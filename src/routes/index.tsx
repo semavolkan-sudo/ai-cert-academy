@@ -106,17 +106,17 @@ var PAYMENT_LINKS = {
 };
 function saveUser(user) {
   try {
-    typeof window !== 'undefined' && localStorage.setItem("aica-user", JSON.stringify(user));
+    localStorage.setItem("aica-user", JSON.stringify(user));
     if (user.email) addToRegistry(user.email, user);
   } catch(e) {}
 }
 function deleteUser() {
-  try { typeof window !== 'undefined' && localStorage.removeItem("aica-user"); } catch(e) {}
+  try { localStorage.removeItem("aica-user"); } catch(e) {}
 }
 
 // ─── USER REGISTRY (email uniqueness + login) ────────────────────────────────
 function getRegistry() {
-  try { var r = (typeof window !== 'undefined' ? localStorage.getItem("aica-registry"); return r ? JSON.parse(r) : {}; } catch(e) { return {}; }
+  try { var r = localStorage.getItem("aica-registry"); return r ? JSON.parse(r) : {}; } catch(e) { return {}; }
 }
 function emailExists(email) {
   return !!getRegistry()[email.toLowerCase()];
@@ -125,7 +125,7 @@ function addToRegistry(email, userData) {
   try {
     var reg = getRegistry();
     reg[email.toLowerCase()] = JSON.stringify(userData);
-    typeof window !== 'undefined' && localStorage.setItem("aica-registry", JSON.stringify(reg));
+    localStorage.setItem("aica-registry", JSON.stringify(reg));
   } catch(e) {}
 }
 function getUserByEmail(email) {
@@ -142,14 +142,14 @@ function getTeamKey(ownerId) { return "team-" + ownerId; }
 function loadTeam(ownerId) {
   return new Promise(function(resolve) {
     try {
-      var val = (typeof window !== 'undefined' ? localStorage.getItem(getTeamKey(ownerId));
+      var val = localStorage.getItem(getTeamKey(ownerId));
       resolve(val ? JSON.parse(val) : null);
     } catch(e) { resolve(null); }
   });
 }
 
 function saveTeam(ownerId, team) {
-  try { typeof window !== 'undefined' && localStorage.setItem(getTeamKey(ownerId), JSON.stringify(team)); } catch(e) {}
+  try { localStorage.setItem(getTeamKey(ownerId), JSON.stringify(team)); } catch(e) {}
 }
 
 function createTeam(owner) {
@@ -955,7 +955,7 @@ function Lesson(props) {
 
   useEffect(function() {
     try {
-      var cv = (typeof window !== 'undefined' ? localStorage.getItem(cacheKey);
+      var cv = localStorage.getItem(cacheKey);
       if (cv) {
         var cd = JSON.parse(cv);
         setCached(Date.now() - cd.ts < 24*60*60*1000);
@@ -1034,7 +1034,7 @@ function Lesson(props) {
         var text = "";
         if (d.content) for (var j = 0; j < d.content.length; j++) text += d.content[j].text || "";
         if (text) {
-          try { typeof window !== 'undefined' && localStorage.setItem(cacheKey, JSON.stringify({ text:text, ts:Date.now() })); } catch(e) {}
+          try { localStorage.setItem(cacheKey, JSON.stringify({ text:text, ts:Date.now() })); } catch(e) {}
           setTimeout(function() { setCards(parseCards(text)); setLoading(false); }, 300);
         } else {
           setCards(getFallbackCards()); setLoading(false);
@@ -1046,7 +1046,7 @@ function Lesson(props) {
 
     try {
       try {
-      var lv = (typeof window !== 'undefined' ? localStorage.getItem(cacheKey);
+      var lv = localStorage.getItem(cacheKey);
       if (lv) {
         var ld = JSON.parse(lv);
         if (Date.now() - ld.ts < 24*60*60*1000 && ld.text) {
@@ -1282,7 +1282,7 @@ function App() {
     }
     // Kayitli kullanici kontrolu
     try {
-      var su = (typeof window !== 'undefined' ? localStorage.getItem("aica-user");
+      var su = localStorage.getItem("aica-user");
       if (su) { var u = JSON.parse(su); setUser(u); setPage("dashboard"); }
     } catch(e) {}
     setBooting(false);
@@ -1334,4 +1334,4 @@ function App() {
   );
 }
 
-export const Route = createFileRoute("/")({ component: App });
+export const Route = createFileRoute("/")({ component: App, ssr: false });
