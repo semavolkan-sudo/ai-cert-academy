@@ -985,21 +985,71 @@ function Lesson(props) {
 
   function parseCards(text) {
     var sections = [
-      { key:"NEDIR",          icon:"L", title:"Bu Arac Nedir?",              color:"#4285f4" },
-      { key:"TARIHCE",        icon:"T", title:"Tarihce ve Gelisim",           color:"#6366f1" },
-      { key:"OZELLIKLER",     icon:"O", title:"Temel Ozellikler",             color:"#d4a853" },
-      { key:"KULLANIM_BASIT", icon:"B", title:"Baslangic Kullanimi",          color:"#10a37f" },
-      { key:"KULLANIM_ILERI", icon:"I", title:"Ileri Seviye Kullanim",        color:"#059669" },
-      { key:"PROMPT_TEMEL",   icon:"P", title:"Temel Prompt Teknigi",         color:"#8b5cf6" },
-      { key:"PROMPT_ILERI",   icon:"U", title:"Uzman Prompt Teknigi",         color:"#7c3aed" },
-      { key:"ENTEGRASYONLAR", icon:"E", title:"Entegrasyonlar",               color:"#0891b2" },
-      { key:"IS_MODELLERI",   icon:"$", title:"Para Kazanma Modelleri",       color:"#f59e0b" },
-      { key:"IPUCU_1",        icon:"1", title:"Uzman Ipucu 1",                color:"#ef4444" },
-      { key:"IPUCU_2",        icon:"2", title:"Uzman Ipucu 2",                color:"#ea580c" },
-      { key:"IPUCU_3",        icon:"3", title:"Uzman Ipucu 3",                color:"#dc2626" },
-      { key:"HATALAR",        icon:"!", title:"Kacin Bu Hatalardan",          color:"#ec4899" },
-      { key:"KARSILASTIRMA",  icon:"K", title:"Rakip Araclarla Karsilastirma",color:"#64748b" },
+      { key:"NEDIR",           icon:"L", title:"Bu Arac Nedir?",              color:"#4285f4" },
+      { key:"TARIHCE",         icon:"T", title:"Tarihce ve Gelisim",           color:"#6366f1" },
+      { key:"TEMEL_OZELLIK_1", icon:"1", title:"Temel Ozellik 1",              color:"#d4a853" },
+      { key:"TEMEL_OZELLIK_2", icon:"2", title:"Temel Ozellik 2",              color:"#d4a853" },
+      { key:"TEMEL_OZELLIK_3", icon:"3", title:"Temel Ozellik 3",              color:"#d4a853" },
+      { key:"TEMEL_OZELLIK_4", icon:"4", title:"Temel Ozellik 4",              color:"#d4a853" },
+      { key:"TEMEL_OZELLIK_5", icon:"5", title:"Temel Ozellik 5",              color:"#d4a853" },
+      { key:"KULLANIM_1",      icon:"A", title:"Baslangic Adim 1",             color:"#10a37f" },
+      { key:"KULLANIM_2",      icon:"B", title:"Baslangic Adim 2",             color:"#10a37f" },
+      { key:"KULLANIM_3",      icon:"C", title:"Baslangic Adim 3",             color:"#10a37f" },
+      { key:"KULLANIM_4",      icon:"D", title:"Baslangic Adim 4",             color:"#10a37f" },
+      { key:"KULLANIM_ILERI_1",icon:"E", title:"Ileri Seviye Kullanim 1",      color:"#059669" },
+      { key:"KULLANIM_ILERI_2",icon:"F", title:"Ileri Seviye Kullanim 2",      color:"#059669" },
+      { key:"KULLANIM_ILERI_3",icon:"G", title:"Ileri Seviye Kullanim 3",      color:"#059669" },
+      { key:"KULLANIM_ILERI_4",icon:"H", title:"Ileri Seviye Kullanim 4",      color:"#059669" },
+      { key:"PROMPT_ZAYIF",    icon:"X", title:"Zayif Prompt - Kacin!",        color:"#ef4444" },
+      { key:"PROMPT_GUCLU",    icon:"P", title:"Guclu Prompt Teknigi",         color:"#8b5cf6" },
+      { key:"PROMPT_UZMAN",    icon:"U", title:"Uzman Prompt Teknigi",         color:"#7c3aed" },
+      { key:"PROMPT_SEKTOR_1", icon:"S", title:"Pazarlama Promptlari",         color:"#9333ea" },
+      { key:"PROMPT_SEKTOR_2", icon:"K", title:"Teknoloji Promptlari",         color:"#9333ea" },
+      { key:"PROMPT_SEKTOR_3", icon:"M", title:"E-Ticaret Promptlari",         color:"#9333ea" },
+      { key:"ENTEGRASYON_1",   icon:"Z", title:"Entegrasyon 1",                color:"#0891b2" },
+      { key:"ENTEGRASYON_2",   icon:"Y", title:"Entegrasyon 2",                color:"#0891b2" },
+      { key:"ENTEGRASYON_3",   icon:"W", title:"Entegrasyon 3",                color:"#0891b2" },
+      { key:"IS_MODELI_1",     icon:"$", title:"Para Kazanma Modeli 1",        color:"#f59e0b" },
+      { key:"IS_MODELI_2",     icon:"$", title:"Para Kazanma Modeli 2",        color:"#f59e0b" },
+      { key:"IS_MODELI_3",     icon:"$", title:"Para Kazanma Modeli 3",        color:"#f59e0b" },
+      { key:"IPUCU_1",         icon:"I", title:"Uzman Ipucu 1",                color:"#dc2626" },
+      { key:"IPUCU_2",         icon:"I", title:"Uzman Ipucu 2",                color:"#dc2626" },
+      { key:"IPUCU_3",         icon:"I", title:"Uzman Ipucu 3",                color:"#dc2626" },
+      { key:"IPUCU_4",         icon:"I", title:"Uzman Ipucu 4",                color:"#dc2626" },
+      { key:"IPUCU_5",         icon:"I", title:"Uzman Ipucu 5",                color:"#dc2626" },
+      { key:"HATA_1",          icon:"!", title:"Kacin: Hata 1",                color:"#ec4899" },
+      { key:"HATA_2",          icon:"!", title:"Kacin: Hata 2",                color:"#ec4899" },
+      { key:"HATA_3",          icon:"!", title:"Kacin: Hata 3",                color:"#ec4899" },
+      { key:"HATA_4",          icon:"!", title:"Kacin: Hata 4",                color:"#ec4899" },
+      { key:"HATA_5",          icon:"!", title:"Kacin: Hata 5",                color:"#ec4899" },
+      { key:"KARSILASTIRMA_1", icon:"V", title:"Rakip Karsilastirma 1",        color:"#64748b" },
+      { key:"KARSILASTIRMA_2", icon:"V", title:"Rakip Karsilastirma 2",        color:"#64748b" },
+      { key:"KARSILASTIRMA_3", icon:"V", title:"Rakip Karsilastirma 3",        color:"#64748b" },
+      { key:"GELECEK",         icon:"R", title:"Gelecek ve Trendler",          color:"#0ea5e9" },
+      { key:"SEKTOR_KULLANIM_1",icon:"N",title:"Finans Sektorunde Kullanim",   color:"#10b981" },
+      { key:"SEKTOR_KULLANIM_2",icon:"N",title:"Saglik Sektorunde Kullanim",   color:"#10b981" },
+      { key:"SEKTOR_KULLANIM_3",icon:"N",title:"Egitim Sektorunde Kullanim",   color:"#10b981" },
+      { key:"SEKTOR_KULLANIM_4",icon:"N",title:"Yaratici Endustriler",         color:"#10b981" },
+      { key:"OTOMASYON_AKISI", icon:"O", title:"Otomasyon Akisi Kur",          color:"#8b5cf6" },
+      { key:"VAKA_CALISMASI",  icon:"Q", title:"Gercek Vaka Calismasi",        color:"#f59e0b" },
+      { key:"SERTIFIKA_HAZIRLIK",icon:"J",title:"Sertifika Hazirlik",          color:"#d4a853" },
     ];
+    var result = [];
+    var keys = sections.map(function(s) { return s.key; });
+    for (var i = 0; i < sections.length; i++) {
+      var s = sections[i];
+      var nextKeys = keys.slice(i + 1).join("|");
+      var pattern = nextKeys ? s.key + "[:\\s]+([\\s\\S]*?)(?=\\n(?:" + nextKeys + ")[:\\s]|$)" : s.key + "[:\\s]+([\\s\\S]*)";
+      try {
+        var m = text.match(new RegExp(pattern));
+        if (m && m[1] && m[1].trim().length > 15) {
+          result.push({ icon:s.icon, title:s.title, body:m[1].trim(), color:s.color });
+        }
+      } catch(e) {}
+    }
+    if (result.length === 0) result.push({ icon:"?", title:lesson.tool + " Dersi", body:text, color:GOLD });
+    return result;
+  }
     var result = [];
     var keys = sections.map(function(s) { return s.key; });
     for (var i = 0; i < sections.length; i++) {
@@ -1060,8 +1110,8 @@ function Lesson(props) {
       fetch(PROXY_URL, {
         method:"POST", headers:{"Content-Type":"application/json"},
         body: JSON.stringify({
-          model:"claude-sonnet-4-20250514", max_tokens:4000,
-          messages:[{ role:"user", content:"Sen dunyanin en iyi AI egitmenisin. " + lesson.tool + " aracini hic bilmeyen birine ogretiyorsun. Bu kisi dersi bitirince araci profesyonel seviyede kullanabilmeli.\n\nHer bolumu GERCEK HAYAT ORNEKLERI ve UYGULAMALI ADIMLARLA yaz. Teorik bilgi degil, direk kullanilab ilir pratik bilgi ver.\n\nNEDIR: " + lesson.tool + " tam olarak ne yapar, kim gelistirdi, neden onemli, hangi sorunu cozer, rakiplerinden ne farki var. 4-5 somut cumle.\n\nTARIHCE: Nasil ortaya cikti, hangi donumum noktasindan gecti, bugun hangi versiyonu kullaniliyor ve ne getirdi.\n\nOZELLIKLER:\n- [Ozellik Adi]: Ne yapar + gercek hayat kullanim senaryosu + neden onemli\n- [Ozellik Adi]: Ne yapar + gercek hayat kullanim senaryosu + neden onemli\n- [Ozellik Adi]: Ne yapar + gercek hayat kullanim senaryosu + neden onemli\n- [Ozellik Adi]: Ne yapar + gercek hayat kullanim senaryosu + neden onemli\n- [Ozellik Adi]: Ne yapar + gercek hayat kullanim senaryosu + neden onemli\n\nKULLANIM_BASIT:\n1. [Adim]: Ne yapilir + neden bu sirada + dikkat edilmesi gereken\n2. [Adim]: Ne yapilir + neden bu sirada + dikkat edilmesi gereken\n3. [Adim]: Ne yapilir + neden bu sirada + dikkat edilmesi gereken\n4. [Adim]: Ne yapilir + neden bu sirada + dikkat edilmesi gereken\n\nKULLANIM_ILERI:\n1. [Gelismis Adim]: Teknik detay + ne zaman kullanilir + ornek\n2. [Gelismis Adim]: Teknik detay + ne zaman kullanilir + ornek\n3. [Gelismis Adim]: Teknik detay + ne zaman kullanilir + ornek\n4. [Gelismis Adim]: Teknik detay + ne zaman kullanilir + ornek\n\nPROMPT_TEMEL: Gercek bir senaryo ver. Zayif prompt ornegi goster. Sonra guclu prompt ornegi goster. Neden guclu oldugunun 3 nedenini acikla.\n\nPROMPT_ILERI: Uzman seviye, cok katmanli bir prompt yaz. Rol + Bagkam + Gorev + Format + Kisitlar icersin. Bu promptun neden 10 kat daha iyi sonuc verdigini acikla.\n\nENTEGRASYONLAR:\n- [Arac]: Nasil entegre edilir + hangi is akisini guclendirir + somut kullanim\n- [Arac]: Nasil entegre edilir + hangi is akisini guclendirir + somut kullanim\n- [Arac]: Nasil entegre edilir + hangi is akisini guclendirir + somut kullanim\n\nIS_MODELLERI:\n- [Model]: Nasil para kazanilir + gercekci gelir potansiyeli + baslamak icin adimlar\n- [Model]: Nasil para kazanilir + gercekci gelir potansiyeli + baslamak icin adimlar\n- [Model]: Nasil para kazanilir + gercekci gelir potansiyeli + baslamak icin adimlar\n\nIPUCU_1: Cok az kisi bilen, zaman kazandiran gizli teknik. Adim adim nasil uygulanacagini goster. Somut ornek ver.\n\nIPUCU_2: Profesyonellerin kullandigi gelismis yontem. Neden etkili? Nasil uygulanir? Hangi durumda kullanilir?\n\nIPUCU_3: Rakiplerden one geciren, cogunun bilmedigi teknik. Somut senaryo ve ornek ile acikla.\n\nHATALAR:\n- [Hata]: Neden yapilir + ne kadar etkiler + nasil onlenir + dogru yaklasim\n- [Hata]: Neden yapilir + ne kadar etkiler + nasil onlenir + dogru yaklasim\n- [Hata]: Neden yapilir + ne kadar etkiler + nasil onlenir + dogru yaklasim\n- [Hata]: Neden yapilir + ne kadar etkiler + nasil onlenir + dogru yaklasim\n\nKARSILASTIRMA:\n- [Rakip Arac] vs " + lesson.tool + ": Hangisi ne zaman daha iyi, neden, hangi kullanim icin hangisi secilmeli\n- [Rakip Arac] vs " + lesson.tool + ": Hangisi ne zaman daha iyi, neden\n- Genel tavsiye: Hangi profildeki kullanici " + lesson.tool + " secmeli\n\nTurkce yaz. Her bolumu bol detayli, ogretici ve uygulamali tut." }]
+          model:"claude-sonnet-4-20250514", max_tokens:8000,
+          messages:[{ role:"user", content:"Sen dunyanin en iyi AI egitmenisin. " + lesson.tool + " aracini hic bilmeyen birine ogretiyorsun. Bu kisi dersi bitirince profesyonel seviyede kullanabilmeli.\n\nRASTGELE: " + Math.floor(Math.random()*9999) + " (Her acilista farkli icerik uret)\n\nAsagidaki TUM bolumler icin genis, detayli, gercek hayat ornekli icerik yaz:\n\nNEDIR: " + lesson.tool + " ne yapar, kim gelistirdi, neden onemli, hangi sorunu cozer. 5-6 cumle.\n\nTARIHCE: Nasil ortaya cikti, ne zaman, hangi versiyonlar geldi, bugunki hali ne kazandirdi.\n\nTEMEL_OZELLIK_1: En onemli 1. ozellik - ne yapar, gercek senaryo, neden kritik\n\nTEMEL_OZELLIK_2: En onemli 2. ozellik - ne yapar, gercek senaryo, neden kritik\n\nTEMEL_OZELLIK_3: En onemli 3. ozellik - ne yapar, gercek senaryo, neden kritik\n\nTEMEL_OZELLIK_4: En onemli 4. ozellik - ne yapar, gercek senaryo, neden kritik\n\nTEMEL_OZELLIK_5: En onemli 5. ozellik - ne yapar, gercek senaryo, neden kritik\n\nKULLANIM_1: Ilk adim - ne yapilir, neden bu sirada, dikkat edilmesi gereken\n\nKULLANIM_2: Ikinci adim - ne yapilir, detaylar, ipucu\n\nKULLANIM_3: Ucuncu adim - ne yapilir, detaylar, ipucu\n\nKULLANIM_4: Dorduncu adim - ne yapilir, detaylar, ipucu\n\nKULLANIM_ILERI_1: Gelismis kullanim 1 - teknik detay, ne zaman, ornek\n\nKULLANIM_ILERI_2: Gelismis kullanim 2 - teknik detay, ne zaman, ornek\n\nKULLANIM_ILERI_3: Gelismis kullanim 3 - teknik detay, ne zaman, ornek\n\nKULLANIM_ILERI_4: Gelismis kullanim 4 - teknik detay, ne zaman, ornek\n\nPROMPT_ZAYIF: Yeni baslayanin zayif prompt ornegi ve neden zayif oldugu\n\nPROMPT_GUCLU: Ayni gorev icin guclu prompt ve neden 10 kat daha iyi sonuc verdigini ac\n\nPROMPT_UZMAN: Rol + Bagkam + Gorev + Format + Kisitlar iceren uzman seviye prompt ve analizi\n\nPROMPT_SEKTOR_1: Pazarlama icin spesifik kullanisli prompt ornegi\n\nPROMPT_SEKTOR_2: Yazilim/teknoloji icin spesifik kullanisli prompt ornegi\n\nPROMPT_SEKTOR_3: E-ticaret icin spesifik kullanisli prompt ornegi\n\nENTEGRASYON_1: En guclu 1. entegrasyon - nasil baglenir, is akisini nasil guclendirir\n\nENTEGRASYON_2: En guclu 2. entegrasyon - nasil baglenir, ornek\n\nENTEGRASYON_3: En guclu 3. entegrasyon - nasil baglenir, ornek\n\nIS_MODELI_1: Para kazanma modeli 1 - nasil, kac para, nasil baslanir\n\nIS_MODELI_2: Para kazanma modeli 2 - nasil, kac para, nasil baslanir\n\nIS_MODELI_3: Para kazanma modeli 3 - nasil, kac para, nasil baslanir\n\nIPUCU_1: Gizli teknik 1 - adim adim nasil uygulanir, somut ornek\n\nIPUCU_2: Gizli teknik 2 - neden etkili, nasil uygulanir\n\nIPUCU_3: Gizli teknik 3 - rakiplerden one geciren teknik\n\nIPUCU_4: Gizli teknik 4 - profesyonellerin kullandigi ileri teknik\n\nIPUCU_5: Gizli teknik 5 - verimlilik katlayan ozellik\n\nHATA_1: En yaygin 1. hata - neden yapilir, nasil onlenir, dogru yaklasim\n\nHATA_2: En yaygin 2. hata - neden yapilir, nasil onlenir\n\nHATA_3: En yaygin 3. hata - neden yapilir, nasil onlenir\n\nHATA_4: En yaygin 4. hata - neden yapilir, nasil onlenir\n\nHATA_5: En yaygin 5. hata - neden yapilir, nasil onlenir\n\nKARSILASTIRMA_1: En yakin rakip ile karsilastirma - hangisi ne zaman daha iyi\n\nKARSILASTIRMA_2: Ikinci rakip ile karsilastirma\n\nKARSILASTIRMA_3: Ucuncu rakip ile karsilastirma\n\nGELECEK: Bu aracin gelecegi, 2025-2026 beklentileri, nereye gidiyor\n\nSEKTOR_KULLANIM_1: Finans sektorunde nasil kullanilir - somut ornekler\n\nSEKTOR_KULLANIM_2: Saglik sektorunde nasil kullanilir - somut ornekler\n\nSEKTOR_KULLANIM_3: Egitim sektorunde nasil kullanilir - somut ornekler\n\nSEKTOR_KULLANIM_4: Yaratici endustriler icin kullanim - somut ornekler\n\nOTOMASYON_AKISI: Bu araci merkeze alan tam otomasyon akisi - adim adim kur\n\nVAKA_CALISMASI: Gercek bir sirketin bu araci nasil kullandigi ve somut sonuclari\n\nSERTIFIKA_HAZIRLIK: Uzman seviyede kullanmayi kanitlamak icin bilmen gereken 5 kritik konu\n\nTurkce yaz. Her bolumu minimum 3-4 cumle ile detayli anlat." }]
         })
       }).then(function(r) { return r.json(); }).then(function(d) {
         clearInterval(timer);
@@ -1371,5 +1421,6 @@ function App() {
     </div>
   );
 }
+
 
 export const Route = createFileRoute("/")({ component: App, ssr: false });
