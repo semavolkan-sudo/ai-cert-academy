@@ -1,3 +1,5 @@
+// @ts-nocheck
+import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
@@ -1221,7 +1223,7 @@ function Lesson(props) {
 }
 
 // ─── APP ROOT ─────────────────────────────────────────────────────────────────
-export default function App() {
+function App() {
   var [page, setPage] = useState("landing");
   var [user, setUser] = useState(null);
   var [plan, setPlan] = useState(null);
@@ -1293,3 +1295,6 @@ export default function App() {
     </div>
   );
 }
+
+
+export const Route = createFileRoute("/")({ component: App });
