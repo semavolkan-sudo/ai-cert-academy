@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, useRef } from "react";
 
 // ─── SSR-SAFE STORAGE ────────────────────────────────────────────────────────
@@ -959,7 +958,7 @@ function Dashboard(props) {
 // ─── LESSON ──────────────────────────────────────────────────────────────────
 function Lesson(props) {
   var lesson = props.lesson;
-  var cacheKey = "lesson-v4-" + lesson.day;
+  var cacheKey = "lesson-v5-" + lesson.day;
   var [phase, setPhase] = useState("intro");
   var [loading, setLoading] = useState(false);
   var [loadProgress, setLoadProgress] = useState(0);
@@ -1404,5 +1403,3 @@ export default function App() {
     </div>
   );
 }
-
-
