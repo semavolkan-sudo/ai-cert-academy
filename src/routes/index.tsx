@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { createFileRoute } from "@tanstack/react-router";
+
 import { useState, useEffect, useRef } from "react";
 
 // ─── SSR-SAFE STORAGE ────────────────────────────────────────────────────────
@@ -1019,11 +1020,26 @@ function Lesson(props) {
 
   function getFallbackCards() {
     return [
-      { icon:"L", title:"Bu Arac Nedir?",     color:"#4285f4", body:lesson.desc },
-      { icon:"O", title:"Temel Ozellikler",    color:"#d4a853", body:"- Hizli ve kullanimi kolay\n- Uretkenlik artiran ozellikler\n- Entegrasyon destegi" },
-      { icon:"B", title:"Nasil Kullanilir?",   color:"#10a37f", body:"1. Hesap olustur\n2. Arayuzu incele\n3. Ilk gorevini dene" },
-      { icon:"P", title:"Prompt Ornegi",       color:"#8b5cf6", body:"\"" + lesson.tool + " ile bir is akisi olustur ve adim adim anlat\"" },
-      { icon:"!", title:"Onemli Ipucu",        color:"#ef4444", body:"Net ve baglamli talimatlar her zaman daha iyi sonuc verir. Belirsiz sormak yerine hedef, format ve beklentiyi acikca belirt." },
+      {
+        icon: "L", title: "Bu Arac Nedir?", color: "#4285f4",
+        body: lesson.tool + " — " + lesson.desc + "\n\nBu ders boyunca araci sifirdan ogrenecek, gercek is senaryolarinda nasil kullanacagini kesfedeceksin. Her kart somut bir beceri kazandiriyor."
+      },
+      {
+        icon: "O", title: "Temel Ozellikler", color: "#d4a853",
+        body: "- Metin Uretimi: Tek bir aciklama ile profesyonel seviyede icerik, email, rapor ve kod uretir\n- Baglamsal Anlama: Onceki mesajlari hatirlar, uzun konusmalarda tutarli kalir\n- Cok Dilli Destek: Turkce dahil 50+ dilde akici ve dogal yanit verir\n- Dosya Analizi: PDF, Word, Excel ve gorsel dosyalari yukleyerek analiz ettirebilirsin\n- Kod Yazma: Python, JavaScript, SQL ve daha fazlasinda kod yazar, hata ayiklar"
+      },
+      {
+        icon: "B", title: "Baslangic: Ilk 3 Adim", color: "#10a37f",
+        body: "1. Hesap Olustur: Platforma git, Google hesabinla 30 saniyede kaydol. Ucretsiz plan gunluk kullanim icin yeterli.\n\n2. Net Prompt Yaz: 'Bir sey yaz' degil, 'Hedef kitle: 30-45 yas profesyoneller. Ton: samimi. 3 paragraflik LinkedIn gonderisi yaz' gibi spesifik talimatlar ver.\n\n3. Iteratif Gelistir: Ilk yanit mekemmel olmayabilir. 'Daha kisa yap', 'Ornek ekle', 'Daha guvenilir ton kullan' diyerek adim adim iyilestir."
+      },
+      {
+        icon: "P", title: "Gercek Hayat Prompt Ornegi", color: "#8b5cf6",
+        body: "SENARYO: Bir e-ticaret sitesi icin urun aciklamasi yazman gerekiyor.\n\nZAYIF PROMPT:\n'Urun aciklamasi yaz'\n\nGUCLU PROMPT:\n'Sen deneyimli bir e-ticaret metin yazarisin. Hedef kitle: 25-40 yas kadin musteriler. Urun: el yapimi seramik kupa. Ton: sicak ve hikaye anlatan. Format: baslik + 3 madde ozellik + duygusal CTA. Maks 100 kelime.'\n\nFARK: Guclu prompt ile uretilen icerik direkt kullanilabilir, zayif prompt ile defalarca duzenleme gerekir."
+      },
+      {
+        icon: "!", title: "En Cok Yapilan 3 Hata", color: "#ef4444",
+        body: "HATA 1 - Belirsiz Sormak:\n'Bana bir sey anlat' yerine net hedef, format ve ton belirt. Belirsizlik = ortalama sonuc.\n\nHATA 2 - Tek Seferlik Kullanim:\nGercek gu cu iterasyonda. 'Su satirlari duzenle', 'Daha kisa yap', 'B2B tona cevir' diyerek gelistir.\n\nHATA 3 - Dogrulamadan Kullanmak:\nYapay zeka yanilabilir. Ozellikle tarih, istatistik ve hukuki bilgileri mutlaka dogrula."
+      },
     ];
   }
 
@@ -1046,7 +1062,7 @@ function Lesson(props) {
         method:"POST", headers:{"Content-Type":"application/json"},
         body: JSON.stringify({
           model:"claude-sonnet-4-20250514", max_tokens:4000,
-          messages:[{ role:"user", content:"Sen dunyaca unlu bir AI egitim uzmanisin. Hic bilgisi olmayan birine " + lesson.tool + " ogretiyorsun. Bu kisi dersi bitirdiginde bagimsiz olarak kullanabilmeli ve uzman gibi dusunebilmeli.\n\nAsagidaki her bolumu genis ve ogretici yaz:\n\nNEDIR: Ne oldugu, kim gelistirdigi, ne zaman ciktigi, hangi problemi cozdugu, kimler kullanmali ve neden. 5-6 cumle.\n\nTARIHCE: Nasil ortaya cikti, nasil gelisti, bugunki versiyonu neler getirdi. 3-4 cumle.\n\nOZELLIKLER:\n- [Ozellik adi]: Detayli aciklama ve pratik etkisi\n- [Ozellik adi]: Detayli aciklama\n- [Ozellik adi]: Detayli aciklama\n- [Ozellik adi]: Detayli aciklama\n- [Ozellik adi]: Detayli aciklama\n\nKULLANIM_BASIT:\n1. [Adim]: Ne yapilir, neden\n2. [Adim]: Ne yapilir\n3. [Adim]: Ne yapilir\n4. [Adim]: Ne yapilir\n\nKULLANIM_ILERI:\n1. [Adim]: Gelismis teknik\n2. [Adim]: Gelismis teknik\n3. [Adim]: Gelismis teknik\n4. [Adim]: Gelismis teknik\n\nPROMPT_TEMEL: Yeni baslayanlar icin detayli prompt ornegi ve neden etkili oldugu.\n\nPROMPT_ILERI: Uzman seviye prompt ornegi, neden cok daha etkili oldugunu ac.\n\nENTEGRASYONLAR:\n- Hangi araclarla birlikte kullanilir, nasil, ornek ver\n- Birden fazla entegrasyon ornegi\n\nIS_MODELLERI:\n- Bu araci kullanarak nasil para kazanilir\n- Somut is modeli ornekleri\n\nIPUCU_1: Cok az kisi bilen uzmanlik gerektiren teknik. Somut ornek.\n\nIPUCU_2: Zaman kazandiran gelismis yontem. Somut ornek.\n\nIPUCU_3: Rakiplerden one geciren gizli teknik. Somut ornek.\n\nHATALAR:\n- Yeni baslayanların en cok yaptigi hatalar ve nasil kacınılır\n\nKARSILASTIRMA:\n- Benzer araclarla karsilastir, ne zaman hangisi kullanilmali\n\nTurkce yaz. Her bolumu detayli tut." }]
+          messages:[{ role:"user", content:"Sen dunyanin en iyi AI egitmenisin. " + lesson.tool + " aracini hic bilmeyen birine ogretiyorsun. Bu kisi dersi bitirince araci profesyonel seviyede kullanabilmeli.\n\nHer bolumu GERCEK HAYAT ORNEKLERI ve UYGULAMALI ADIMLARLA yaz. Teorik bilgi degil, direk kullanilab ilir pratik bilgi ver.\n\nNEDIR: " + lesson.tool + " tam olarak ne yapar, kim gelistirdi, neden onemli, hangi sorunu cozer, rakiplerinden ne farki var. 4-5 somut cumle.\n\nTARIHCE: Nasil ortaya cikti, hangi donumum noktasindan gecti, bugun hangi versiyonu kullaniliyor ve ne getirdi.\n\nOZELLIKLER:\n- [Ozellik Adi]: Ne yapar + gercek hayat kullanim senaryosu + neden onemli\n- [Ozellik Adi]: Ne yapar + gercek hayat kullanim senaryosu + neden onemli\n- [Ozellik Adi]: Ne yapar + gercek hayat kullanim senaryosu + neden onemli\n- [Ozellik Adi]: Ne yapar + gercek hayat kullanim senaryosu + neden onemli\n- [Ozellik Adi]: Ne yapar + gercek hayat kullanim senaryosu + neden onemli\n\nKULLANIM_BASIT:\n1. [Adim]: Ne yapilir + neden bu sirada + dikkat edilmesi gereken\n2. [Adim]: Ne yapilir + neden bu sirada + dikkat edilmesi gereken\n3. [Adim]: Ne yapilir + neden bu sirada + dikkat edilmesi gereken\n4. [Adim]: Ne yapilir + neden bu sirada + dikkat edilmesi gereken\n\nKULLANIM_ILERI:\n1. [Gelismis Adim]: Teknik detay + ne zaman kullanilir + ornek\n2. [Gelismis Adim]: Teknik detay + ne zaman kullanilir + ornek\n3. [Gelismis Adim]: Teknik detay + ne zaman kullanilir + ornek\n4. [Gelismis Adim]: Teknik detay + ne zaman kullanilir + ornek\n\nPROMPT_TEMEL: Gercek bir senaryo ver. Zayif prompt ornegi goster. Sonra guclu prompt ornegi goster. Neden guclu oldugunun 3 nedenini acikla.\n\nPROMPT_ILERI: Uzman seviye, cok katmanli bir prompt yaz. Rol + Bagkam + Gorev + Format + Kisitlar icersin. Bu promptun neden 10 kat daha iyi sonuc verdigini acikla.\n\nENTEGRASYONLAR:\n- [Arac]: Nasil entegre edilir + hangi is akisini guclendirir + somut kullanim\n- [Arac]: Nasil entegre edilir + hangi is akisini guclendirir + somut kullanim\n- [Arac]: Nasil entegre edilir + hangi is akisini guclendirir + somut kullanim\n\nIS_MODELLERI:\n- [Model]: Nasil para kazanilir + gercekci gelir potansiyeli + baslamak icin adimlar\n- [Model]: Nasil para kazanilir + gercekci gelir potansiyeli + baslamak icin adimlar\n- [Model]: Nasil para kazanilir + gercekci gelir potansiyeli + baslamak icin adimlar\n\nIPUCU_1: Cok az kisi bilen, zaman kazandiran gizli teknik. Adim adim nasil uygulanacagini goster. Somut ornek ver.\n\nIPUCU_2: Profesyonellerin kullandigi gelismis yontem. Neden etkili? Nasil uygulanir? Hangi durumda kullanilir?\n\nIPUCU_3: Rakiplerden one geciren, cogunun bilmedigi teknik. Somut senaryo ve ornek ile acikla.\n\nHATALAR:\n- [Hata]: Neden yapilir + ne kadar etkiler + nasil onlenir + dogru yaklasim\n- [Hata]: Neden yapilir + ne kadar etkiler + nasil onlenir + dogru yaklasim\n- [Hata]: Neden yapilir + ne kadar etkiler + nasil onlenir + dogru yaklasim\n- [Hata]: Neden yapilir + ne kadar etkiler + nasil onlenir + dogru yaklasim\n\nKARSILASTIRMA:\n- [Rakip Arac] vs " + lesson.tool + ": Hangisi ne zaman daha iyi, neden, hangi kullanim icin hangisi secilmeli\n- [Rakip Arac] vs " + lesson.tool + ": Hangisi ne zaman daha iyi, neden\n- Genel tavsiye: Hangi profildeki kullanici " + lesson.tool + " secmeli\n\nTurkce yaz. Her bolumu bol detayli, ogretici ve uygulamali tut." }]
         })
       }).then(function(r) { return r.json(); }).then(function(d) {
         clearInterval(timer);
