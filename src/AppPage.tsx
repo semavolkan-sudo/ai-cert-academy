@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, useRef } from "react";
 
 // ─── SSR-SAFE STORAGE ────────────────────────────────────────────────────────
@@ -959,7 +958,7 @@ function Dashboard(props) {
 // ─── LESSON ──────────────────────────────────────────────────────────────────
 function Lesson(props) {
   var lesson = props.lesson;
-  var cacheKey = "lesson-v4-" + lesson.day;
+  var cacheKey = "lesson-v5-" + lesson.day;
   var [phase, setPhase] = useState("intro");
   var [loading, setLoading] = useState(false);
   var [loadProgress, setLoadProgress] = useState(0);
@@ -1042,6 +1041,22 @@ function Lesson(props) {
       try {
         var m = text.match(new RegExp(pattern));
         if (m && m[1] && m[1].trim().length > 15) {
+          result.push({ icon:s.icon, title:s.title, body:m[1].trim(), color:s.color });
+        }
+      } catch(e) {}
+    }
+    if (result.length === 0) result.push({ icon:"?", title:lesson.tool + " Dersi", body:text, color:GOLD });
+    return result;
+  }
+    var result = [];
+    var keys = sections.map(function(s) { return s.key; });
+    for (var i = 0; i < sections.length; i++) {
+      var s = sections[i];
+      var nextKeys = keys.slice(i + 1).join("|");
+      var pattern = nextKeys ? s.key + "[:\s]+([\s\S]*?)(?=\n(?:"+nextKeys+")[:\s]|$)" : s.key + "[:\s]+([\s\S]*)";
+      try {
+        var m = text.match(new RegExp(pattern));
+        if (m && m[1] && m[1].trim().length > 20) {
           result.push({ icon:s.icon, title:s.title, body:m[1].trim(), color:s.color });
         }
       } catch(e) {}
@@ -1404,5 +1419,3 @@ export default function App() {
     </div>
   );
 }
-
-
