@@ -2,7 +2,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 
-export const Route = createFileRoute("/")({ component: App, ssr: false });
+export const Route = createFileRoute("/")({ component: App });
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 var PROXY_URL = "https://twicwuxerfjxojlprabu.supabase.co/functions/v1/anthropic-proxy";
