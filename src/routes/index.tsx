@@ -142,7 +142,7 @@ function getTeamKey(ownerId) { return "team-" + ownerId; }
 function loadTeam(ownerId) {
   return new Promise(function(resolve) {
     try {
-      var val = (typeof window!=='undefined'?localStorage.getItem(getTeamKey(ownerId):null));
+      var val = (typeof window!=='undefined'?localStorage.getItem(getTeamKey(ownerId)):null);
       resolve(val ? JSON.parse(val) : null);
     } catch(e) { resolve(null); }
   });
