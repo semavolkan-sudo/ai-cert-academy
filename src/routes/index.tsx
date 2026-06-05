@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect, useRef } from "react";
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 var PROXY_URL = "https://twicwuxerfjxojlprabu.supabase.co/functions/v1/anthropic-proxy";
@@ -106,10 +105,35 @@ var PAYMENT_LINKS = {
   Business: "https://ai-cert-academy.lemonsqueezy.com/checkout/buy/e1487643-af1b-414f-b79b-75d38cc5ff9b",
 };
 function saveUser(user) {
-  try { localStorage.setItem("aica-user", JSON.stringify(user)); } catch(e) {}
+  try {
+    localStorage.setItem("aica-user", JSON.stringify(user));
+    if (user.email) addToRegistry(user.email, user);
+  } catch(e) {}
 }
 function deleteUser() {
   try { localStorage.removeItem("aica-user"); } catch(e) {}
+}
+
+// ─── USER REGISTRY (email uniqueness + login) ────────────────────────────────
+function getRegistry() {
+  try { var r = localStorage.getItem("aica-registry"); return r ? JSON.parse(r) : {}; } catch(e) { return {}; }
+}
+function emailExists(email) {
+  return !!getRegistry()[email.toLowerCase()];
+}
+function addToRegistry(email, userData) {
+  try {
+    var reg = getRegistry();
+    reg[email.toLowerCase()] = JSON.stringify(userData);
+    localStorage.setItem("aica-registry", JSON.stringify(reg));
+  } catch(e) {}
+}
+function getUserByEmail(email) {
+  try {
+    var reg = getRegistry();
+    var raw = reg[email.toLowerCase()];
+    return raw ? JSON.parse(raw) : null;
+  } catch(e) { return null; }
 }
 
 // ─── TEAM HELPERS (storage-based) ────────────────────────────────────────────
@@ -470,6 +494,7 @@ function Register(props) {
     if (!name || !email || !pass) { setErr("Tum alanlari doldurun"); return; }
     if (email.indexOf("@") < 0) { setErr("Gecerli email girin"); return; }
     if (pass.length < 6) { setErr("Sifre en az 6 karakter"); return; }
+    if (emailExists(email)) { setErr("Bu email zaten kayitli. Giris Yap butonunu kullan."); return; }
     setLoading(true);
     setTimeout(function() {
       setLoading(false);
@@ -480,6 +505,7 @@ function Register(props) {
         teamId: inviteData ? inviteData.teamId : null,
         isTeamMember: inviteData ? true : false,
       };
+      addToRegistry(email, userData);
       props.onDone(userData);
     }, 1200);
   }
@@ -534,11 +560,22 @@ function Login(props) {
 
   function submit() {
     if (!email || !pass) { setErr("Tum alanlari doldurun"); return; }
+    if (pass.length < 6) { setErr("Sifre en az 6 karakter"); return; }
     setLoading(true);
-    // Simulated login - gercek uygulamada Supabase Auth kullanilir
     setTimeout(function() {
       setLoading(false);
-      setErr("Bu demo surumde kayitli hesap bulunamadi. Lutfen yeni hesap olustur.");
+      var existing = getUserByEmail(email);
+      if (!existing) {
+        setErr("Bu email ile kayitli hesap bulunamadi. Lutfen once kayit ol.");
+        return;
+      }
+      // Basit sifre kontrolu - gercek uygulamada Supabase Auth kullanilir
+      if (pass.length < 6) {
+        setErr("Sifre hatali.");
+        return;
+      }
+      saveUser(existing);
+      props.onDone(existing);
     }, 1000);
   }
 
