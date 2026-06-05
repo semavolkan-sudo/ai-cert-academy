@@ -1,5 +1,3 @@
-// @ts-nocheck
-import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
@@ -101,24 +99,26 @@ var DEFAULT_QUIZ = [
 
 // ─── STORAGE HELPERS ─────────────────────────────────────────────────────────
 function saveUser(user) {
-  try { window.storage.set("aica-user", JSON.stringify(user)); } catch(e) {}
+  try { localStorage.setItem("aica-user", JSON.stringify(user)); } catch(e) {}
 }
 function deleteUser() {
-  try { window.storage.delete("aica-user"); } catch(e) {}
+  try { localStorage.removeItem("aica-user"); } catch(e) {}
 }
 
 // ─── TEAM HELPERS (storage-based) ────────────────────────────────────────────
 function getTeamKey(ownerId) { return "team-" + ownerId; }
 
 function loadTeam(ownerId) {
-  return window.storage.get(getTeamKey(ownerId), true).then(function(r) {
-    if (r && r.value) { try { return JSON.parse(r.value); } catch(e) {} }
-    return null;
-  }).catch(function() { return null; });
+  return new Promise(function(resolve) {
+    try {
+      var val = localStorage.getItem(getTeamKey(ownerId));
+      resolve(val ? JSON.parse(val) : null);
+    } catch(e) { resolve(null); }
+  });
 }
 
 function saveTeam(ownerId, team) {
-  try { window.storage.set(getTeamKey(ownerId), JSON.stringify(team), true); } catch(e) {}
+  try { localStorage.setItem(getTeamKey(ownerId), JSON.stringify(team)); } catch(e) {}
 }
 
 function createTeam(owner) {
@@ -910,17 +910,13 @@ function Lesson(props) {
   var quiz = DEFAULT_QUIZ;
 
   useEffect(function() {
-    window.storage.get(cacheKey, true).then(function(r) {
-      if (r && r.value) {
-        try {
-          var d = JSON.parse(r.value);
-          var ONE_DAY = 24 * 60 * 60 * 1000;
-          setCached(Date.now() - d.ts < ONE_DAY);
-          return;
-        } catch(e) {}
-      }
-      setCached(false);
-    }).catch(function() { setCached(false); });
+    try {
+      var cv = localStorage.getItem(cacheKey);
+      if (cv) {
+        var cd = JSON.parse(cv);
+        setCached(Date.now() - cd.ts < 24*60*60*1000);
+      } else { setCached(false); }
+    } catch(e) { setCached(false); }
   }, [cacheKey]);
 
   function parseCards(text) {
@@ -994,7 +990,7 @@ function Lesson(props) {
         var text = "";
         if (d.content) for (var j = 0; j < d.content.length; j++) text += d.content[j].text || "";
         if (text) {
-          try { window.storage.set(cacheKey, JSON.stringify({ text:text, ts:Date.now() }), true); } catch(e) {}
+          try { localStorage.setItem(cacheKey, JSON.stringify({ text:text, ts:Date.now() })); } catch(e) {}
           setTimeout(function() { setCards(parseCards(text)); setLoading(false); }, 300);
         } else {
           setCards(getFallbackCards()); setLoading(false);
@@ -1005,17 +1001,16 @@ function Lesson(props) {
     }
 
     try {
-      window.storage.get(cacheKey, true).then(function(r) {
-        if (r && r.value) {
-          try {
-            var d = JSON.parse(r.value);
-            if (Date.now() - d.ts < 24*60*60*1000 && d.text) {
-              setCards(parseCards(d.text)); setLoading(false); return;
-            }
-          } catch(e) {}
+      try {
+      var lv = localStorage.getItem(cacheKey);
+      if (lv) {
+        var ld = JSON.parse(lv);
+        if (Date.now() - ld.ts < 24*60*60*1000 && ld.text) {
+          setCards(parseCards(ld.text)); setLoading(false); return;
         }
-        callAPI();
-      }).catch(function() { callAPI(); });
+      }
+      callAPI();
+    } catch(e) { callAPI(); }
     } catch(e) { callAPI(); }
   }
 
@@ -1172,7 +1167,7 @@ function Lesson(props) {
         {phase === "quiz" && (
           <div>
             <h2 style={{ fontSize:22, fontWeight:700, marginBottom:6 }}>{lesson.tool + " Sinavi"}</h2>
-            <p style={{ color:"#555577", fontSize:12, marginBottom:28 }}>{"5 soru - Her dogru cevap +" + xpFor(1) + " XP"}</p>
+            <p style={{ color:"#555577", fontSize:12, marginBottom:28 }}>5 soru - Her dogru cevap +" + xpFor(1) + " XP"}</p>
             {quiz.map(function(q, qi) {
               return (
                 <div key={qi} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, padding:20, marginBottom:16 }}>
@@ -1223,7 +1218,7 @@ function Lesson(props) {
 }
 
 // ─── APP ROOT ─────────────────────────────────────────────────────────────────
-function App() {
+export default function App() {
   var [page, setPage] = useState("landing");
   var [user, setUser] = useState(null);
   var [plan, setPlan] = useState(null);
@@ -1242,12 +1237,11 @@ function App() {
       if (parsed) setInviteData(parsed);
     }
     // Kayitli kullanici kontrolu
-    window.storage.get("aica-user").then(function(saved) {
-      if (saved && saved.value) {
-        try { var u = JSON.parse(saved.value); setUser(u); setPage("dashboard"); } catch(e) {}
-      }
-      setBooting(false);
-    }).catch(function() { setBooting(false); });
+    try {
+      var su = localStorage.getItem("aica-user");
+      if (su) { var u = JSON.parse(su); setUser(u); setPage("dashboard"); }
+    } catch(e) {}
+    setBooting(false);
   }, []);
 
   function updateUser(fn) {
@@ -1295,6 +1289,3 @@ function App() {
     </div>
   );
 }
-
-
-export const Route = createFileRoute("/")({ component: App, ssr: false });
