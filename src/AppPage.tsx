@@ -1103,6 +1103,7 @@ function Lesson(props) {
         var text = "";
         if (d.content) for (var j = 0; j < d.content.length; j++) text += d.content[j].text || "";
         if (text) {
+          console.log("API RAW:", text.substring(0, 500));
           try { lsSet(cacheKey, JSON.stringify({ text:text, ts:Date.now() })); } catch(e) {}
           setTimeout(function() { setCards(parseCards(text)); setLoading(false); }, 300);
         } else {
