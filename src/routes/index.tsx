@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { createFileRoute } from "@tanstack/react-router";
-
 import { useState, useEffect, useRef } from "react";
 
 // ─── SSR-SAFE STORAGE ────────────────────────────────────────────────────────
@@ -23,7 +22,7 @@ function lsRemove(key) {
 
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-var PROXY_URL = "https://twicwuxerfjxojlprabu.supabase.co/functions/v1/anthropic-proxy";
+var PROXY_URL = "https://ai-cert-proxy.sema-volkan.workers.dev";
 // Lovable'a yukledikten sonra yukaridaki URL'yi Supabase'den aldiginla degistir
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
@@ -1309,13 +1308,16 @@ function App() {
   var [inviteData, setInviteData] = useState(null);
 
   useEffect(function() {
+    if (typeof window === "undefined") { setBooting(false); return; }
     // Davet linki kontrolu
-    var params = new URLSearchParams(window.location.search);
-    var inviteCode = params.get("invite");
-    if (inviteCode) {
-      var parsed = parseInviteCode(inviteCode);
-      if (parsed) setInviteData(parsed);
-    }
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var inviteCode = params.get("invite");
+      if (inviteCode) {
+        var parsed = parseInviteCode(inviteCode);
+        if (parsed) setInviteData(parsed);
+      }
+    } catch(e) {}
     // Kayitli kullanici kontrolu
     try {
       var su = lsGet("aica-user");
@@ -1369,6 +1371,5 @@ function App() {
     </div>
   );
 }
-
 
 export const Route = createFileRoute("/")({ component: App, ssr: false });
