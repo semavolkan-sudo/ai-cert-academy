@@ -1,5 +1,4 @@
 // @ts-nocheck
-import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 
 // ─── SSR-SAFE STORAGE ────────────────────────────────────────────────────────
@@ -1347,7 +1346,7 @@ function Lesson(props) {
 }
 
 // ─── APP ROOT ─────────────────────────────────────────────────────────────────
-function App() {
+export default function App() {
   var [page, setPage] = useState("landing");
   var [user, setUser] = useState(null);
   var [plan, setPlan] = useState(null);
@@ -1423,4 +1422,3 @@ function App() {
 }
 
 
-export const Route = createFileRoute("/")({ component: App, ssr: false });
