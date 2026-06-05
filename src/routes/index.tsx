@@ -2,6 +2,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 
+export const Route = createFileRoute("/")({ component: App, ssr: false });
+
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 var PROXY_URL = "https://twicwuxerfjxojlprabu.supabase.co/functions/v1/anthropic-proxy";
 // Lovable'a yukledikten sonra yukaridaki URL'yi Supabase'den aldiginla degistir
@@ -99,7 +101,12 @@ var DEFAULT_QUIZ = [
   { q:"En verimli calisma yontemi hangisidir?",               opts:["Tek seferlik uzun soru","Iteratif prompt zinciri","Sablonlari kopyalamak","Baskasinin promptlarini kullanmak"],            ans:1 },
 ];
 
-// ─── STORAGE HELPERS ─────────────────────────────────────────────────────────
+// ─── PAYMENT LINKS ───────────────────────────────────────────────────────────
+var PAYMENT_LINKS = {
+  Starter:  "https://ai-cert-academy.lemonsqueezy.com/checkout/buy/f9a71b5d-1f89-481e-9fc3-8d90cc2783b6",
+  Pro:      "https://ai-cert-academy.lemonsqueezy.com/checkout/buy/1e6783f3-22a7-449c-8946-6c43d5c5e4b7",
+  Business: "https://ai-cert-academy.lemonsqueezy.com/checkout/buy/e1487643-af1b-414f-b79b-75d38cc5ff9b",
+};
 function saveUser(user) {
   try { localStorage.setItem("aica-user", JSON.stringify(user)); } catch(e) {}
 }
@@ -438,7 +445,7 @@ function Landing(props) {
                       return <div key={f} style={{ display:"flex", gap:7, alignItems:"center", fontSize:13, color:"#ccccdd" }}><span style={{ color:plan.color }}>v</span>{f}</div>;
                     })}
                   </div>
-                  <button onClick={function() { props.onGo("register", plan); }}
+                  <button onClick={function() { window.open(PAYMENT_LINKS[plan.name], "_blank"); }}
                     style={{ width:"100%", background: plan.popular ? "linear-gradient(135deg,#d4a853,#f0c060)" : "transparent", color: plan.popular ? "#08080f" : plan.color, border:"1px solid "+plan.color, borderRadius:10, padding:"12px 0", fontSize:14, fontWeight:700, cursor:"pointer" }}>
                     {plan.popular ? "Hemen Kayit Ol" : "Sec"}
                   </button>
@@ -1291,6 +1298,3 @@ function App() {
     </div>
   );
 }
-
-
-export const Route = createFileRoute("/")({ component: App, ssr: false });
