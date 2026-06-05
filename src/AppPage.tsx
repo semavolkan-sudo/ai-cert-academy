@@ -1049,22 +1049,6 @@ function Lesson(props) {
     if (result.length === 0) result.push({ icon:"?", title:lesson.tool + " Dersi", body:text, color:GOLD });
     return result;
   }
-    var result = [];
-    var keys = sections.map(function(s) { return s.key; });
-    for (var i = 0; i < sections.length; i++) {
-      var s = sections[i];
-      var nextKeys = keys.slice(i + 1).join("|");
-      var pattern = nextKeys ? s.key + "[:\s]+([\s\S]*?)(?=\n(?:"+nextKeys+")[:\s]|$)" : s.key + "[:\s]+([\s\S]*)";
-      try {
-        var m = text.match(new RegExp(pattern));
-        if (m && m[1] && m[1].trim().length > 20) {
-          result.push({ icon:s.icon, title:s.title, body:m[1].trim(), color:s.color });
-        }
-      } catch(e) {}
-    }
-    if (result.length === 0) result.push({ icon:"?", title:lesson.tool + " Dersi", body:text, color:GOLD });
-    return result;
-  }
 
   function getFallbackCards() {
     return [
