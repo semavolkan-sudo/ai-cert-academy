@@ -1,5 +1,25 @@
 // @ts-nocheck
 import { createFileRoute } from "@tanstack/react-router";
+import { useState, useEffect, useRef } from "react";
+
+// ─── SSR-SAFE STORAGE ────────────────────────────────────────────────────────
+var isClient = typeof window !== "undefined";
+
+function lsGet(key) {
+  if (!isClient) return null;
+  try { return localStorage.getItem(key); } catch(e) { return null; }
+}
+
+function lsSet(key, value) {
+  if (!isClient) return;
+  try { localStorage.setItem(key, value); } catch(e) {}
+}
+
+function lsRemove(key) {
+  if (!isClient) return;
+  try { localStorage.removeItem(key); } catch(e) {}
+}
+
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 var PROXY_URL = "https://twicwuxerfjxojlprabu.supabase.co/functions/v1/anthropic-proxy";
@@ -106,17 +126,17 @@ var PAYMENT_LINKS = {
 };
 function saveUser(user) {
   try {
-    typeof window!=='undefined'&&localStorage.setItem("aica-user", JSON.stringify(user));
+    lsSet("aica-user", JSON.stringify(user));
     if (user.email) addToRegistry(user.email, user);
   } catch(e) {}
 }
 function deleteUser() {
-  try { typeof window!=='undefined'&&localStorage.removeItem("aica-user"); } catch(e) {}
+  try { lsRemove("aica-user"); } catch(e) {}
 }
 
 // ─── USER REGISTRY (email uniqueness + login) ────────────────────────────────
 function getRegistry() {
-  try { var r = (typeof window!=='undefined'?localStorage.getItem("aica-registry"):null); return r ? JSON.parse(r) : {}; } catch(e) { return {}; }
+  try { var r = lsGet("aica-registry"); return r ? JSON.parse(r) : {}; } catch(e) { return {}; }
 }
 function emailExists(email) {
   return !!getRegistry()[email.toLowerCase()];
@@ -125,7 +145,7 @@ function addToRegistry(email, userData) {
   try {
     var reg = getRegistry();
     reg[email.toLowerCase()] = JSON.stringify(userData);
-    typeof window!=='undefined'&&localStorage.setItem("aica-registry", JSON.stringify(reg));
+    lsSet("aica-registry", JSON.stringify(reg));
   } catch(e) {}
 }
 function getUserByEmail(email) {
@@ -142,14 +162,14 @@ function getTeamKey(ownerId) { return "team-" + ownerId; }
 function loadTeam(ownerId) {
   return new Promise(function(resolve) {
     try {
-      var val = (typeof window!=='undefined'?localStorage.getItem(getTeamKey(ownerId)):null);
+      var val = lsGet(getTeamKey(ownerId));
       resolve(val ? JSON.parse(val) : null);
     } catch(e) { resolve(null); }
   });
 }
 
 function saveTeam(ownerId, team) {
-  try { typeof window!=='undefined'&&localStorage.setItem(getTeamKey(ownerId), JSON.stringify(team)); } catch(e) {}
+  try { lsSet(getTeamKey(ownerId), JSON.stringify(team)); } catch(e) {}
 }
 
 function createTeam(owner) {
@@ -646,7 +666,7 @@ function TeamPanel(props) {
     var updatedTeam = Object.assign({}, team, { members: team.members.concat([newMember]) });
     setTeam(updatedTeam);
     saveTeam(user.email, updatedTeam);
-    var link = (typeof window!=='undefined'?window.location.origin:'') + "?invite=" + code;
+    var link = window.location.origin + "?invite=" + code;
     setInviteLink(link);
     setInviteMsg("Davet linki olusturuldu!");
     setInviteEmail("");
@@ -955,7 +975,7 @@ function Lesson(props) {
 
   useEffect(function() {
     try {
-      var cv = (typeof window!=='undefined'?localStorage.getItem(cacheKey):null);
+      var cv = lsGet(cacheKey);
       if (cv) {
         var cd = JSON.parse(cv);
         setCached(Date.now() - cd.ts < 24*60*60*1000);
@@ -1034,7 +1054,7 @@ function Lesson(props) {
         var text = "";
         if (d.content) for (var j = 0; j < d.content.length; j++) text += d.content[j].text || "";
         if (text) {
-          try { typeof window!=='undefined'&&localStorage.setItem(cacheKey, JSON.stringify({ text:text, ts:Date.now() })); } catch(e) {}
+          try { lsSet(cacheKey, JSON.stringify({ text:text, ts:Date.now() })); } catch(e) {}
           setTimeout(function() { setCards(parseCards(text)); setLoading(false); }, 300);
         } else {
           setCards(getFallbackCards()); setLoading(false);
@@ -1046,7 +1066,7 @@ function Lesson(props) {
 
     try {
       try {
-      var lv = (typeof window!=='undefined'?localStorage.getItem(cacheKey):null);
+      var lv = lsGet(cacheKey);
       if (lv) {
         var ld = JSON.parse(lv);
         if (Date.now() - ld.ts < 24*60*60*1000 && ld.text) {
@@ -1274,7 +1294,7 @@ function App() {
 
   useEffect(function() {
     // Davet linki kontrolu
-    var params = new URLSearchParams((typeof window!=='undefined'?window.location.search:''));
+    var params = new URLSearchParams(window.location.search);
     var inviteCode = params.get("invite");
     if (inviteCode) {
       var parsed = parseInviteCode(inviteCode);
@@ -1282,7 +1302,7 @@ function App() {
     }
     // Kayitli kullanici kontrolu
     try {
-      var su = (typeof window!=='undefined'?localStorage.getItem("aica-user"):null);
+      var su = lsGet("aica-user");
       if (su) { var u = JSON.parse(su); setUser(u); setPage("dashboard"); }
     } catch(e) {}
     setBooting(false);
@@ -1333,5 +1353,6 @@ function App() {
     </div>
   );
 }
+
 
 export const Route = createFileRoute("/")({ component: App, ssr: false });
