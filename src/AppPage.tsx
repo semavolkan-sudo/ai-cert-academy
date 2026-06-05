@@ -1101,6 +1101,7 @@ function Lesson(props) {
         var text = "";
         if (d.content) for (var j = 0; j < d.content.length; j++) text += d.content[j].text || "";
         if (text) {
+          console.log("[startLesson] Raw API response text:", text);
           try { lsSet(cacheKey, JSON.stringify({ text:text, ts:Date.now() })); } catch(e) {}
           setTimeout(function() { setCards(parseCards(text)); setLoading(false); }, 300);
         } else {
@@ -1117,6 +1118,7 @@ function Lesson(props) {
       if (lv) {
         var ld = JSON.parse(lv);
         if (Date.now() - ld.ts < 24*60*60*1000 && ld.text) {
+          console.log("[startLesson] Raw cached response text:", ld.text);
           setCards(parseCards(ld.text)); setLoading(false); return;
         }
       }
