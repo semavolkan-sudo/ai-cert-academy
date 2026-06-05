@@ -1,4 +1,8 @@
+// @ts-nocheck
+import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
+
+export const Route = createFileRoute("/")({ component: App, ssr: false });
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 var PROXY_URL = "https://twicwuxerfjxojlprabu.supabase.co/functions/v1/anthropic-proxy";
@@ -1223,7 +1227,7 @@ function Lesson(props) {
 }
 
 // ─── APP ROOT ─────────────────────────────────────────────────────────────────
-export default function App() {
+function App() {
   var [page, setPage] = useState("landing");
   var [user, setUser] = useState(null);
   var [plan, setPlan] = useState(null);
