@@ -81,10 +81,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Deep-tier AI certifications for engineers moving from implementation to innovation. Join 12,000+ certified professionals worldwide." },
       { name: "author", content: "AI Certification Academy" },
       { property: "og:title", content: "AI Certification Academy — Master the Intelligence Age" },
-      { property: "og:description", content: "Deep-tier AI certifications for engineers moving from implementation to innovation." },
+      { property: "og:description", content: "Deep-tier AI certifications for engineers moving from implementation to innovation. Join 12,000+ certified professionals worldwide." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@AICertAcademy" },
+      { name: "twitter:title", content: "AI Certification Academy — Master the Intelligence Age" },
+      { name: "twitter:description", content: "Deep-tier AI certifications for engineers moving from implementation to innovation. Join 12,000+ certified professionals worldwide." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e802c580-e0c2-4085-a5e3-0ca34bc23152/id-preview-7f1e7c96--9fe83c5d-fa85-4495-b33f-d34eb302851b.lovable.app-1780672913967.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e802c580-e0c2-4085-a5e3-0ca34bc23152/id-preview-7f1e7c96--9fe83c5d-fa85-4495-b33f-d34eb302851b.lovable.app-1780672913967.png" },
     ],
     links: [
       {
