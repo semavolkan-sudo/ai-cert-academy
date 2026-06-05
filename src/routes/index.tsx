@@ -1170,7 +1170,7 @@ function Lesson(props) {
         {phase === "quiz" && (
           <div>
             <h2 style={{ fontSize:22, fontWeight:700, marginBottom:6 }}>{lesson.tool + " Sinavi"}</h2>
-            <p style={{ color:"#555577", fontSize:12, marginBottom:28 }}>5 soru - Her dogru cevap +" + xpFor(1) + " XP"}</p>
+            <p style={{ color:"#555577", fontSize:12, marginBottom:28 }}>{"5 soru - Her dogru cevap +" + xpFor(1) + " XP"}</p>
             {quiz.map(function(q, qi) {
               return (
                 <div key={qi} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, padding:20, marginBottom:16 }}>
