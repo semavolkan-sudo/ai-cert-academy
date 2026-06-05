@@ -1128,7 +1128,6 @@ function Lesson(props) {
       });
     }
 
-    try {
       try {
       var lv = lsGet(cacheKey);
       if (lv) {
@@ -1138,7 +1137,6 @@ function Lesson(props) {
         }
       }
       callAPI();
-    } catch(e) { callAPI(); }
     } catch(e) { callAPI(); }
   }
 
