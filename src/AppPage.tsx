@@ -21,7 +21,7 @@ function lsRemove(key) {
 
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-var PROXY_URL = "https://ai-cert-proxy.sema-volkan.workers.dev";
+var PROXY_URL = "https://aicert.sema-volkan.workers.dev";
 // Lovable'a yukledikten sonra yukaridaki URL'yi Supabase'den aldiginla degistir
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
