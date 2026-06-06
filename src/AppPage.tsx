@@ -1092,6 +1092,7 @@ function Lesson(props) {
         setLoadProgress(Math.round(prog));
       }, 500);
 
+      console.log("Starting fetch to proxy...");
       fetch("https://aicert.sema-volkan.workers.dev", {
         method:"POST", headers:{"Content-Type":"application/json"},
         body: JSON.stringify({
