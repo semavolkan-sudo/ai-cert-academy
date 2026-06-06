@@ -324,7 +324,8 @@ function MentorChat(props) {
     if (p.mentorSessions !== 999) setLeft(left - 1);
     var history = msgs.map(function(m) { return { role: m.role === "ai" ? "assistant" : "user", content: m.text }; });
     history.push({ role:"user", content:msg });
-    fetch(PROXY_URL, {
+      console.log("Starting fetch to proxy...");
+      fetch("https://aicert.sema-volkan.workers.dev", {
       method:"POST", headers:{"Content-Type":"application/json"},
       body: JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:800,
         system:"Sen bir AI egitim mentorusun. Ogrenci: "+user.name+". Plan: "+(user.plan?user.plan.name:"")+". Seviye: "+lvl.name+" ("+( user.xp||0)+" XP). Turkce, samimi, motive edici, kisa ve pratik yanitlar ver.",
