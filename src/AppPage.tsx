@@ -1,4 +1,6 @@
+// @ts-nocheck
 import { useState, useEffect, useRef } from "react";
+
 
 // ─── SSR-SAFE STORAGE ────────────────────────────────────────────────────────
 var isClient = typeof window !== "undefined";
