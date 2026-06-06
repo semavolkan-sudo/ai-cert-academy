@@ -324,7 +324,8 @@ function MentorChat(props) {
     if (p.mentorSessions !== 999) setLeft(left - 1);
     var history = msgs.map(function(m) { return { role: m.role === "ai" ? "assistant" : "user", content: m.text }; });
     history.push({ role:"user", content:msg });
-    fetch(PROXY_URL, {
+      console.log("Starting fetch to proxy...");
+      fetch("https://aicert.sema-volkan.workers.dev", {
       method:"POST", headers:{"Content-Type":"application/json"},
       body: JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:800,
         system:"Sen bir AI egitim mentorusun. Ogrenci: "+user.name+". Plan: "+(user.plan?user.plan.name:"")+". Seviye: "+lvl.name+" ("+( user.xp||0)+" XP). Turkce, samimi, motive edici, kisa ve pratik yanitlar ver.",
@@ -1091,13 +1092,14 @@ function Lesson(props) {
         setLoadProgress(Math.round(prog));
       }, 500);
 
-      fetch(PROXY_URL, {
+      console.log("Starting fetch to proxy...");
+      fetch("https://aicert.sema-volkan.workers.dev", {
         method:"POST", headers:{"Content-Type":"application/json"},
         body: JSON.stringify({
           model:"claude-sonnet-4-20250514", max_tokens:8000,
           messages:[{ role:"user", content:"Sen dunyanin en iyi AI egitmenisin. " + lesson.tool + " aracini hic bilmeyen birine ogretiyorsun. Bu kisi dersi bitirince profesyonel seviyede kullanabilmeli.\n\nRASTGELE: " + Math.floor(Math.random()*9999) + " (Her acilista farkli icerik uret)\n\nAsagidaki TUM bolumler icin genis, detayli, gercek hayat ornekli icerik yaz:\n\nNEDIR: " + lesson.tool + " ne yapar, kim gelistirdi, neden onemli, hangi sorunu cozer. 5-6 cumle.\n\nTARIHCE: Nasil ortaya cikti, ne zaman, hangi versiyonlar geldi, bugunki hali ne kazandirdi.\n\nTEMEL_OZELLIK_1: En onemli 1. ozellik - ne yapar, gercek senaryo, neden kritik\n\nTEMEL_OZELLIK_2: En onemli 2. ozellik - ne yapar, gercek senaryo, neden kritik\n\nTEMEL_OZELLIK_3: En onemli 3. ozellik - ne yapar, gercek senaryo, neden kritik\n\nTEMEL_OZELLIK_4: En onemli 4. ozellik - ne yapar, gercek senaryo, neden kritik\n\nTEMEL_OZELLIK_5: En onemli 5. ozellik - ne yapar, gercek senaryo, neden kritik\n\nKULLANIM_1: Ilk adim - ne yapilir, neden bu sirada, dikkat edilmesi gereken\n\nKULLANIM_2: Ikinci adim - ne yapilir, detaylar, ipucu\n\nKULLANIM_3: Ucuncu adim - ne yapilir, detaylar, ipucu\n\nKULLANIM_4: Dorduncu adim - ne yapilir, detaylar, ipucu\n\nKULLANIM_ILERI_1: Gelismis kullanim 1 - teknik detay, ne zaman, ornek\n\nKULLANIM_ILERI_2: Gelismis kullanim 2 - teknik detay, ne zaman, ornek\n\nKULLANIM_ILERI_3: Gelismis kullanim 3 - teknik detay, ne zaman, ornek\n\nKULLANIM_ILERI_4: Gelismis kullanim 4 - teknik detay, ne zaman, ornek\n\nPROMPT_ZAYIF: Yeni baslayanin zayif prompt ornegi ve neden zayif oldugu\n\nPROMPT_GUCLU: Ayni gorev icin guclu prompt ve neden 10 kat daha iyi sonuc verdigini ac\n\nPROMPT_UZMAN: Rol + Bagkam + Gorev + Format + Kisitlar iceren uzman seviye prompt ve analizi\n\nPROMPT_SEKTOR_1: Pazarlama icin spesifik kullanisli prompt ornegi\n\nPROMPT_SEKTOR_2: Yazilim/teknoloji icin spesifik kullanisli prompt ornegi\n\nPROMPT_SEKTOR_3: E-ticaret icin spesifik kullanisli prompt ornegi\n\nENTEGRASYON_1: En guclu 1. entegrasyon - nasil baglenir, is akisini nasil guclendirir\n\nENTEGRASYON_2: En guclu 2. entegrasyon - nasil baglenir, ornek\n\nENTEGRASYON_3: En guclu 3. entegrasyon - nasil baglenir, ornek\n\nIS_MODELI_1: Para kazanma modeli 1 - nasil, kac para, nasil baslanir\n\nIS_MODELI_2: Para kazanma modeli 2 - nasil, kac para, nasil baslanir\n\nIS_MODELI_3: Para kazanma modeli 3 - nasil, kac para, nasil baslanir\n\nIPUCU_1: Gizli teknik 1 - adim adim nasil uygulanir, somut ornek\n\nIPUCU_2: Gizli teknik 2 - neden etkili, nasil uygulanir\n\nIPUCU_3: Gizli teknik 3 - rakiplerden one geciren teknik\n\nIPUCU_4: Gizli teknik 4 - profesyonellerin kullandigi ileri teknik\n\nIPUCU_5: Gizli teknik 5 - verimlilik katlayan ozellik\n\nHATA_1: En yaygin 1. hata - neden yapilir, nasil onlenir, dogru yaklasim\n\nHATA_2: En yaygin 2. hata - neden yapilir, nasil onlenir\n\nHATA_3: En yaygin 3. hata - neden yapilir, nasil onlenir\n\nHATA_4: En yaygin 4. hata - neden yapilir, nasil onlenir\n\nHATA_5: En yaygin 5. hata - neden yapilir, nasil onlenir\n\nKARSILASTIRMA_1: En yakin rakip ile karsilastirma - hangisi ne zaman daha iyi\n\nKARSILASTIRMA_2: Ikinci rakip ile karsilastirma\n\nKARSILASTIRMA_3: Ucuncu rakip ile karsilastirma\n\nGELECEK: Bu aracin gelecegi, 2025-2026 beklentileri, nereye gidiyor\n\nSEKTOR_KULLANIM_1: Finans sektorunde nasil kullanilir - somut ornekler\n\nSEKTOR_KULLANIM_2: Saglik sektorunde nasil kullanilir - somut ornekler\n\nSEKTOR_KULLANIM_3: Egitim sektorunde nasil kullanilir - somut ornekler\n\nSEKTOR_KULLANIM_4: Yaratici endustriler icin kullanim - somut ornekler\n\nOTOMASYON_AKISI: Bu araci merkeze alan tam otomasyon akisi - adim adim kur\n\nVAKA_CALISMASI: Gercek bir sirketin bu araci nasil kullandigi ve somut sonuclari\n\nSERTIFIKA_HAZIRLIK: Uzman seviyede kullanmayi kanitlamak icin bilmen gereken 5 kritik konu\n\nTurkce yaz. Her bolumu minimum 3-4 cumle ile detayli anlat." }]
         })
-      }).then(function(r) { return r.json(); }).then(function(d) {
+      }).then(function(r) { console.log("Fetch response status:", r.status); return r.json(); }).then(function(d) {
         clearInterval(timer);
         setLoadProgress(100);
         var text = "";
