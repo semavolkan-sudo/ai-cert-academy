@@ -441,7 +441,7 @@ function Landing(props) {
             );
           })}
         </div>
-        <button onClick={function() { var el = document.getElementById("pricing"); if (el) el.scrollIntoView({ behavior:"smooth" }); }}
+        <button onClick={function() { props.onGo && props.onGo("auth"); }}
           style={{ background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:12, padding:"16px 44px", fontSize:17, fontWeight:700, cursor:"pointer" }}>
           Hemen Basla
         </button>
