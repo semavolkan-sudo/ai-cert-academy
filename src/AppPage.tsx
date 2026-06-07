@@ -1118,70 +1118,93 @@ function Lesson(props) {
     setLoadProgress(0);
     setLoadError(false);
 
-    function callAPI() {
-      var prog = 0;
-      var timer = setInterval(function() {
-        prog = Math.min(prog + Math.random() * 8, 90);
-        setLoadProgress(Math.round(prog));
-      }, 500);
+    var cacheKey2 = "lesson-v10-" + lesson.tool;
 
-      var lessonPrompt = "Sen bir AI egitim uzmanisin. " + lesson.tool + " araci icin birbirinden farkli, egitici, pratik 10 ders karti uret. Her kart farkli bir konu/beceri ogretmeli. JSON array formatinda sadece kartlari dondur, baska hicbir sey yazma. Her kart su formatta olsun: { \"title\": string, \"content\": string, \"icon\": string (emoji) }. RASTGELE: " + Math.floor(Math.random()*99999);
+    try {
+      var lv = lsGet(cacheKey2);
+      if (lv) {
+        var ld = JSON.parse(lv);
+        if (Date.now() - ld.ts < 24*60*60*1000 && ld.cards && ld.cards.length >= 50) {
+          setCards(normalizeCards(ld.cards));
+          setLoading(false);
+          return;
+        }
+      }
+    } catch(e) {}
+
+    var allCards = [];
+    var totalBatches = 10;
+    var completed = 0;
+
+    var topics = [
+      "Bu araç nedir, ne işe yarar, kimler kullanır — sıfırdan anlat",
+      "Arayüz turu: ilk açtığında ne görürsün, hangi butona basarsın",
+      "İlk 5 dakikada yapman gereken temel ayarlar ve kurulum",
+      "En temel özellik #1 — gerçek hayat örneğiyle adım adım kullanım",
+      "En temel özellik #2 — iş hayatından somut senaryo",
+      "En temel özellik #3 — günlük hayatta nasıl kullanırsın",
+      "Sık yapılan 5 hata ve nasıl kaçınırsın — örneklerle",
+      "Ücretsiz vs ücretli plan farkları — hangisini seçmelisin",
+      "Zaman kazandıran 5 kısayol ve ipucu",
+      "Diğer araçlarla entegrasyon — iş akışına nasıl eklersin"
+    ];
+
+    function fetchBatch(batchIndex) {
+      var topic = topics[batchIndex];
+      var prompt = "Sen deneyimli bir AI eğitmensin. Hiç bilmeyen bir öğrenciye " + lesson.tool + " aracını öğretiyorsun.\n\nBu ders kartı seti konusu: " + topic + "\n\nBu konu hakkında 10 adet ders kartı üret. Her kart:\n- Somut, gerçek hayat örneği içermeli\n- Adım adım açıklama yapmalı\n- Teknik jargondan kaçınmalı, sade Türkçe kullanmalı\n- Birbirinden farklı alt konular işlemeli\n\nSADECE JSON array döndür, başka hiçbir şey yazma:\n[{\"title\": \"kart başlığı\", \"content\": \"detaylı açıklama ve örnek\", \"icon\": \"emoji\"}]\n\nRASTGELE_SEED: " + Math.floor(Math.random()*999999);
 
       fetch("https://ai-proxy-two-pi.vercel.app/api/proxy", {
-        method:"POST", headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 2000, messages: [{ role: "user", content: lessonPrompt }] })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 2000,
+          messages: [{ role: "user", content: prompt }]
+        })
       }).then(function(r) { return r.json(); }).then(function(d) {
-        clearInterval(timer);
-        setLoadProgress(100);
-        var parsed = [];
-        // Direct array response
-        if (Object.prototype.toString.call(d) === "[object Array]") {
-          parsed = normalizeCards(d);
-        } else if (d && Object.prototype.toString.call(d.cards) === "[object Array]") {
-          parsed = normalizeCards(d.cards);
-        } else {
-          // Anthropic-style { content: [{ text }] }
-          var text = "";
-          if (d && d.content && d.content.length) {
-            for (var j = 0; j < d.content.length; j++) text += d.content[j].text || "";
-          } else if (typeof d === "string") {
-            text = d;
-          } else if (d && typeof d.text === "string") {
-            text = d.text;
-          } else if (d && typeof d.result === "string") {
-            text = d.result;
-          }
-          parsed = parseCardsFromText(text);
+        var text = "";
+        if (d && d.content && d.content.length) {
+          for (var j = 0; j < d.content.length; j++) text += d.content[j].text || "";
         }
+        var parsed = parseCardsFromText(text);
         if (parsed.length > 0) {
-          try { lsSet(cacheKey, JSON.stringify({ cards: parsed, ts: Date.now() })); } catch(e) {}
-          setTimeout(function() { setCards(parsed); setLoading(false); }, 300);
-        } else {
-          setCards(getFallbackCards()); setLoading(false);
+          allCards = allCards.concat(parsed);
+        }
+
+        completed++;
+        setLoadProgress(Math.round((completed / totalBatches) * 100));
+
+        if (completed === totalBatches) {
+          if (allCards.length > 0) {
+            try { lsSet(cacheKey2, JSON.stringify({ cards: allCards, ts: Date.now() })); } catch(e) {}
+            setCards(normalizeCards(allCards));
+            setLoading(false);
+          } else {
+            setCards(getFallbackCards());
+            setLoading(false);
+          }
         }
       }).catch(function() {
-        clearInterval(timer); setLoadError(true); setLoading(false);
+        completed++;
+        setLoadProgress(Math.round((completed / totalBatches) * 100));
+
+        if (completed === totalBatches) {
+          if (allCards.length > 0) {
+            setCards(normalizeCards(allCards));
+            setLoading(false);
+          } else {
+            setLoadError(true);
+            setLoading(false);
+          }
+        }
       });
     }
 
-    try {
-      try {
-      var lv = lsGet(cacheKey);
-      if (lv) {
-        var ld = JSON.parse(lv);
-        if (Date.now() - ld.ts < 24*60*60*1000) {
-          if (ld.cards && ld.cards.length) {
-            setCards(normalizeCards(ld.cards)); setLoading(false); return;
-          }
-          if (ld.text) {
-            var fromText = parseCardsFromText(ld.text);
-            if (fromText.length) { setCards(fromText); setLoading(false); return; }
-          }
-        }
-      }
-      callAPI();
-    } catch(e) { callAPI(); }
-    } catch(e) { callAPI(); }
+    for (var b = 0; b < totalBatches; b++) {
+      (function(idx) {
+        setTimeout(function() { fetchBatch(idx); }, idx * 300);
+      })(b);
+    }
   }
 
   function setAnswer(qi, oi) {
