@@ -583,6 +583,126 @@ function Register(props) {
 }
 
 // ─── LOGIN ────────────────────────────────────────────────────────────────────
+function AdminPanel(props) {
+  var [users, setUsers] = useState([]);
+  var [loading, setLoading] = useState(true);
+  var [err, setErr] = useState("");
+
+  useEffect(function() {
+    fetch(USERS_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "list", adminKey: ADMIN_KEY })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var list = Array.isArray(data) ? data : (data && data.users ? data.users : []);
+        setUsers(list || []);
+        setLoading(false);
+      })
+      .catch(function(e) { setErr("Kullanicilar yuklenemedi"); setLoading(false); });
+  }, []);
+
+  function fmt(ts) {
+    if (!ts) return "-";
+    try { var d = new Date(ts); return d.toLocaleDateString("tr-TR") + " " + d.toLocaleTimeString("tr-TR", { hour:"2-digit", minute:"2-digit" }); } catch(e) { return "-"; }
+  }
+
+  function planName(u) {
+    if (u && u.plan && u.plan.name) return u.plan.name;
+    if (u && typeof u.plan === "string") return u.plan;
+    return "Starter";
+  }
+
+  function planColor(name) {
+    if (name === "Pro") return "#d4a853";
+    if (name === "Business") return "#10a37f";
+    return "#6366f1";
+  }
+
+  var total = users.length;
+  var proCount = users.filter(function(u) { var p = planName(u); return p === "Pro" || p === "Business"; }).length;
+  var todayStart = new Date(); todayStart.setHours(0,0,0,0);
+  var todayCount = users.filter(function(u) {
+    var t = u.createdAt || u.registeredAt || u.created_at || 0;
+    return t && t >= todayStart.getTime();
+  }).length;
+
+  var summary = [
+    { label:"Toplam Uye", val: total, color: GOLD },
+    { label:"Pro / Business", val: proCount, color: "#10a37f" },
+    { label:"Bugun Kayit", val: todayCount, color: "#6366f1" },
+  ];
+
+  return (
+    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:"sans-serif", padding:24 }}>
+      <div style={{ maxWidth:1100, margin:"0 auto" }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24 }}>
+          <div>
+            <div style={{ fontSize:13, color:"#888899" }}>Yonetim Paneli</div>
+            <div style={{ fontSize:24, fontWeight:800, color:GOLD }}>Admin Dashboard</div>
+          </div>
+          <button onClick={props.onLogout} style={{ background:"rgba(255,255,255,0.05)", color:"#fff", border:"1px solid "+CARD_BORDER, borderRadius:10, padding:"10px 16px", fontSize:13, cursor:"pointer" }}>Cikis</button>
+        </div>
+
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))", gap:14, marginBottom:24 }}>
+          {summary.map(function(s) {
+            return (
+              <div key={s.label} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, padding:18 }}>
+                <div style={{ fontSize:12, color:"#888899", marginBottom:6 }}>{s.label}</div>
+                <div style={{ fontSize:26, fontWeight:800, color:s.color }}>{s.val}</div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, overflow:"hidden" }}>
+          {loading ? (
+            <div style={{ padding:40, textAlign:"center", color:"#888899" }}>Yukleniyor...</div>
+          ) : err ? (
+            <div style={{ padding:40, textAlign:"center", color:"#ef4444" }}>{err}</div>
+          ) : users.length === 0 ? (
+            <div style={{ padding:40, textAlign:"center", color:"#888899" }}>Henuz kayitli kullanici yok</div>
+          ) : (
+            <div style={{ overflowX:"auto" }}>
+              <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
+                <thead>
+                  <tr style={{ background:"rgba(255,255,255,0.03)", textAlign:"left" }}>
+                    <th style={{ padding:"12px 14px", color:"#888899", fontWeight:600 }}>Ad</th>
+                    <th style={{ padding:"12px 14px", color:"#888899", fontWeight:600 }}>Email</th>
+                    <th style={{ padding:"12px 14px", color:"#888899", fontWeight:600 }}>Plan</th>
+                    <th style={{ padding:"12px 14px", color:"#888899", fontWeight:600 }}>XP</th>
+                    <th style={{ padding:"12px 14px", color:"#888899", fontWeight:600 }}>Kayit</th>
+                    <th style={{ padding:"12px 14px", color:"#888899", fontWeight:600 }}>Son Gorulme</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map(function(u, i) {
+                    var pn = planName(u);
+                    var pc = planColor(pn);
+                    return (
+                      <tr key={(u.email || "") + i} style={{ borderTop:"1px solid "+CARD_BORDER }}>
+                        <td style={{ padding:"12px 14px", color:"#fff" }}>{u.name || u.fullName || "-"}</td>
+                        <td style={{ padding:"12px 14px", color:"#bbbbcc" }}>{u.email || "-"}</td>
+                        <td style={{ padding:"12px 14px" }}>
+                          <span style={{ background:pc+"22", color:pc, border:"1px solid "+pc+"55", borderRadius:8, padding:"3px 10px", fontSize:11, fontWeight:700 }}>{pn}</span>
+                        </td>
+                        <td style={{ padding:"12px 14px", color:"#fff", fontWeight:600 }}>{u.xp || 0}</td>
+                        <td style={{ padding:"12px 14px", color:"#888899" }}>{fmt(u.createdAt || u.registeredAt || u.created_at)}</td>
+                        <td style={{ padding:"12px 14px", color:"#888899" }}>{fmt(u.lastSeen || u.lastSeenAt || u.updatedAt)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Login(props) {
   var [email, setEmail] = useState("");
   var [pass, setPass] = useState("");
