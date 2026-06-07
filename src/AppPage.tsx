@@ -1552,6 +1552,135 @@ function Lesson(props) {
 }
 
 // ─── APP ROOT ─────────────────────────────────────────────────────────────────
+function Auth(props) {
+  var [tab, setTab] = useState("login");
+  var [name, setName] = useState("");
+  var [email, setEmail] = useState("");
+  var [pass, setPass] = useState("");
+  var [err, setErr] = useState("");
+  var [loading, setLoading] = useState(false);
+  var [showAdmin, setShowAdmin] = useState(false);
+
+  function submit() {
+    setErr("");
+    if (!email || !pass) { setErr("Tum alanlari doldurun"); return; }
+    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) { setShowAdmin(true); return; }
+    if (pass.length < 6) { setErr("Sifre en az 6 karakter"); return; }
+    if (tab === "register") {
+      if (!name) { setErr("Ad Soyad gerekli"); return; }
+      if (email.indexOf("@") < 0) { setErr("Gecerli email girin"); return; }
+      if (emailExists(email)) { setErr("Bu email zaten kayitli. Giris Yap'a gec."); return; }
+      setLoading(true);
+      setTimeout(function() {
+        setLoading(false);
+        var userData = {
+          name: name, email: email,
+          plan: null,
+          progress: {}, scores: {}, xp: 0, streak: 0,
+          createdAt: Date.now(),
+        };
+        addToRegistry(email, userData);
+        props.onRegister(userData);
+      }, 800);
+    } else {
+      setLoading(true);
+      setTimeout(function() {
+        setLoading(false);
+        var existing = getUserByEmail(email);
+        if (!existing) { setErr("Bu email ile kayitli hesap yok. Kayit Ol sekmesini kullan."); return; }
+        props.onLogin(existing);
+      }, 600);
+    }
+  }
+
+  if (showAdmin) {
+    return <AdminPanel onLogout={function() { setShowAdmin(false); setEmail(""); setPass(""); }} />;
+  }
+
+  function tabBtn(id, label) {
+    var active = tab === id;
+    return (
+      <button onClick={function() { setTab(id); setErr(""); }}
+        style={{ flex:1, background: active ? "rgba(212,168,83,0.15)" : "transparent", color: active ? GOLD : "#888899", border:"none", borderBottom: active ? "2px solid "+GOLD : "2px solid transparent", padding:"12px 0", fontSize:14, fontWeight:700, cursor:"pointer" }}>
+        {label}
+      </button>
+    );
+  }
+
+  return (
+    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:"sans-serif", display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+      <div style={{ width:"100%", maxWidth:420 }}>
+        <div style={{ textAlign:"center", marginBottom:28 }}>
+          <div style={{ fontSize:40, fontWeight:800, color:GOLD }}>AI</div>
+          <div style={{ fontSize:17, fontWeight:600 }}>Certification Academy</div>
+        </div>
+        <div style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:16, overflow:"hidden" }}>
+          <div style={{ display:"flex" }}>
+            {tabBtn("login", "Giris Yap")}
+            {tabBtn("register", "Kayit Ol")}
+          </div>
+          <div style={{ padding:28 }}>
+            {tab === "register" && (
+              <div style={{ marginBottom:14 }}>
+                <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Ad Soyad</label>
+                <input type="text" value={name} onChange={function(e) { setName(e.target.value); }}
+                  style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box" }} />
+              </div>
+            )}
+            <div style={{ marginBottom:14 }}>
+              <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Email</label>
+              <input type="email" value={email} onChange={function(e) { setEmail(e.target.value); }}
+                style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box" }} />
+            </div>
+            <div style={{ marginBottom:14 }}>
+              <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Sifre</label>
+              <input type="password" value={pass} onChange={function(e) { setPass(e.target.value); }} onKeyDown={function(e) { if (e.key === "Enter") submit(); }}
+                style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box" }} />
+            </div>
+            {err && <div style={{ color:"#ef4444", fontSize:12, marginBottom:12 }}>{err}</div>}
+            <button onClick={submit} disabled={loading}
+              style={{ width:"100%", background: loading ? "#444" : "linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"13px 0", fontSize:15, fontWeight:700, cursor: loading ? "not-allowed" : "pointer" }}>
+              {loading ? "Lutfen bekleyin..." : (tab === "register" ? "Kayit Ol" : "Giris Yap")}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PlanSelect(props) {
+  return (
+    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:"sans-serif", padding:"60px 20px" }}>
+      <div style={{ maxWidth:960, margin:"0 auto" }}>
+        <h2 style={{ textAlign:"center", fontSize:28, fontWeight:700, marginBottom:12 }}>Planini Sec</h2>
+        <p style={{ textAlign:"center", color:"#666688", marginBottom:40, fontSize:13 }}>Hedefine uygun plani sec ve bugun basla</p>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))", gap:20 }}>
+          {PLANS.map(function(plan) {
+            return (
+              <div key={plan.name} style={{ background: plan.popular ? "rgba(212,168,83,0.08)" : CARD_BG, border:"1px solid "+(plan.popular?plan.color:CARD_BORDER), borderRadius:16, padding:28, position:"relative" }}>
+                {plan.popular && <div style={{ position:"absolute", top:-11, left:"50%", transform:"translateX(-50%)", background:GOLD, color:"#08080f", fontSize:11, fontWeight:700, padding:"3px 14px", borderRadius:100 }}>EN POPULER</div>}
+                <div style={{ fontSize:18, fontWeight:700, marginBottom:6 }}>{plan.name}</div>
+                <div style={{ fontSize:40, fontWeight:800, color:plan.color, fontFamily:"monospace" }}>{"$"+plan.price}</div>
+                <div style={{ color:"#555577", fontSize:12, marginBottom:20 }}>/ay</div>
+                <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:24 }}>
+                  {plan.features.map(function(f) {
+                    return <div key={f} style={{ display:"flex", gap:7, alignItems:"center", fontSize:13, color:"#ccccdd" }}><span style={{ color:plan.color }}>v</span>{f}</div>;
+                  })}
+                </div>
+                <button onClick={function() { props.onPick(plan); }}
+                  style={{ width:"100%", background: plan.popular ? "linear-gradient(135deg,#d4a853,#f0c060)" : "transparent", color: plan.popular ? "#08080f" : plan.color, border:"1px solid "+plan.color, borderRadius:10, padding:"12px 0", fontSize:14, fontWeight:700, cursor:"pointer" }}>
+                  Sec
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   var [page, setPage] = useState("landing");
   var [user, setUser] = useState(null);
