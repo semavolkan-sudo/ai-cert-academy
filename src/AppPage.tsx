@@ -960,7 +960,7 @@ function Dashboard(props) {
 // ─── LESSON ──────────────────────────────────────────────────────────────────
 function Lesson(props) {
   var lesson = props.lesson;
-  var cacheKey = "lesson-v6-" + lesson.day;
+  var cacheKey = "lesson-v7-" + lesson.tool;
   var [phase, setPhase] = useState("intro");
   var [loading, setLoading] = useState(false);
   var [loadProgress, setLoadProgress] = useState(0);
@@ -982,6 +982,40 @@ function Lesson(props) {
       } else { setCached(false); }
     } catch(e) { setCached(false); }
   }, [cacheKey]);
+
+  function normalizeCards(arr) {
+    var out = [];
+    if (!arr || !arr.length) return out;
+    var palette = ["#d4a853","#10a37f","#8b5cf6","#4285f4","#ef4444","#f59e0b","#0891b2","#ec4899","#7c3aed","#059669"];
+    for (var i = 0; i < arr.length; i++) {
+      var c = arr[i] || {};
+      out.push({
+        icon: c.icon || "*",
+        title: c.title || (lesson.tool + " - Kart " + (i+1)),
+        body: c.content || c.body || "",
+        color: palette[i % palette.length]
+      });
+    }
+    return out;
+  }
+
+  function parseCardsFromText(text) {
+    if (!text) return [];
+    var t = String(text).trim();
+    // Strip markdown code fences if present
+    t = t.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/,"").trim();
+    // Try to locate JSON array
+    var start = t.indexOf("[");
+    var end = t.lastIndexOf("]");
+    if (start !== -1 && end !== -1 && end > start) {
+      t = t.slice(start, end + 1);
+    }
+    try {
+      var parsed = JSON.parse(t);
+      if (Object.prototype.toString.call(parsed) === "[object Array]") return normalizeCards(parsed);
+    } catch(e) {}
+    return [];
+  }
 
   function parseCards(text) {
     var sections = [
