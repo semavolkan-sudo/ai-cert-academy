@@ -588,9 +588,15 @@ function Login(props) {
   var [pass, setPass] = useState("");
   var [err, setErr] = useState("");
   var [loading, setLoading] = useState(false);
+  var [showAdmin, setShowAdmin] = useState(false);
 
   function submit() {
     if (!email || !pass) { setErr("Tum alanlari doldurun"); return; }
+    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+      setErr("");
+      setShowAdmin(true);
+      return;
+    }
     if (pass.length < 6) { setErr("Sifre en az 6 karakter"); return; }
     setLoading(true);
     setTimeout(function() {
@@ -608,6 +614,10 @@ function Login(props) {
       saveUser(existing);
       props.onDone(existing);
     }, 1000);
+  }
+
+  if (showAdmin) {
+    return <AdminPanel onLogout={function() { setShowAdmin(false); setEmail(""); setPass(""); }} />;
   }
 
   return (
