@@ -1746,9 +1746,17 @@ export default function App() {
     <div>
       {xpToast && <XPToast xp={xpToast} onDone={function() { setXpToast(null); }} />}
       {mentor && user && <MentorChat user={user} onClose={function() { setMentor(false); }} />}
-      {page === "landing" && <Landing onGo={function(target, p) { if (target === "register") { setPlan(p); setPage("register"); } }} />}
-      {page === "register" && <Register plan={plan} inviteData={inviteData} onDone={handleRegDone} onLogin={function() { setPage("login"); }} />}
-      {page === "login" && <Login onRegister={function() { setPage("register"); }} onDone={function(u) { setUser(u); saveUser(u); setPage("dashboard"); }} />}
+      {page === "landing" && <Landing onGo={function(target) { if (target === "auth") setPage("auth"); }} />}
+      {page === "auth" && <Auth
+        onRegister={function(u) { setUser(u); saveUser(u); setPage("planselect"); }}
+        onLogin={function(u) { setUser(u); saveUser(u); setPage(u && u.plan ? "dashboard" : "planselect"); }}
+      />}
+      {page === "planselect" && <PlanSelect onPick={function(p) {
+        setPlan(p);
+        updateUser(function(prev) { return Object.assign({}, prev, { plan: p }); });
+        try { window.open(PAYMENT_LINKS[p.name], "_blank"); } catch(e) {}
+        setPage(user && user.profile ? "dashboard" : "onboarding");
+      }} />}
       {page === "onboarding" && <Onboarding onDone={handleOnbDone} />}
       {page === "dashboard" && <Dashboard user={user} onLesson={handleLessonStart} onLogout={handleLogout} onMentor={function() { setMentor(true); }} />}
       {page === "lesson" && <Lesson lesson={lesson} user={user} onDone={handleLessonDone} onBack={function() { setPage("dashboard"); }} />}
