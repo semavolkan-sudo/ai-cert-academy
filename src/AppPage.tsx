@@ -24,6 +24,10 @@ function lsRemove(key) {
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 var PROXY_URL = "https://ai-proxy-two-pi.vercel.app/api/proxy";
 // Lovable'a yukledikten sonra yukaridaki URL'yi Supabase'den aldiginla degistir
+var USERS_API = "https://ai-proxy-two-pi.vercel.app/api/users";
+var ADMIN_EMAIL = "admin@aicert.com";
+var ADMIN_PASS = "aicert-admin-2024";
+var ADMIN_KEY = "aicert-admin-2024";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 var BG = "#08080f";
@@ -128,6 +132,13 @@ function saveUser(user) {
   try {
     lsSet("aica-user", JSON.stringify(user));
     if (user.email) addToRegistry(user.email, user);
+    try {
+      fetch(USERS_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "register", user: user })
+      }).catch(function() {});
+    } catch(e) {}
   } catch(e) {}
 }
 function deleteUser() {
