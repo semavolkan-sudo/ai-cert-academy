@@ -1129,7 +1129,7 @@ function Lesson(props) {
 
       fetch("https://ai-proxy-two-pi.vercel.app/api/proxy", {
         method:"POST", headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({ tool_name: lesson.tool, prompt: lessonPrompt })
+        body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 2000, messages: [{ role: "user", content: lessonPrompt }] })
       }).then(function(r) { return r.json(); }).then(function(d) {
         clearInterval(timer);
         setLoadProgress(100);
