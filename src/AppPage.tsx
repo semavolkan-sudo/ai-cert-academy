@@ -585,8 +585,9 @@ function Register(props) {
 // ─── LOGIN ────────────────────────────────────────────────────────────────────
 function AdminPanel(props) {
   var [users, setUsers] = useState([]);
+  var [orders, setOrders] = useState([]);
   var [loading, setLoading] = useState(true);
-  var [err, setErr] = useState("");
+  var [tab, setTab] = useState("users");
 
   useEffect(function() {
     fetch(USERS_API, {
@@ -594,109 +595,159 @@ function AdminPanel(props) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "list", adminKey: ADMIN_KEY })
     })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        var list = Array.isArray(data) ? data : (data && data.users ? data.users : []);
-        setUsers(list || []);
-        setLoading(false);
-      })
-      .catch(function(e) { setErr("Kullanicilar yuklenemedi"); setLoading(false); });
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var list = Array.isArray(data) ? data : (data && data.users ? data.users : []);
+      setUsers(list || []);
+      setLoading(false);
+    })
+    .catch(function() { setLoading(false); });
   }, []);
 
   function fmt(ts) {
     if (!ts) return "-";
-    try { var d = new Date(ts); return d.toLocaleDateString("tr-TR") + " " + d.toLocaleTimeString("tr-TR", { hour:"2-digit", minute:"2-digit" }); } catch(e) { return "-"; }
+    try {
+      var d = new Date(ts);
+      if (isNaN(d.getTime())) return "-";
+      return d.toLocaleDateString("tr-TR") + " " + d.toLocaleTimeString("tr-TR", { hour:"2-digit", minute:"2-digit" });
+    } catch(e) { return "-"; }
   }
 
   function planName(u) {
-    if (u && u.plan && u.plan.name) return u.plan.name;
-    if (u && typeof u.plan === "string") return u.plan;
+    if (!u || !u.plan) return "Starter";
+    if (typeof u.plan === "string") return u.plan;
+    if (u.plan.name) return u.plan.name;
     return "Starter";
   }
 
   function planColor(name) {
-    if (name === "Pro") return "#d4a853";
     if (name === "Business") return "#10a37f";
+    if (name === "Pro") return "#d4a853";
     return "#6366f1";
   }
 
   var total = users.length;
-  var proCount = users.filter(function(u) { var p = planName(u); return p === "Pro" || p === "Business"; }).length;
+  var proCount = users.filter(function(u) { return planName(u) === "Pro"; }).length;
+  var bizCount = users.filter(function(u) { return planName(u) === "Business"; }).length;
   var todayStart = new Date(); todayStart.setHours(0,0,0,0);
   var todayCount = users.filter(function(u) {
-    var t = u.createdAt || u.registeredAt || u.created_at || 0;
-    return t && t >= todayStart.getTime();
+    var t = u.created_at || u.createdAt || u.registeredAt;
+    if (!t) return false;
+    return new Date(t).getTime() >= todayStart.getTime();
   }).length;
+
+  var totalXP = users.reduce(function(acc, u) { return acc + (u.xp || 0); }, 0);
 
   var summary = [
     { label:"Toplam Uye", val: total, color: GOLD },
-    { label:"Pro / Business", val: proCount, color: "#10a37f" },
+    { label:"Pro", val: proCount, color: "#d4a853" },
+    { label:"Business", val: bizCount, color: "#10a37f" },
     { label:"Bugun Kayit", val: todayCount, color: "#6366f1" },
+    { label:"Toplam XP", val: totalXP, color: "#ec4899" },
   ];
 
   return (
     <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:"sans-serif", padding:24 }}>
-      <div style={{ maxWidth:1100, margin:"0 auto" }}>
+      <div style={{ maxWidth:1200, margin:"0 auto" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24 }}>
           <div>
             <div style={{ fontSize:13, color:"#888899" }}>Yonetim Paneli</div>
-            <div style={{ fontSize:24, fontWeight:800, color:GOLD }}>Admin Dashboard</div>
+            <div style={{ fontSize:28, fontWeight:800, color:GOLD }}>Admin Dashboard</div>
           </div>
-          <button onClick={props.onLogout} style={{ background:"rgba(255,255,255,0.05)", color:"#fff", border:"1px solid "+CARD_BORDER, borderRadius:10, padding:"10px 16px", fontSize:13, cursor:"pointer" }}>Cikis</button>
+          <button onClick={props.onLogout} style={{ background:"rgba(239,68,68,0.1)", color:"#ef4444", border:"1px solid rgba(239,68,68,0.3)", borderRadius:10, padding:"10px 20px", fontSize:13, cursor:"pointer", fontWeight:600 }}>Cikis Yap</button>
         </div>
 
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))", gap:14, marginBottom:24 }}>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))", gap:12, marginBottom:24 }}>
           {summary.map(function(s) {
             return (
-              <div key={s.label} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, padding:18 }}>
-                <div style={{ fontSize:12, color:"#888899", marginBottom:6 }}>{s.label}</div>
-                <div style={{ fontSize:26, fontWeight:800, color:s.color }}>{s.val}</div>
+              <div key={s.label} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, padding:"16px 20px" }}>
+                <div style={{ fontSize:11, color:"#888899", marginBottom:8, textTransform:"uppercase", letterSpacing:1 }}>{s.label}</div>
+                <div style={{ fontSize:30, fontWeight:800, color:s.color }}>{s.val}</div>
               </div>
+            );
+          })}
+        </div>
+
+        <div style={{ display:"flex", gap:8, marginBottom:16 }}>
+          {["users","plans"].map(function(t) {
+            return (
+              <button key={t} onClick={function() { setTab(t); }}
+                style={{ background: tab===t ? GOLD : "transparent", color: tab===t ? "#08080f" : "#888899", border:"1px solid "+(tab===t ? GOLD : CARD_BORDER), borderRadius:8, padding:"8px 18px", fontSize:13, fontWeight:600, cursor:"pointer" }}>
+                {t === "users" ? "Kullanicilar" : "Plan Dagilimi"}
+              </button>
             );
           })}
         </div>
 
         <div style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, overflow:"hidden" }}>
           {loading ? (
-            <div style={{ padding:40, textAlign:"center", color:"#888899" }}>Yukleniyor...</div>
-          ) : err ? (
-            <div style={{ padding:40, textAlign:"center", color:"#ef4444" }}>{err}</div>
+            <div style={{ padding:60, textAlign:"center", color:"#888899" }}>Yukleniyor...</div>
           ) : users.length === 0 ? (
-            <div style={{ padding:40, textAlign:"center", color:"#888899" }}>Henuz kayitli kullanici yok</div>
-          ) : (
+            <div style={{ padding:60, textAlign:"center", color:"#888899" }}>Henuz kayitli kullanici yok</div>
+          ) : tab === "users" ? (
             <div style={{ overflowX:"auto" }}>
               <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
                 <thead>
-                  <tr style={{ background:"rgba(255,255,255,0.03)", textAlign:"left" }}>
-                    <th style={{ padding:"12px 14px", color:"#888899", fontWeight:600 }}>Ad</th>
-                    <th style={{ padding:"12px 14px", color:"#888899", fontWeight:600 }}>Email</th>
-                    <th style={{ padding:"12px 14px", color:"#888899", fontWeight:600 }}>Plan</th>
-                    <th style={{ padding:"12px 14px", color:"#888899", fontWeight:600 }}>XP</th>
-                    <th style={{ padding:"12px 14px", color:"#888899", fontWeight:600 }}>Kayit</th>
-                    <th style={{ padding:"12px 14px", color:"#888899", fontWeight:600 }}>Son Gorulme</th>
+                  <tr style={{ background:"rgba(255,255,255,0.03)" }}>
+                    {["#","Ad Soyad","Email","Plan","XP","İlerleme","Kayit Tarihi","Son Giris"].map(function(h) {
+                      return <th key={h} style={{ padding:"12px 14px", color:"#888899", fontWeight:600, textAlign:"left", whiteSpace:"nowrap" }}>{h}</th>;
+                    })}
                   </tr>
                 </thead>
                 <tbody>
                   {users.map(function(u, i) {
                     var pn = planName(u);
                     var pc = planColor(pn);
+                    var prog = u.progress || {};
+                    var doneCount = Object.keys(prog).filter(function(k) { return prog[k] === true || prog[k] === "done"; }).length;
                     return (
-                      <tr key={(u.email || "") + i} style={{ borderTop:"1px solid "+CARD_BORDER }}>
-                        <td style={{ padding:"12px 14px", color:"#fff" }}>{u.name || u.fullName || "-"}</td>
+                      <tr key={(u.email||"")+i} style={{ borderTop:"1px solid "+CARD_BORDER }}>
+                        <td style={{ padding:"12px 14px", color:"#555577", fontSize:11 }}>{i+1}</td>
+                        <td style={{ padding:"12px 14px", color:"#fff", fontWeight:600 }}>{u.name || "-"}</td>
                         <td style={{ padding:"12px 14px", color:"#bbbbcc" }}>{u.email || "-"}</td>
                         <td style={{ padding:"12px 14px" }}>
-                          <span style={{ background:pc+"22", color:pc, border:"1px solid "+pc+"55", borderRadius:8, padding:"3px 10px", fontSize:11, fontWeight:700 }}>{pn}</span>
+                          <span style={{ background:pc+"22", color:pc, border:"1px solid "+pc+"55", borderRadius:20, padding:"4px 12px", fontSize:11, fontWeight:700 }}>{pn}</span>
                         </td>
-                        <td style={{ padding:"12px 14px", color:"#fff", fontWeight:600 }}>{u.xp || 0}</td>
-                        <td style={{ padding:"12px 14px", color:"#888899" }}>{fmt(u.createdAt || u.registeredAt || u.created_at)}</td>
-                        <td style={{ padding:"12px 14px", color:"#888899" }}>{fmt(u.lastSeen || u.lastSeenAt || u.updatedAt)}</td>
+                        <td style={{ padding:"12px 14px", color:GOLD, fontWeight:700 }}>{u.xp || 0}</td>
+                        <td style={{ padding:"12px 14px" }}>
+                          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                            <div style={{ width:60, height:5, background:"rgba(255,255,255,0.1)", borderRadius:3, overflow:"hidden" }}>
+                              <div style={{ width:Math.min(100,(doneCount/28)*100)+"%", height:"100%", background:GOLD, borderRadius:3 }} />
+                            </div>
+                            <span style={{ fontSize:11, color:"#888899" }}>{doneCount}/28</span>
+                          </div>
+                        </td>
+                        <td style={{ padding:"12px 14px", color:"#888899", whiteSpace:"nowrap" }}>{fmt(u.created_at || u.createdAt || u.registeredAt)}</td>
+                        <td style={{ padding:"12px 14px", color:"#888899", whiteSpace:"nowrap" }}>{fmt(u.last_seen || u.lastSeen || u.updatedAt)}</td>
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
             </div>
+          ) : (
+            <div style={{ padding:24 }}>
+              {["Starter","Pro","Business"].map(function(pn) {
+                var count = users.filter(function(u) { return planName(u) === pn; }).length;
+                var pct = total > 0 ? Math.round((count/total)*100) : 0;
+                var pc = planColor(pn);
+                return (
+                  <div key={pn} style={{ marginBottom:20 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
+                      <span style={{ fontWeight:600, color:pc }}>{pn}</span>
+                      <span style={{ color:"#888899" }}>{count} kullanici ({pct}%)</span>
+                    </div>
+                    <div style={{ height:10, background:"rgba(255,255,255,0.06)", borderRadius:5, overflow:"hidden" }}>
+                      <div style={{ width:pct+"%", height:"100%", background:pc, borderRadius:5, transition:"width 0.6s" }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           )}
+        </div>
+        <div style={{ marginTop:12, textAlign:"right", fontSize:11, color:"#555577" }}>
+          Son guncelleme: {fmt(Date.now())} · {total} kullanici
         </div>
       </div>
     </div>
