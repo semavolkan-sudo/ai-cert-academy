@@ -2429,13 +2429,23 @@ function Lesson(props) {
     setLoadProgress(0);
     setLoadError(false);
 
-    var cacheKey2 = "lesson-v14-" + lesson.tool;
+    var today = new Date().toISOString().split("T")[0];
+    var profileKey = "default";
+    try {
+      var su = lsGet("aica_user");
+      if (su) {
+        var pu = JSON.parse(su);
+        if (pu.profile && pu.profile.profileKey) profileKey = pu.profile.profileKey;
+      }
+    } catch(e) {}
+
+    var cacheKey2 = "lesson-db-" + lesson.tool + "-" + profileKey + "-" + today;
 
     try {
       var lv = lsGet(cacheKey2);
       if (lv) {
         var ld = JSON.parse(lv);
-        if (Date.now() - ld.ts < 24*60*60*1000 && ld.cards && ld.cards.length >= 40) {
+        if (ld.cards && ld.cards.length > 0) {
           setCards(normalizeCards(ld.cards));
           setLoading(false);
           return;
@@ -2443,56 +2453,67 @@ function Lesson(props) {
       }
     } catch(e) {}
 
+    setLoadProgress(30);
+
+    fetch("https://ai-proxy-two-pi.vercel.app/api/get-lesson?tool=" + encodeURIComponent(lesson.tool) + "&profile=" + encodeURIComponent(profileKey))
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      setLoadProgress(100);
+      if (data && data.cards && data.cards.length > 0) {
+        try { lsSet(cacheKey2, JSON.stringify({ cards: data.cards })); } catch(e) {}
+        setCards(normalizeCards(data.cards));
+        setLoading(false);
+      } else {
+        startLessonFallback(profileKey, cacheKey2);
+      }
+    })
+    .catch(function() {
+      startLessonFallback(profileKey, cacheKey2);
+    });
+  }
+
+  function startLessonFallback(profileKey, cacheKey2) {
+    setLoadProgress(0);
     var allCards = [];
-    var totalBatches = 9;
-    var CONCURRENT = 1;
+    var totalBatches = 5;
+    var CONCURRENT = 2;
     var completed = 0;
 
-    var topics = [
-      "Bu araç tam olarak ne işe yarar — sıfırdan başlayan biri için eksiksiz giriş. Aracın hangi sorunu çözdüğünü, kimler için tasarlandığını, rakiplerinden farkını ve gerçek hayatta ne zaman kullanılması gerektiğini somut örneklerle anlat.",
-      "İlk kurulum ve arayüz rehberi — uygulamayı ilk açan biri ne görür, hangi butona basar, menüler ne anlama gelir, ayarlar nerede bulunur. Ekran düzenini ve her alanın işlevini adım adım açıkla.",
-      "Temel kullanım becerileri — en çok kullanılan 3-4 özelliği derinlemesiyle anlat. Her özellik için: Ne işe yarar, nasıl aktif edilir, hangi ayarlar değiştirilebilir, gerçek bir görevde nasıl kullanılır.",
-      "Prompt ve komut yazma sanatı — bu araçtan maksimum verim almak için nasıl sorular sorulur, nasıl komutlar verilir. İyi prompt vs kötü prompt karşılaştırmaları, şablonlar ve hazır komut örnekleri.",
-      "Gerçek iş senaryoları — pazarlama, satış, müşteri hizmetleri, içerik üretimi, proje yönetimi gibi alanlarda bu aracı kullanan gerçekçi senaryolar. Her senaryo için adım adım nasıl yapılır anlat.",
-      "Gelişmiş teknikler ve gizli özellikler — çoğu kullanıcının bilmediği kısayollar, entegrasyonlar, otomasyon seçenekleri, toplu işlem yapma yöntemleri ve güç kullanıcı stratejileri.",
-      "Yaygın hatalar ve çözümleri — kullanıcıların en sık yaptığı 5 hata. Her hata için: Hata nedir, neden olur, nasıl düzeltilir, nasıl önlenir. Öncesi/sonrası örneklerle karşılaştırmalı anlat.",
-      "Verimlilik ve otomasyon — tekrar eden işleri nasıl otomatikleştirirsin, şablonlar nasıl oluşturursun, diğer araçlarla nasıl entegre edersin, günde kaç saat kazanabilirsin.",
-      "Ücretsiz vs ücretli plan derinlemesine karşılaştırma — hangi özellikler ücretsiz, hangisi ücretli, para vermeye değer mi, alternatifler var mı, hangi kullanıcı tipi için hangi plan uygundur.",
-      "Uzman seviyesi ipuçları — bu aracı profesyonel düzeyde kullanan kişilerin stratejileri, sektöre özel kullanım örnekleri ve gerçek başarı hikayeleri.",
-      "Sen hem " + lesson.tool + " aracının uzman eğitmenisin hem de deneyimli bir AI pedagogusun. Öğrencinin bu aracı gerçekten içselleştirmesini ve ustalaşmasını sağlamak için interaktif bir ders tasarlıyorsun.\n\nAşağıdaki 5 farklı konuda birer EĞİTİM ODAKLI ders kartı üret:\n1. Öğrenme yol haritası — bu aracı sıfırdan ustaya giden 30 günlük öğrenme planı\n2. Pratik egzersizler — hemen yapılabilecek 5 alıştırma ve uygulama görevi\n3. Sık sorulan sorular — yeni başlayanların en çok kafasını karıştıran 5 soru ve net cevapları\n4. Öz değerlendirme — 'Bu aracı ne kadar iyi kullanıyorum?' sorusuna cevap verecek 5 kriter\n5. Bir sonraki seviyeye geçiş — bu aracı öğrendikten sonra hangi araçları ve becerileri öğrenmelisin\n\nHer kart EĞİTİM ODAKLI ve MOTİVE EDİCİ olmalı:\n- Öğrenciye doğrudan seslenen, sen dili\n- Somut alıştırma ve görev içeren\n- Başarı kriteri ve ölçüm yöntemi olan\n- Motivasyon artırıcı, cesaret verici ton\n- Gerçek öğrenci başarı hikayesi\n\nSADECE JSON döndür:\n[{\"title\":\"başlık\",\"content\":\"açıklama\\n\\n💡 Gerçek Örnek: örnek\\n\\n📊 Adımlar:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ Pro İpucu: ipucu\",\"icon\":\"emoji\"}]"
+    var profileCtx = "Genel kullanıcı";
+    if (profileKey === "baslangic_kariyer") profileCtx = "Yeni başlayan, kariyerini geliştirmek isteyen profesyonel";
+    else if (profileKey === "baslangic_is") profileCtx = "Yeni başlayan, kendi işini kurmak isteyen girişimci";
+    else if (profileKey === "baslangic_freelance") profileCtx = "Yeni başlayan, freelance gelir elde etmek isteyen";
+    else if (profileKey === "orta_kariyer") profileCtx = "Orta seviye, kariyerinde ilerlemek isteyen profesyonel";
+    else if (profileKey === "orta_is") profileCtx = "Orta seviye, işini büyütmek isteyen girişimci";
+    else if (profileKey === "ileri_kariyer") profileCtx = "İleri seviye, sektöründe AI lideri olmak isteyen uzman";
+
+    var batchPrompts = [
+      "Sen dünyaca tanınan bir AI eğitim uzmanısın. " + lesson.tool + " aracını öğretiyorsun.\nÖğrenci profili: " + profileCtx + "\n\nBu profile ÖZEL 5 ders kartı üret:\n1. Bu araç bu kişi için neden önemli\n2. Bu profile özel kurulum ve ilk adımlar\n3. Bu kişinin işinde kullanabileceği en kritik özellik\n4. Bu profile özel prompt şablonları\n5. Bu kişinin sık yaptığı hatalar\n\nHer kart:\n- 4-5 cümle açıklama\n- Bu profile uygun gerçek senaryo\n- 1️⃣2️⃣3️⃣ adımlar\n- Pro ipucu\n\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"açıklama\\n\\n💡 Gerçek Örnek: örnek\\n\\n📊 Adımlar:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ Pro İpucu: ipucu\",\"icon\":\"emoji\"}]",
+      "Sen fütürist AI danışmanısın. " + lesson.tool + " için içerik üretiyorsun.\nÖğrenci profili: " + profileCtx + "\n\nBu profile ÖZEL 5 kart üret:\n1. Bu kişi için en değerli entegrasyonlar\n2. Bu profile özel otomasyon senaryoları\n3. Bu kişinin sektöründe rekabet avantajı\n4. Gelir ve verimlilik artışı senaryoları\n5. 2025-2030 fırsatları\n\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"açıklama\\n\\n💡 Gerçek Örnek: örnek\\n\\n📊 Adımlar:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ Pro İpucu: ipucu\",\"icon\":\"emoji\"}]",
+      "Sen AI pedagog eğitmensin. " + lesson.tool + " için eğitim kartları üretiyorsun.\nÖğrenci profili: " + profileCtx + "\n\nBu profile ÖZEL 5 eğitim kartı üret:\n1. Bu kişi için kişiselleştirilmiş 30 günlük plan\n2. Bu profile özel pratik egzersizler\n3. Bu seviyedeki soruların cevapları\n4. Bir sonraki seviyeye geçiş yolu\n5. Bu profile özel başarı hikayeleri\n\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"açıklama\\n\\n💡 Gerçek Örnek: örnek\\n\\n📊 Adımlar:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ Pro İpucu: ipucu\",\"icon\":\"emoji\"}]",
+      "Sen AI vizyoner danışmanısın. " + lesson.tool + " için fütüristik kartlar üretiyorsun.\nÖğrenci profili: " + profileCtx + "\n\nBu profile ÖZEL 5 kart üret:\n1. Bu kişi için AGI yolculuğunda fırsatlar\n2. Bu kişinin mesleğinde dönüşüm\n3. Bu profile özel rekabet avantajı\n4. Etik ve sorumluluk rehberi\n5. Bu kişi için başarı hikayeleri\n\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"açıklama\\n\\n💡 Gerçek Örnek: örnek\\n\\n📊 Adımlar:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ Pro İpucu: ipucu\",\"icon\":\"emoji\"}]",
+      "Sen hem " + lesson.tool + " uzmanısın hem AI eğitmenisin.\nÖğrenci profili: " + profileCtx + "\n\nBu profile ÖZEL 5 kart üret:\n1. Bu kişi için en kritik özellikler\n2. Bu profile özel gelişmiş teknikler\n3. Bu kişinin hedefine özel otomasyon\n4. Bu profile özel entegrasyon rehberi\n5. Bu kişi için uzman ipuçları\n\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"açıklama\\n\\n💡 Gerçek Örnek: örnek\\n\\n📊 Adımlar:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ Pro İpucu: ipucu\",\"icon\":\"emoji\"}]"
     ];
 
     function fetchBatch(batchIndex, onDone) {
-      var delay = batchIndex * 2000;
-      setTimeout(function() {
-        var topic = topics[batchIndex % topics.length];
-        var seed = Math.floor(Math.random() * 9999999);
-        var prompt = "Sen dünyaca tanınan bir AI eğitim uzmanısın. " + lesson.tool + " aracını hiç bilmeyen birine öğretiyorsun.\n\nBu ders için konu: " + topic + "\nSeed: " + seed + "\n\nBu konuda 5 adet ÇOK DETAYLI ders kartı üret. Her kart:\n\n- En az 4-5 cümle açıklama (kapsamlı, bilgilendirici)\n- SOMUT ve GERÇEK bir örnek (kurgusal değil, gerçekten yapılabilir)\n- Adım adım talimat (1️⃣2️⃣3️⃣ formatında)\n- Görsel şema (gerektiğinde → akış, ❌✅ karşılaştırma)\n- Hemen uygulanabilir pro ipucu\n\nFormat:\nDetaylı açıklama metni. En az 4 cümle.\n\n💡 Gerçek Örnek: Gerçekçi senaryo.\n\n📊 Nasıl Yapılır:\n1️⃣ İlk adım\n2️⃣ İkinci adım\n3️⃣ Üçüncü adım\n\n⚡ Pro İpucu: Somut ipucu.\n\nSADECE JSON döndür:\n[{\"title\":\"Başlık\",\"content\":\"açıklama\\n\\n💡 Gerçek Örnek: örnek\\n\\n📊 Nasıl Yapılır:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ Pro İpucu: ipucu\",\"icon\":\"emoji\"}]";
-
-        fetch(PROXY_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            model: "claude-haiku-4-5-20251001",
-            max_tokens: 3000,
-            messages: [{ role: "user", content: prompt }]
-          })
+      fetch(PROXY_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 4000,
+          messages: [{ role: "user", content: batchPrompts[batchIndex] }]
         })
-        .then(function(r) { return r.json(); })
-        .then(function(d) {
-          var text = "";
-          if (d && d.content) {
-            for (var j = 0; j < d.content.length; j++) text += d.content[j].text || "";
-          }
-          var parsed = parseCardsFromText(text);
-          if (parsed.length > 0) allCards = allCards.concat(parsed);
-          onDone(true);
-        })
-        .catch(function(err) {
-          console.error("Batch " + batchIndex + " failed:", err);
-          onDone(false);
-        });
-      }, delay);
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        var text = "";
+        if (d && d.content) { for (var j = 0; j < d.content.length; j++) text += d.content[j].text || ""; }
+        var parsed = parseCardsFromText(text);
+        if (parsed.length > 0) allCards = allCards.concat(parsed);
+        onDone(true);
+      })
+      .catch(function() { onDone(false); });
     }
 
     var queue = [];
@@ -2510,7 +2531,7 @@ function Lesson(props) {
             setLoadProgress(Math.round((completed / totalBatches) * 100));
             if (completed === totalBatches) {
               if (allCards.length > 0) {
-                try { lsSet(cacheKey2, JSON.stringify({ cards: allCards, ts: Date.now() })); } catch(e) {}
+                try { lsSet(cacheKey2, JSON.stringify({ cards: allCards })); } catch(e) {}
                 setCards(normalizeCards(allCards));
               } else {
                 setCards(getFallbackCards());
