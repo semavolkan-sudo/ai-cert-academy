@@ -2668,6 +2668,22 @@ function Auth(props) {
   var [codeInput, setCodeInput] = useState("");
   var [pendingUser, setPendingUser] = useState(null);
   var [info, setInfo] = useState("");
+  var [couponCode, setCouponCode] = useState("");
+  var [couponResult, setCouponResult] = useState(null);
+  var [couponLoading, setCouponLoading] = useState(false);
+
+  function applyCoupon(emailVal) {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    fetch(USERS_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "verify-coupon", couponCode: couponCode.trim(), email: emailVal || email })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { setCouponResult(d); setCouponLoading(false); })
+      .catch(function() { setCouponResult({ ok: false, reason: "error" }); setCouponLoading(false); });
+  }
 
   function submit() {
     setErr("");
@@ -2705,6 +2721,11 @@ function Auth(props) {
           plan: null, paid: false,
           progress: {}, scores: {}, xp: 0, streak: 0,
           createdAt: Date.now(),
+          coupon: couponResult && couponResult.ok ? {
+            code: couponResult.code,
+            discount: couponResult.discount,
+            isFree: couponResult.isFree || couponResult.discount === 100
+          } : null,
         };
         // Generate 6-digit verification code (simulated email send)
         var code = String(Math.floor(100000 + Math.random() * 900000));
@@ -2741,6 +2762,21 @@ function Auth(props) {
     setTimeout(function() {
       setLoading(false);
       if (pendingUser) addToRegistry(pendingUser.email, pendingUser);
+      // Bedava erişim kuponu varsa kayıt akışını onRegister'a yönlendir
+      if (pendingUser && pendingUser.coupon && pendingUser.coupon.isFree && props.onRegister) {
+        var freeRegUser = Object.assign({}, pendingUser);
+        setVerifyCode(null);
+        setPendingUser(null);
+        setCodeInput("");
+        setName("");
+        setPass("");
+        setPass2("");
+        setTerms(false);
+        setCouponCode("");
+        setCouponResult(null);
+        props.onRegister(freeRegUser);
+        return;
+      }
       // Reset & switch to login with email prefilled
       var savedEmail = pendingUser ? pendingUser.email : email;
       setVerifyCode(null);
@@ -2869,6 +2905,45 @@ function Auth(props) {
                 <span><span style={{ color:GOLD2 }}>Kullanım Koşulları</span> ve <span style={{ color:GOLD2 }}>Gizlilik Politikasını</span> okudum, kabul ediyorum.</span>
               </label>
             )}
+            {tab === "register" && (
+              <div style={{ marginBottom:16 }}>
+                <div style={{ fontSize:12, color:"#888899", marginBottom:8, fontWeight:600, textTransform:"uppercase", letterSpacing:1 }}>
+                  Kupon Kodun Var Mı? (Opsiyonel)
+                </div>
+                <div style={{ display:"flex", gap:8 }}>
+                  <input
+                    value={couponCode}
+                    onChange={function(e) { setCouponCode(e.target.value.toUpperCase()); setCouponResult(null); }}
+                    placeholder="KUPON KODU"
+                    style={{ flex:1, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:13, outline:"none", fontFamily:"monospace", letterSpacing:2 }}
+                  />
+                  <button
+                    onClick={function(e) { e.preventDefault(); applyCoupon(email); }}
+                    disabled={couponLoading || !couponCode.trim()}
+                    style={{ background: couponLoading || !couponCode.trim() ? "rgba(255,255,255,0.05)" : "linear-gradient(135deg,#c9a84c,#f5cc6a)", color: couponLoading || !couponCode.trim() ? "#555577" : "#08080f", border:"none", borderRadius:10, padding:"12px 18px", fontSize:13, fontWeight:700, cursor: couponLoading || !couponCode.trim() ? "not-allowed" : "pointer", whiteSpace:"nowrap" }}>
+                    {couponLoading ? "..." : "Uygula"}
+                  </button>
+                </div>
+                {couponResult && couponResult.ok && (
+                  <div style={{ marginTop:8, background:"rgba(16,163,127,0.1)", border:"1px solid rgba(16,163,127,0.3)", borderRadius:10, padding:"10px 14px", display:"flex", alignItems:"center", gap:8 }}>
+                    <span style={{ fontSize:16 }}>✅</span>
+                    <span style={{ fontSize:13, color:"#10a37f", fontWeight:600 }}>
+                      {couponResult.isFree || couponResult.discount === 100
+                        ? "Bedava erişim kuponu! Kayıt sonrası otomatik uygulanacak."
+                        : "%" + couponResult.discount + " indirim kuponu uygulandı!"}
+                    </span>
+                  </div>
+                )}
+                {couponResult && !couponResult.ok && (
+                  <div style={{ marginTop:8, background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.2)", borderRadius:10, padding:"10px 14px", display:"flex", alignItems:"center", gap:8 }}>
+                    <span style={{ fontSize:16 }}>❌</span>
+                    <span style={{ fontSize:13, color:"#ef4444" }}>
+                      {couponResult.message || "Geçersiz veya kullanılmış kupon kodu"}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
             {info && <div style={{ color:"#10a37f", fontSize:12, marginBottom:12, padding:"10px 12px", background:"rgba(16,163,127,0.08)", border:"1px solid rgba(16,163,127,0.25)", borderRadius:10 }}>{info}</div>}
             {err && <div style={{ color:"#ef4444", fontSize:12, marginBottom:14, padding:"10px 12px", background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:10 }}>{err}</div>}
             <button onClick={submit} disabled={loading}
@@ -2948,6 +3023,9 @@ function PlanSelectInner(props) {
   var [couponResult, setCouponResult] = useState(null);
   var [couponLoading, setCouponLoading] = useState(false);
 
+  var userCoupon = null;
+  try { var suPC = lsGet("aica-user"); if (suPC) { var puPC = JSON.parse(suPC); userCoupon = puPC.coupon || null; } } catch(e) {}
+
   function applyCoupon() {
     if (!couponCode.trim()) return;
     setCouponLoading(true);
@@ -2977,10 +3055,20 @@ function PlanSelectInner(props) {
                 style={{ background: plan.popular ? "linear-gradient(145deg, rgba(201,168,76,0.12), rgba(124,92,252,0.06))" : "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+(plan.popular?"rgba(201,168,76,0.45)":CARD_BORDER2), borderRadius:24, padding:32, position:"relative", boxShadow: plan.popular ? "0 8px 32px rgba(201,168,76,0.20), inset 0 1px 0 rgba(255,255,255,0.1)" : "0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)", transition:"all 0.2s ease" }}>
                 {plan.popular && <div style={{ position:"absolute", top:-12, left:"50%", transform:"translateX(-50%)", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", fontSize:11, fontWeight:800, padding:"5px 18px", borderRadius:100, letterSpacing:"1px", boxShadow:SHADOW_GOLD, textTransform:"uppercase" }}>En Popüler</div>}
                 <div style={{ fontSize:14, fontWeight:700, marginBottom:8, color:TEXT2, textTransform:"uppercase", letterSpacing:"1.5px" }}>{plan.name}</div>
-                <div style={{ display:"flex", alignItems:"baseline", gap:6, marginBottom:24 }}>
-                  <span style={{ fontSize:48, fontWeight:800, color: plan.popular ? GOLD2 : plan.color, fontFamily:FONT_MONO, letterSpacing:"-0.03em" }}>{"$"+plan.price}</span>
-                  <span style={{ color:TEXT2, fontSize:13, fontFamily:FONT_MONO }}>/ay</span>
-                </div>
+                {userCoupon && !userCoupon.isFree && userCoupon.discount ? (
+                  <div style={{ marginBottom:24 }}>
+                    <div style={{ fontSize:14, color:"#888899", textDecoration:"line-through" }}>${plan.price}/ay</div>
+                    <div style={{ fontSize:36, fontWeight:800, color: plan.popular ? GOLD2 : plan.color, fontFamily:FONT_MONO }}>
+                      ${Math.round(plan.price * (1 - userCoupon.discount/100))}<span style={{ fontSize:14, color:"#888899" }}>/ay</span>
+                    </div>
+                    <div style={{ fontSize:11, color:"#10a37f", fontWeight:600 }}>%{userCoupon.discount} indirim uygulandı</div>
+                  </div>
+                ) : (
+                  <div style={{ display:"flex", alignItems:"baseline", gap:6, marginBottom:24 }}>
+                    <span style={{ fontSize:48, fontWeight:800, color: plan.popular ? GOLD2 : plan.color, fontFamily:FONT_MONO, letterSpacing:"-0.03em" }}>{"$"+plan.price}</span>
+                    <span style={{ color:TEXT2, fontSize:13, fontFamily:FONT_MONO }}>/ay</span>
+                  </div>
+                )}
                 <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:26 }}>
                   {plan.features.map(function(f) {
                     return <div key={f} style={{ display:"flex", gap:10, alignItems:"flex-start", fontSize:13, color:TEXT, lineHeight:1.5 }}><span style={{ color: plan.popular ? GOLD2 : plan.color, fontWeight:800, flexShrink:0 }}>✓</span>{f}</div>;
@@ -3139,7 +3227,18 @@ export default function App() {
       {mentor && user && <MentorChat user={user} onClose={function() { setMentor(false); }} />}
       {page === "landing" && <Landing onGo={function(target) { if (target === "auth") setPage("auth"); }} />}
       {page === "auth" && <Auth
-        onRegister={function(u) { setUser(u); saveUser(u); setPage("planselect"); }}
+        onRegister={function(u) {
+          setUser(u);
+          saveUser(u);
+          if (u && u.coupon && u.coupon.isFree) {
+            var updatedUser = Object.assign({}, u, { plan: PLANS[1], paid: true, couponUsed: u.coupon.code });
+            setUser(updatedUser);
+            saveUser(updatedUser);
+            setPage(updatedUser.profile ? "dashboard" : "onboarding");
+          } else {
+            setPage("planselect");
+          }
+        }}
         onLogin={function(u) {
           setUser(u);
           saveUser(u);
