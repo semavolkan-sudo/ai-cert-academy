@@ -2668,6 +2668,22 @@ function Auth(props) {
   var [codeInput, setCodeInput] = useState("");
   var [pendingUser, setPendingUser] = useState(null);
   var [info, setInfo] = useState("");
+  var [couponCode, setCouponCode] = useState("");
+  var [couponResult, setCouponResult] = useState(null);
+  var [couponLoading, setCouponLoading] = useState(false);
+
+  function applyCoupon(emailVal) {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    fetch(USERS_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "verify-coupon", couponCode: couponCode.trim(), email: emailVal || email })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { setCouponResult(d); setCouponLoading(false); })
+      .catch(function() { setCouponResult({ ok: false, reason: "error" }); setCouponLoading(false); });
+  }
 
   function submit() {
     setErr("");
@@ -2705,6 +2721,11 @@ function Auth(props) {
           plan: null, paid: false,
           progress: {}, scores: {}, xp: 0, streak: 0,
           createdAt: Date.now(),
+          coupon: couponResult && couponResult.ok ? {
+            code: couponResult.code,
+            discount: couponResult.discount,
+            isFree: couponResult.isFree || couponResult.discount === 100
+          } : null,
         };
         // Generate 6-digit verification code (simulated email send)
         var code = String(Math.floor(100000 + Math.random() * 900000));
@@ -2741,6 +2762,21 @@ function Auth(props) {
     setTimeout(function() {
       setLoading(false);
       if (pendingUser) addToRegistry(pendingUser.email, pendingUser);
+      // Bedava erişim kuponu varsa kayıt akışını onRegister'a yönlendir
+      if (pendingUser && pendingUser.coupon && pendingUser.coupon.isFree && props.onRegister) {
+        var freeRegUser = Object.assign({}, pendingUser);
+        setVerifyCode(null);
+        setPendingUser(null);
+        setCodeInput("");
+        setName("");
+        setPass("");
+        setPass2("");
+        setTerms(false);
+        setCouponCode("");
+        setCouponResult(null);
+        props.onRegister(freeRegUser);
+        return;
+      }
       // Reset & switch to login with email prefilled
       var savedEmail = pendingUser ? pendingUser.email : email;
       setVerifyCode(null);
