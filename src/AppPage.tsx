@@ -466,60 +466,73 @@ function Landing(props) {
           Hemen Basla
         </button>
       </div>
-      <div style={{ maxWidth:900, margin:"0 auto", padding:"0 20px 64px" }}>
-        <h2 style={{ textAlign:"center", fontSize:24, fontWeight:700, marginBottom:32 }}>Ogrencilerimiz Ne Diyor?</h2>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))", gap:16 }}>
+      <div style={{ maxWidth:960, margin:"0 auto", padding:"0 20px 72px" }}>
+        <h2 style={{ textAlign:"center", fontSize:28, fontWeight:800, marginBottom:36, color:TEXT, letterSpacing:"-0.02em" }}>Ogrencilerimiz Ne Diyor?</h2>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))", gap:18 }}>
           {reviews.map(function(r, i) {
             return (
-              <div key={i} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:16, padding:24 }}>
-                <div style={{ color:GOLD, fontSize:14, marginBottom:10 }}>{"★★★★★"}</div>
-                <p style={{ color:"#ccccdd", fontSize:13, lineHeight:1.6, marginBottom:14, fontStyle:"italic" }}>{"\"" + r.text + "\""}</p>
-                <div style={{ display:"flex", gap:8, alignItems:"center" }}>
-                  <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(212,168,83,0.2)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, color:GOLD }}>{r.name[0]}</div>
-                  <div><div style={{ fontWeight:600, fontSize:12 }}>{r.name}</div><div style={{ color:"#555577", fontSize:11 }}>{r.role}</div></div>
+              <div key={i}
+                onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.borderColor=CARD_BORDER2; }}
+                onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.borderColor=CARD_BORDER; }}
+                style={{ background:"linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+CARD_BORDER, borderRadius:20, padding:26, transition:"all 0.2s ease", boxShadow:"0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)", fontFamily:FONT }}>
+                <div style={{ color:GOLD2, fontSize:15, marginBottom:12, letterSpacing:"2px" }}>{"★★★★★"}</div>
+                <p style={{ color:TEXT, fontSize:14, lineHeight:1.7, marginBottom:18, fontStyle:"italic" }}>{"\"" + r.text + "\""}</p>
+                <div style={{ display:"flex", gap:10, alignItems:"center" }}>
+                  <div style={{ width:36, height:36, borderRadius:"50%", background:"linear-gradient(135deg, rgba(201,168,76,0.25), rgba(124,92,252,0.20))", border:"1px solid rgba(201,168,76,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, color:GOLD2 }}>{r.name[0]}</div>
+                  <div><div style={{ fontWeight:600, fontSize:13, color:TEXT }}>{r.name}</div><div style={{ color:TEXT2, fontSize:11, fontFamily:FONT_MONO, marginTop:2 }}>{r.role}</div></div>
                 </div>
               </div>
             );
           })}
         </div>
       </div>
-      <div style={{ maxWidth:1060, margin:"0 auto", padding:"0 20px 64px" }}>
-        <h2 style={{ textAlign:"center", fontSize:28, fontWeight:700, marginBottom:10 }}>28 Gunluk Program</h2>
-        <p style={{ textAlign:"center", color:"#666688", marginBottom:36, fontSize:13 }}>Her gun yeni bir AI araci, her gun yeni bir super guc</p>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:12 }}>
+      <div style={{ maxWidth:1060, margin:"0 auto", padding:"0 20px 72px" }}>
+        <h2 style={{ textAlign:"center", fontSize:32, fontWeight:800, marginBottom:10, color:TEXT, letterSpacing:"-0.02em" }}>28 Gunluk Program</h2>
+        <p style={{ textAlign:"center", color:TEXT2, marginBottom:40, fontSize:14, fontFamily:FONT_MONO }}>Her gun yeni bir AI araci, her gun yeni bir super guc</p>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(210px,1fr))", gap:14 }}>
           {COURSES.map(function(c) {
             return (
-              <div key={c.day} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:12, padding:"16px 14px", display:"flex", gap:10, alignItems:"flex-start" }}>
-                <div style={{ fontSize:22, flexShrink:0 }}>{c.icon}</div>
+              <div key={c.day}
+                onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.borderColor=CARD_BORDER2; }}
+                onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.borderColor=CARD_BORDER; }}
+                style={{ background:"linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+CARD_BORDER, borderRadius:14, padding:"16px 16px", display:"flex", gap:12, alignItems:"flex-start", transition:"all 0.2s ease", boxShadow:"inset 0 1px 0 rgba(255,255,255,0.05)", fontFamily:FONT }}>
+                <div style={{ fontSize:26, flexShrink:0 }}>{c.icon}</div>
                 <div>
-                  <div style={{ fontSize:10, color:"#555577", fontFamily:"monospace", marginBottom:2 }}>{"GUN "+c.day}</div>
-                  <div style={{ fontWeight:700, fontSize:13, marginBottom:2 }}>{c.tool}</div>
-                  {c.day > 14 && <div style={{ fontSize:10, color:"#818cf8" }}>Pro+</div>}
+                  <div style={{ fontSize:10, color:GOLD, fontFamily:FONT_MONO, marginBottom:3, fontWeight:700, letterSpacing:"1px" }}>{"GUN " + c.day.toString().padStart(2,"0")}</div>
+                  <div style={{ fontWeight:700, fontSize:13, marginBottom:3, color:TEXT }}>{c.tool}</div>
+                  {c.day > 14 && <div style={{ fontSize:10, color:PURPLE, fontFamily:FONT_MONO, fontWeight:600 }}>Pro+</div>}
                 </div>
               </div>
             );
           })}
         </div>
       </div>
-      <div id="pricing" style={{ background:"rgba(255,255,255,0.02)", borderTop:"1px solid rgba(255,255,255,0.05)", padding:"60px 20px" }}>
-        <div style={{ maxWidth:960, margin:"0 auto" }}>
-          <h2 style={{ textAlign:"center", fontSize:28, fontWeight:700, marginBottom:12 }}>Planini Sec</h2>
-          <p style={{ textAlign:"center", color:"#666688", marginBottom:40, fontSize:13 }}>Hedefine uygun plani sec ve bugun basla</p>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))", gap:20 }}>
+      <div id="pricing" style={{ background:"linear-gradient(180deg, rgba(124,92,252,0.04), rgba(201,168,76,0.04))", borderTop:"1px solid "+CARD_BORDER, padding:"72px 20px" }}>
+        <div style={{ maxWidth:1000, margin:"0 auto" }}>
+          <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planini Sec</h2>
+          <p style={{ textAlign:"center", color:TEXT2, marginBottom:44, fontSize:14, fontFamily:FONT }}>Hedefine uygun plani sec ve bugun basla</p>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:22 }}>
             {PLANS.map(function(plan) {
               return (
-                <div key={plan.name} style={{ background: plan.popular ? "rgba(212,168,83,0.08)" : CARD_BG, border:"1px solid "+(plan.popular?plan.color:CARD_BORDER), borderRadius:16, padding:28, position:"relative" }}>
-                  {plan.popular && <div style={{ position:"absolute", top:-11, left:"50%", transform:"translateX(-50%)", background:GOLD, color:"#08080f", fontSize:11, fontWeight:700, padding:"3px 14px", borderRadius:100 }}>EN POPULER</div>}
-                  <div style={{ fontSize:18, fontWeight:700, marginBottom:6 }}>{plan.name}</div>
-                  <div style={{ fontSize:40, fontWeight:800, color:plan.color, fontFamily:"monospace" }}>{"$"+plan.price}</div>
-                  <div style={{ color:"#555577", fontSize:12, marginBottom:20 }}>/ay</div>
-                  <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:24 }}>
+                <div key={plan.name}
+                  onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-4px)"; }}
+                  onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; }}
+                  style={{ background: plan.popular ? "linear-gradient(145deg, rgba(201,168,76,0.12), rgba(124,92,252,0.06))" : "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+(plan.popular?"rgba(201,168,76,0.45)":CARD_BORDER2), borderRadius:24, padding:32, position:"relative", boxShadow: plan.popular ? "0 8px 32px rgba(201,168,76,0.20), inset 0 1px 0 rgba(255,255,255,0.1)" : "0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)", transition:"all 0.2s ease", fontFamily:FONT }}>
+                  {plan.popular && <div style={{ position:"absolute", top:-12, left:"50%", transform:"translateX(-50%)", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", fontSize:11, fontWeight:800, padding:"5px 18px", borderRadius:100, letterSpacing:"1px", boxShadow:SHADOW_GOLD, textTransform:"uppercase" }}>En Populer</div>}
+                  <div style={{ fontSize:14, fontWeight:700, marginBottom:8, color:TEXT2, textTransform:"uppercase", letterSpacing:"1.5px" }}>{plan.name}</div>
+                  <div style={{ display:"flex", alignItems:"baseline", gap:6, marginBottom:24 }}>
+                    <span style={{ fontSize:48, fontWeight:800, color: plan.popular ? GOLD2 : plan.color, fontFamily:FONT_MONO, letterSpacing:"-0.03em" }}>{"$"+plan.price}</span>
+                    <span style={{ color:TEXT2, fontSize:13, fontFamily:FONT_MONO }}>/ay</span>
+                  </div>
+                  <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:26 }}>
                     {plan.features.map(function(f) {
-                      return <div key={f} style={{ display:"flex", gap:7, alignItems:"center", fontSize:13, color:"#ccccdd" }}><span style={{ color:plan.color }}>v</span>{f}</div>;
+                      return <div key={f} style={{ display:"flex", gap:10, alignItems:"flex-start", fontSize:13, color:TEXT, lineHeight:1.5 }}><span style={{ color: plan.popular ? GOLD2 : plan.color, fontWeight:800, flexShrink:0 }}>✓</span>{f}</div>;
                     })}
                   </div>
                   <button onClick={function() { window.open(PAYMENT_LINKS[plan.name], "_blank"); }}
-                    style={{ width:"100%", background: plan.popular ? "linear-gradient(135deg,#d4a853,#f0c060)" : "transparent", color: plan.popular ? "#08080f" : plan.color, border:"1px solid "+plan.color, borderRadius:10, padding:"12px 0", fontSize:14, fontWeight:700, cursor:"pointer" }}>
+                    onMouseEnter={function(e){ if(plan.popular){ e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; } else { e.currentTarget.style.background="rgba(255,255,255,0.06)"; } }}
+                    onMouseLeave={function(e){ if(plan.popular){ e.currentTarget.style.boxShadow=SHADOW_GOLD; } else { e.currentTarget.style.background="transparent"; } }}
+                    style={{ width:"100%", background: plan.popular ? "linear-gradient(135deg,#c9a84c,#f5cc6a)" : "transparent", color: plan.popular ? "#08080f" : plan.color, border:"1px solid "+(plan.popular?"transparent":plan.color), borderRadius:14, padding:"14px 0", fontSize:14, fontWeight:700, cursor:"pointer", boxShadow: plan.popular ? SHADOW_GOLD : "none", transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
                     {plan.popular ? "Hemen Kayit Ol" : "Sec"}
                   </button>
                 </div>
