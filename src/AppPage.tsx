@@ -2486,6 +2486,22 @@ function Auth(props) {
     setInfo("");
     if (!email || !pass) { setErr("Tüm alanlari doldurun"); return; }
     if (email === ADMIN_EMAIL && pass === ADMIN_PASS) { setShowAdmin(true); return; }
+    // Test kullanıcıları: ödeme atlanır, doğru planla giriş yapılır
+    var emailKey = (email || "").toLowerCase();
+    var testUser = TEST_USERS[emailKey];
+    if (testUser && tab === "login") {
+      if (pass !== testUser.pass) { setErr("Hatalı şifre"); return; }
+      var planObj = PLANS.find(function(p) { return p.name === testUser.plan; }) || PLANS[0];
+      var tu = {
+        name: testUser.name, email: emailKey,
+        plan: planObj, paid: true,
+        progress: {}, scores: {}, xp: 0, streak: 0,
+        createdAt: Date.now(),
+      };
+      addToRegistry(emailKey, tu);
+      props.onLogin(tu);
+      return;
+    }
     if (pass.length < 6) { setErr("Şifre en az 6 karakter"); return; }
     if (tab === "register") {
       if (!name) { setErr("Ad Soyad gerekli"); return; }
@@ -2498,7 +2514,7 @@ function Auth(props) {
         setLoading(false);
         var userData = {
           name: name, email: email,
-          plan: null,
+          plan: null, paid: false,
           progress: {}, scores: {}, xp: 0, streak: 0,
           createdAt: Date.now(),
         };
@@ -2515,6 +2531,9 @@ function Auth(props) {
         setLoading(false);
         var existing = getUserByEmail(email);
         if (!existing) { setErr("Bu email ile kayıtlı hesap yok. Kayıt Ol sekmesini kullan."); return; }
+        if (!existing.paid) {
+          setErr("Ödeme yapılmadan sisteme giriş yapılamaz. Lütfen bir plan seçin.");
+        }
         props.onLogin(existing);
       }, 600);
     }
