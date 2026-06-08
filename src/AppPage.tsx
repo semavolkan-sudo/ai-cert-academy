@@ -2453,6 +2453,8 @@ function Lesson(props) {
       var seed = Math.floor(Math.random() * 9999999);
       var prompt = "Sen dünyaca tanınan bir AI eğitim uzmanısın. " + lesson.tool + " aracını hiç bilmeyen birine öğretiyorsun.\n\nBu ders için konu: " + topic + "\nSeed: " + seed + "\n\nBu konuda 5 adet ÇOK DETAYLI ders kartı üret. Her kart:\n\n- En az 4-5 cümle açıklama (kapsamlı, bilgilendirici)\n- SOMUT ve GERÇEK bir örnek (kurgusal değil, gerçekten yapılabilir)\n- Adım adım talimat (gerektiğinde 1️⃣2️⃣3️⃣ formatında)\n- Görsel şema (gerektiğinde → akış, ❌✅ karşılaştırma)\n- Hemen uygulanabilir pro ipucu\n\nFormat (bu formatı kesinlikle koru):\nDetaylı açıklama metni. En az 4 cümle. Konuyu derinlemesine anlat.\n\n💡 Gerçek Örnek: Gerçekçi ve uygulanabilir bir senaryo. Kimin, nasıl, hangi adımlarla kullandığını anlat.\n\n📊 Nasıl Yapılır:\n1️⃣ İlk adım\n2️⃣ İkinci adım\n3️⃣ Üçüncü adım\n\n⚡ Pro İpucu: Çoğu kullanıcının bilmediği, zaman kazandıran somut ipucu.\n\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"Başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: örnek\\n\\n📊 Nasıl Yapılır:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ Pro İpucu: ipucu\",\"icon\":\"emoji\"}]";
 
+      console.log("Fetching batch " + batchIndex + " topic:", topic.substring(0, 50));
+
       fetch(PROXY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
