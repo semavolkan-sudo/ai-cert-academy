@@ -23,7 +23,7 @@ function lsRemove(key) {
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 var PROXY_URL = "https://ai-proxy-two-pi.vercel.app/api/proxy";
-// Lovable'a yukledikten sonra yukaridaki URL'yi Supabase'den aldiginla degistir
+// Lovable'a yükledikten sonra yukarıdaki URL'yi Supabase'den aldiginla degistir
 var USERS_API = "https://ai-proxy-two-pi.vercel.app/api/users";
 var ADMIN_EMAIL = "admin@aicert.com";
 var ADMIN_PASS = "aicert-admin-2024";
@@ -62,11 +62,11 @@ function getPerms(user) {
 
 var XP_LEVELS = [
   { level: 1, name: "AI Acemi",       xp: 0,    color: "#888899" },
-  { level: 2, name: "AI Ogrenci",     xp: 100,  color: "#6366f1" },
+  { level: 2, name: "AI Öğrenci",     xp: 100,  color: "#6366f1" },
   { level: 3, name: "AI Pratisyen",   xp: 300,  color: "#3b82f6" },
   { level: 4, name: "AI Uzman",       xp: 600,  color: "#10a37f" },
-  { level: 5, name: "AI Ustat",       xp: 1000, color: "#d4a853" },
-  { level: 6, name: "AI Sertifikali", xp: 1500, color: "#ef4444" },
+  { level: 5, name: "AI Üstat",       xp: 1000, color: "#d4a853" },
+  { level: 6, name: "AI Sertifikalı", xp: 1500, color: "#ef4444" },
 ];
 
 function getLvl(xp) {
@@ -148,38 +148,38 @@ function TurkishCharTest(props) {
 
 var PLANS = [
   { name: "Starter",  price: 29,  color: "#6366f1", popular: false,
-    features: ["14 gun erisim (ilk yari)", "Ders icerikleri", "Gunluk quizler", "XP ve Streak sistemi", "Temel sertifika"] },
+    features: ["14 gün erişim (ilk yarı)", "Ders içerikleri", "Günlük quizler", "XP ve Streak sistemi", "Temel sertifika"] },
   { name: "Pro",      price: 79,  color: "#d4a853", popular: true,
-    features: ["28 gun tam erisim", "Tum dersler", "XP ve Streak sistemi", "AI Mentor (4 seans)", "Bonus icerikler", "Premium sertifika"] },
+    features: ["28 gün tam erişim", "Tüm dersler", "XP ve Streak sistemi", "AI Mentor (4 seans)", "Bonus içerikler", "Premium sertifika"] },
   { name: "Business", price: 199, color: "#10a37f", popular: false,
-    features: ["5 kullanici lisansi", "Sinirirsiz AI Mentor", "Ekip yonetim paneli", "Ekip liderboard", "Kurumsal sertifika", "Oncelikli destek"] },
+    features: ["5 kullanıcı lisansı", "Sınırsız AI Mentor", "Ekip yönetim paneli", "Ekip liderboard", "Kurumsal sertifika", "Öncelikli destek"] },
 ];
 
 var COURSES = [
-  { day:1,  tool:"ChatGPT",            icon:"\uD83E\uDD16", color:"#10a37f", desc:"Dunyanin en populer AI asistanini ustaca kullanin" },
+  { day:1,  tool:"ChatGPT",            icon:"\uD83E\uDD16", color:"#10a37f", desc:"Dunyanin en popüler AI asistanini ustaca kullanin" },
   { day:2,  tool:"Claude",             icon:"\uD83E\uDDE0", color:"#d4a853", desc:"Anthropic'in gelismis dil modeliyle calisin" },
   { day:3,  tool:"Gemini",             icon:"\u2728",         color:"#4285f4", desc:"Google'in multimodal AI sistemini kesfedin" },
   { day:4,  tool:"Perplexity",         icon:"\uD83D\uDD0D", color:"#6366f1", desc:"AI destekli arastirma motorunu ogreyin" },
   { day:5,  tool:"Deepseek",           icon:"\uD83D\uDE80", color:"#ef4444", desc:"Cin'in guclu acik kaynak modelini kullanin" },
   { day:6,  tool:"Copilot",            icon:"\uD83D\uDCBB", color:"#0078d4", desc:"Microsoft AI asistaniyla uretkenlik" },
-  { day:7,  tool:"Grok",               icon:"\u26A1",         color:"#1d9bf0", desc:"xAI gercek zamanli AI modelini kesfedin" },
+  { day:7,  tool:"Grok",               icon:"\u26A1",         color:"#1d9bf0", desc:"xAI gerçek zamanli AI modelini kesfedin" },
   { day:8,  tool:"Lovable",            icon:"\uD83D\uDC9C", color:"#8b5cf6", desc:"AI ile uygulama gelistirmeyi ogreyin" },
   { day:9,  tool:"Manus",              icon:"\uD83E\uDD1D", color:"#f59e0b", desc:"Otonom AI ajan sistemini kullanin" },
   { day:10, tool:"NanoBanana",         icon:"\uD83C\uDF4C", color:"#fbbf24", desc:"Yeni nesil AI araclarini kesfedin" },
   { day:11, tool:"Leonardo AI",        icon:"\uD83C\uDFA8", color:"#ec4899", desc:"AI gorsel uretiminde uzmanlasin" },
   { day:12, tool:"Meta AI",            icon:"\uD83C\uDF10", color:"#0668e1", desc:"Meta AI ekosistemini ogreyin" },
   { day:13, tool:"Assembly AI",        icon:"\uD83C\uDF99", color:"#14b8a6", desc:"Ses transkripsiyon AI kullanin" },
-  { day:14, tool:"Canva AI",           icon:"\uD83D\uDD8C", color:"#7c3aed", desc:"AI destekli tasarim araclarini ogreyin" },
+  { day:14, tool:"Canva AI",           icon:"\uD83D\uDD8C", color:"#7c3aed", desc:"AI destekli tasarım araçlarını öğrenin" },
   { day:15, tool:"Veo 3",              icon:"\uD83C\uDFAC", color:"#dc2626", desc:"Google video uretim AI kesfedin" },
   { day:16, tool:"Sora 2",             icon:"\uD83C\uDFA5", color:"#059669", desc:"OpenAI video AI modelini kullanin" },
   { day:17, tool:"Kimi",               icon:"\uD83C\uDF19", color:"#7c3aed", desc:"Moonshot AI guclu modelini ogreyin" },
   { day:18, tool:"Kling",              icon:"\uD83C\uDFAD", color:"#b45309", desc:"Kuaishou video AI kesfedin" },
-  { day:19, tool:"Midjourney",         icon:"\uD83C\uDF0C", color:"#4f46e5", desc:"En populer gorsel AI aracinda uzmanlasin" },
+  { day:19, tool:"Midjourney",         icon:"\uD83C\uDF0C", color:"#4f46e5", desc:"En popüler gorsel AI aracinda uzmanlasin" },
   { day:20, tool:"Runway ML",          icon:"\u2702",         color:"#16a34a", desc:"AI video duzenleme platformu ogreyin" },
   { day:21, tool:"ElevenLabs",         icon:"\uD83D\uDD0A", color:"#ea580c", desc:"AI ses klonlama teknolojisini kullanin" },
   { day:22, tool:"Pika Labs",          icon:"\u26A1",         color:"#0891b2", desc:"Hizli video olusturma AI kesfedin" },
   { day:23, tool:"Stable Diffusion",   icon:"\uD83C\uDF0A", color:"#7c3aed", desc:"Acik kaynak gorsel AI uzmanlasin" },
-  { day:24, tool:"Make.com",           icon:"\uD83D\uDD17", color:"#9333ea", desc:"AI otomasyon akislari kurun" },
+  { day:24, tool:"Make.com",           icon:"\uD83D\uDD17", color:"#9333ea", desc:"AI otomasyon akışları kurun" },
   { day:25, tool:"Zapier AI",          icon:"\u26A1",         color:"#ff6b35", desc:"AI destekli is akislarini otomatize edin" },
   { day:26, tool:"Notion AI",          icon:"\uD83D\uDCDD", color:"#374151", desc:"AI destekli verimlilik sistemleri kurun" },
   { day:27, tool:"Prompt Engineering", icon:"\uD83C\uDFAF", color:"#b91c1c", desc:"Etkili prompt yazma tekniklerini ogreyin" },
@@ -187,7 +187,7 @@ var COURSES = [
 ];
 
 var MOCK_LB = [
-  { name:"Ayse K.",   xp:1240, streak:18 },
+  { name:"Ayşe K.",   xp:1240, streak:18 },
   { name:"Mehmet T.", xp:1180, streak:22 },
   { name:"Zeynep A.", xp:980,  streak:12 },
   { name:"Can B.",    xp:860,  streak:9  },
@@ -195,11 +195,11 @@ var MOCK_LB = [
 ];
 
 var DEFAULT_QUIZ = [
-  { q:"Bu AI aracinin temel kullanim amaci nedir?",          opts:["Yalnizca gorsel uretim","Yalnizca kod yazma","Genel amacli uretkenlik","Yalnizca veri analizi"],                          ans:2 },
-  { q:"Prompt engineering'de en onemli unsur nedir?",        opts:["Kisa yazmak","Net ve baglamli talimatlar","Ingilizce kullanmak","Buyuk harf kullanmak"],                                  ans:1 },
-  { q:"AI araclarinin is dunyasindaki en buyuk avantaji?",    opts:["Maliyeti sifirlamak","Calisanlari isten cikarmak","Tekrarlayan gorevleri otomatize etmek","Internetsiz calismak"],         ans:2 },
-  { q:"AI ciktilarini kullanirken en kritik adim?",           opts:["Hepsini direkt kullanmak","Dogrulamak ve duzenlemek","Ingilizce cevirmek","Kaydetmek"],                                    ans:1 },
-  { q:"En verimli calisma yontemi hangisidir?",               opts:["Tek seferlik uzun soru","Iteratif prompt zinciri","Sablonlari kopyalamak","Baskasinin promptlarini kullanmak"],            ans:1 },
+  { q:"Bu AI aracının temel kullanım amacı nedir?",          opts:["Yalnızca görsel üretim","Yalnızca kod yazma","Genel amaçlı üretkenlik","Yalnızca veri analizi"],                          ans:2 },
+  { q:"Prompt engineering'de en önemli unsur nedir?",        opts:["Kısa yazmak","Net ve bağlamlı talimatlar","İngilizce kullanmak","Büyük harf kullanmak"],                                  ans:1 },
+  { q:"AI araçlarının iş dünyasındaki en büyük avantajı?",    opts:["Maliyeti sıfırlamak","Çalışanları işten çıkarmak","Tekrarlayan görevleri otomatize etmek","İnternetsiz çalışmak"],         ans:2 },
+  { q:"AI çıktılarını kullanırken en kritik adım?",           opts:["Hepsini direkt kullanmak","Doğrulamak ve düzenlemek","İngilizce çevirmek","Kaydetmek"],                                    ans:1 },
+  { q:"En verimli çalışma yöntemi hangisidir?",               opts:["Tek seferlik uzun soru","Iteratif prompt zinciri","Şablonları kopyalamak","Başkasının promptlarini kullanmak"],            ans:1 },
 ];
 
 // ─── PAYMENT LINKS ───────────────────────────────────────────────────────────
@@ -306,12 +306,12 @@ function generateCertificate(userName, tier, totalXP) {
   ctx.fillStyle = "#d4a853"; ctx.font = "bold 88px Georgia"; ctx.textAlign = "center"; ctx.fillText("AI", 700, 200);
   ctx.fillStyle = "#ffffff"; ctx.font = "bold 52px Georgia"; ctx.fillText("Certification Academy", 700, 270);
   ctx.fillStyle = "rgba(212,168,83,0.35)"; ctx.fillRect(250, 295, 900, 3);
-  ctx.fillStyle = "#9999bb"; ctx.font = "italic 26px Georgia"; ctx.fillText("Bu belge, asagidaki kisinin", 700, 345);
-  ctx.fillStyle = "#d4a853"; ctx.font = "bold 60px Georgia"; ctx.fillText(userName || "Katilimci", 700, 430);
+  ctx.fillStyle = "#9999bb"; ctx.font = "italic 26px Georgia"; ctx.fillText("Bu belge, aşağıdaki kişinin", 700, 345);
+  ctx.fillStyle = "#d4a853"; ctx.font = "bold 60px Georgia"; ctx.fillText(userName || "Katılımcı", 700, 430);
   ctx.fillStyle = "rgba(212,168,83,0.35)"; ctx.fillRect(350, 455, 700, 2);
   ctx.fillStyle = "#ffffff"; ctx.font = "24px Georgia";
-  ctx.fillText("28 Gunluk AI Sertifika Programini basariyla tamamladigini", 700, 505);
-  ctx.fillText("ve tum sinav ve degerlendirmelerden gectigini onaylar.", 700, 540);
+  ctx.fillText("28 Günlük AI Sertifika Programını başarıyla tamamladığını", 700, 505);
+  ctx.fillText("ve tüm sınav ve değerlendirmelerden geçtiğini onaylar.", 700, 540);
   var tierColors = { Temel:"#6366f1", Premium:"#d4a853", Kurumsal:"#10a37f" };
   ctx.fillStyle = tierColors[tier] || "#d4a853"; ctx.font = "bold 22px Georgia";
   ctx.fillText(tier + " Sertifika | Toplam XP: " + totalXP, 700, 590);
@@ -340,14 +340,14 @@ function UpgradeModal(props) {
     <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.80)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:800, display:"flex", alignItems:"center", justifyContent:"center", padding:24, fontFamily:FONT }}>
       <div style={{ background:"linear-gradient(145deg, rgba(13,13,31,0.95), rgba(7,7,17,0.95))", backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)", border:"1px solid rgba(201,168,76,0.4)", borderRadius:24, padding:44, maxWidth:440, textAlign:"center", boxShadow:"0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
         <div style={{ fontSize:56, marginBottom:16 }}>🔒</div>
-        <h2 style={{ background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", fontWeight:800, fontSize:22, marginBottom:12, letterSpacing:"-0.01em" }}>Pro Ozellik</h2>
-        <p style={{ color:TEXT, marginBottom:28, lineHeight:1.7, fontSize:14 }}><span style={{ color:GOLD2, fontWeight:600 }}>{props.feature}</span> — Pro veya Business plana gecis yaparak bu ozelligi kullanabilirsin.</p>
+        <h2 style={{ background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", fontWeight:800, fontSize:22, marginBottom:12, letterSpacing:"-0.01em" }}>Pro Özellik</h2>
+        <p style={{ color:TEXT, marginBottom:28, lineHeight:1.7, fontSize:14 }}><span style={{ color:GOLD2, fontWeight:600 }}>{props.feature}</span> — Pro veya Business plana geçiş yaparak bu özelliği kullanabilirsin.</p>
         <div style={{ display:"flex", gap:12, justifyContent:"center" }}>
-          <button onClick={props.onClose} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid "+CARD_BORDER2, borderRadius:12, padding:"12px 24px", color:TEXT2, cursor:"pointer", fontSize:13, fontWeight:600, fontFamily:FONT, transition:"all 0.2s ease" }}>Vazgec</button>
+          <button onClick={props.onClose} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid "+CARD_BORDER2, borderRadius:12, padding:"12px 24px", color:TEXT2, cursor:"pointer", fontSize:13, fontWeight:600, fontFamily:FONT, transition:"all 0.2s ease" }}>Vazgeç</button>
           <button onClick={props.onClose}
             onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; }}
             onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
-            style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:12, padding:"12px 26px", fontWeight:700, cursor:"pointer", fontSize:13, boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>Plani Yukselt</button>
+            style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:12, padding:"12px 26px", fontWeight:700, cursor:"pointer", fontSize:13, boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>Planı Yükselt</button>
         </div>
       </div>
     </div>
@@ -359,10 +359,10 @@ function Onboarding(props) {
   var [step, setStep] = useState(0);
   var [ans, setAns] = useState({});
   var qs = [
-    { q:"AI araclari hakkinda deneyim seviyeniz?",       opts:["Hic kullanmadim","Birkac kez denedim","Duzenli kullaniyorum","Profesyonel duzey"] },
-    { q:"Oncelikli hedefiniz nedir?",                    opts:["Kariyerimi gelistirmek","Kendi isimi kurmak","Freelance gelir","Genel merak"] },
-    { q:"Gunde ne kadar sure ayirabilirsiniz?",          opts:["10-15 dakika","30 dakika","1 saat","1 saatten fazla"] },
-    { q:"Hangi AI kategorisi en cok ilginizi cekiyor?",  opts:["Metin ve Yazarlik","Gorsel ve Video","Otomasyon","Hepsi esit"] },
+    { q:"AI araçları hakkinda deneyim seviyeniz?",       opts:["Hiç kullanmadim","Birkac kez denedim","Duzenli kullaniyorum","Profesyonel duzey"] },
+    { q:"Öncelikli hedefiniz nedir?",                    opts:["Kariyerimi geliştirmek","Kendi işimi kurmak","Freelance gelir","Genel merak"] },
+    { q:"Günde ne kadar sure ayirabilirsiniz?",          opts:["10-15 dakika","30 dakika","1 saat","1 saatten fazla"] },
+    { q:"Hangi AI kategorisi en çok ilginizi çekiyor?",  opts:["Metin ve Yazarlık","Görsel ve Video","Otomasyon","Hepsi eşit"] },
   ];
   function pick(i) {
     var na = Object.assign({}, ans); na[step] = i; setAns(na);
@@ -374,7 +374,7 @@ function Onboarding(props) {
       <div style={{ width:"100%", maxWidth:500 }}>
         <div style={{ textAlign:"center", marginBottom:36 }}>
           <div style={{ fontSize:36, fontWeight:800, color:GOLD }}>AI</div>
-          <div style={{ color:"#888899", fontSize:13, marginTop:4 }}>Kisisellestirilmis ogrenme yolu olusturuluyor</div>
+          <div style={{ color:"#888899", fontSize:13, marginTop:4 }}>Kişiselleştirilmiş öğrenme yolu oluşturuluyor</div>
         </div>
         <div style={{ background:"rgba(255,255,255,0.06)", borderRadius:100, height:4, marginBottom:28, overflow:"hidden" }}>
           <div style={{ width:(((step+1)/qs.length)*100)+"%", height:"100%", background:GOLD, borderRadius:100 }} />
@@ -403,7 +403,7 @@ function MentorChat(props) {
   var user = props.user;
   var p = getPerms(user);
   var lvl = getLvl(user.xp || 0);
-  var [msgs, setMsgs] = useState([{ role:"ai", text:"Merhaba " + user.name + "! Ben AI Mentor'unum. Seviye " + lvl.level + " - " + lvl.name + " olarak kayitlisin. " + (p.mentor ? (p.mentorSessions === 999 ? "Sinirirsiz seans hakkın var." : p.mentorSessions + " seans hakkin kaldi.") : "") + " Ne ogrenelim?" }]);
+  var [msgs, setMsgs] = useState([{ role:"ai", text:"Merhaba " + user.name + "! Ben AI Mentor'ünüm. Seviye " + lvl.level + " - " + lvl.name + " olarak kayıtlısın. " + (p.mentor ? (p.mentorSessions === 999 ? "Sınırsız seans hakkın var." : p.mentorSessions + " seans hakkın kaldı.") : "") + " Ne öğrenelim?" }]);
   var [inp, setInp] = useState("");
   var [loading, setLoading] = useState(false);
   var [left, setLeft] = useState(p.mentorSessions);
@@ -422,14 +422,14 @@ function MentorChat(props) {
     fetch(PROXY_URL, {
       method:"POST", headers:{"Content-Type":"application/json"},
       body: JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:800,
-        system:"Sen bir AI egitim mentorusun. Ogrenci: "+user.name+". Plan: "+(user.plan?user.plan.name:"")+". Seviye: "+lvl.name+" ("+( user.xp||0)+" XP). Turkce, samimi, motive edici, kisa ve pratik yanitlar ver.",
+        system:"Sen bir AI egitim mentorusun. Öğrenci: "+user.name+". Plan: "+(user.plan?user.plan.name:"")+". Seviye: "+lvl.name+" ("+( user.xp||0)+" XP). Türkçe, samimi, motive edici, kısa ve pratik yanitlar ver.",
         messages:history })
     }).then(function(r) { return r.json(); }).then(function(d) {
       var text = ""; if (d.content) for (var i = 0; i < d.content.length; i++) text += d.content[i].text || "";
       setMsgs(newMsgs.concat([{ role:"ai", text: text || "Hata olustu, tekrar dene." }]));
       setLoading(false);
     }).catch(function() {
-      setMsgs(newMsgs.concat([{ role:"ai", text:"Baglanti hatasi." }]));
+      setMsgs(newMsgs.concat([{ role:"ai", text:"Baglanti hatası." }]));
       setLoading(false);
     });
   }
@@ -441,9 +441,9 @@ function MentorChat(props) {
       <div style={{ width:"100%", maxWidth:680, height:"88vh", background:"linear-gradient(145deg, rgba(13,13,31,0.98), rgba(7,7,17,0.98))", border:"1px solid "+CARD_BORDER2, borderRadius:24, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
         <div style={{ padding:"16px 20px", borderBottom:"1px solid "+CARD_BORDER, display:"flex", alignItems:"center", gap:12, background:"rgba(201,168,76,0.05)", backdropFilter:"blur(12px)" }}>
           <div style={{ width:42, height:42, borderRadius:"50%", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, fontWeight:800, color:"#08080f", boxShadow:"0 4px 16px rgba(201,168,76,0.4)" }}>🧠</div>
-          <div style={{ flex:1 }}><div style={{ fontWeight:700, color:TEXT, fontSize:15 }}>AI Mentor</div><div style={{ fontSize:11, color:TEAL, fontFamily:FONT_MONO, marginTop:2 }}>● Cevrimici</div></div>
+          <div style={{ flex:1 }}><div style={{ fontWeight:700, color:TEXT, fontSize:15 }}>AI Mentor</div><div style={{ fontSize:11, color:TEAL, fontFamily:FONT_MONO, marginTop:2 }}>● Çevrimiçi</div></div>
           <div style={{ background:"rgba(201,168,76,0.12)", border:"1px solid rgba(201,168,76,0.35)", borderRadius:10, padding:"5px 12px", fontSize:11, color:GOLD2, fontFamily:FONT_MONO, fontWeight:700 }}>
-            {p.mentorSessions === 999 ? "Sinirirsiz" : left + " seans"}
+            {p.mentorSessions === 999 ? "Sınırsız" : left + " seans"}
           </div>
           <button onClick={props.onClose} style={{ background:"rgba(255,255,255,0.05)", border:"1px solid "+CARD_BORDER, color:TEXT2, cursor:"pointer", fontSize:18, width:32, height:32, borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center", transition:"all 0.2s ease" }}>×</button>
         </div>
@@ -480,7 +480,7 @@ function MentorChat(props) {
         )}
         <div style={{ padding:"12px 16px", borderTop:"1px solid "+CARD_BORDER, display:"flex", gap:10, background:"rgba(7,7,17,0.6)" }}>
           {p.mentorSessions !== 999 && left <= 0 ? (
-            <div style={{ flex:1, textAlign:"center", color:TEXT2, fontSize:13, padding:"12px 0", fontFamily:FONT_MONO }}>Seans hakkin doldu — Pro'ya gec</div>
+            <div style={{ flex:1, textAlign:"center", color:TEXT2, fontSize:13, padding:"12px 0", fontFamily:FONT_MONO }}>Seans hakkın doldu — Pro'ya geç</div>
           ) : (
             <>
               <input value={inp} onChange={function(e) { setInp(e.target.value); }} onKeyDown={function(e) { if (e.key === "Enter") send(); }}
@@ -505,17 +505,17 @@ function Landing(props) {
   var [count, setCount] = useState(847);
   useEffect(function() { var t = setInterval(function() { setCount(function(c) { return c + Math.floor(Math.random()*3); }); }, 9000); return function() { clearInterval(t); }; }, []);
   var reviews = [
-    { name:"Ayse K.", role:"Pazarlama Muduru", text:"28 gunde tum AI araclari ogrendim. Ekibimden cok daha hızlıyım.", r:5 },
-    { name:"Mehmet T.", role:"Freelancer", text:"AI Mentor ozelligi inanilmaz. Sorularimi aninda yanitliyor.", r:5 },
-    { name:"Zeynep A.", role:"Girisimci", text:"Sertifikamı LinkedIn'e ekledim, 3 yeni musteri geldi!", r:5 },
+    { name:"Ayşe K.", role:"Pazarlama Müdürü", text:"28 günde tüm AI araçları öğrendim. Ekibimden çok daha hızlıyım.", r:5 },
+    { name:"Mehmet T.", role:"Freelancer", text:"AI Mentor özelliği inanılmaz. Sorularımı anında yanıtlıyor.", r:5 },
+    { name:"Zeynep A.", role:"Girişimci", text:"Sertifikamı LinkedIn'e ekledim, 3 yeni müşteri geldi!", r:5 },
   ];
   return (
     <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, backgroundImage:"radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize:"32px 32px" }}>
       <div style={{ position:"relative", textAlign:"center", padding:"72px 20px 80px", background:"radial-gradient(ellipse at 50% 0%,rgba(124,92,252,0.18) 0%,rgba(201,168,76,0.10) 30%,transparent 70%)" }}>
-        <div style={{ display:"inline-block", background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.4)", borderRadius:100, padding:"7px 18px", fontSize:12, color:GOLD2, marginBottom:28, fontFamily:FONT_MONO }}>{"Bu ay " + count + " kisi kayit oldu"}</div>
+        <div style={{ display:"inline-block", background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.4)", borderRadius:100, padding:"7px 18px", fontSize:12, color:GOLD2, marginBottom:28, fontFamily:FONT_MONO }}>{"Bu ay " + count + " kişi kayıt oldu"}</div>
         <div style={{ fontSize:80, fontWeight:800, lineHeight:1, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>AI</div>
         <div style={{ fontSize:36, fontWeight:700, marginBottom:20, color:TEXT }}>Certification Academy</div>
-        <p style={{ fontSize:16, color:TEXT2, maxWidth:460, margin:"0 auto 40px", lineHeight:1.65 }}>28 arac - 28 gun - Gunde 15 dakika<br/><span style={{ color:GOLD2 }}>AI sertifikanı kazan, kariyerini donustur.</span></p>
+        <p style={{ fontSize:16, color:TEXT2, maxWidth:460, margin:"0 auto 40px", lineHeight:1.65 }}>28 araç - 28 gün - Günde 15 dakika<br/><span style={{ color:GOLD2 }}>AI sertifikanı kazan, kariyerini dönüştür.</span></p>
         <div style={{ display:"flex", gap:40, justifyContent:"center", marginBottom:44, flexWrap:"wrap" }}>
           {[["28","Arac"],["28","Gun"],["6","Seviye"],["28","Sınav"]].map(function(item) {
             return (
@@ -530,11 +530,11 @@ function Landing(props) {
           onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.4)"; }}
           onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
           style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"16px 44px", fontSize:17, fontWeight:700, cursor:"pointer", boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT }}>
-          Hemen Basla
+          Hemen Başla
         </button>
       </div>
       <div style={{ maxWidth:960, margin:"0 auto", padding:"0 20px 72px" }}>
-        <h2 style={{ textAlign:"center", fontSize:28, fontWeight:800, marginBottom:36, color:TEXT, letterSpacing:"-0.02em" }}>Ogrencilerimiz Ne Diyor?</h2>
+        <h2 style={{ textAlign:"center", fontSize:28, fontWeight:800, marginBottom:36, color:TEXT, letterSpacing:"-0.02em" }}>Öğrencilerimiz Ne Diyor?</h2>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))", gap:18 }}>
           {reviews.map(function(r, i) {
             return (
@@ -554,8 +554,8 @@ function Landing(props) {
         </div>
       </div>
       <div style={{ maxWidth:1060, margin:"0 auto", padding:"0 20px 72px" }}>
-        <h2 style={{ textAlign:"center", fontSize:32, fontWeight:800, marginBottom:10, color:TEXT, letterSpacing:"-0.02em" }}>28 Gunluk Program</h2>
-        <p style={{ textAlign:"center", color:TEXT2, marginBottom:40, fontSize:14, fontFamily:FONT_MONO }}>Her gun yeni bir AI araci, her gun yeni bir super guc</p>
+        <h2 style={{ textAlign:"center", fontSize:32, fontWeight:800, marginBottom:10, color:TEXT, letterSpacing:"-0.02em" }}>28 Günlük Program</h2>
+        <p style={{ textAlign:"center", color:TEXT2, marginBottom:40, fontSize:14, fontFamily:FONT_MONO }}>Her gün yeni bir AI aracı, her gün yeni bir süper guc</p>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(210px,1fr))", gap:14 }}>
           {COURSES.map(function(c) {
             return (
@@ -565,7 +565,7 @@ function Landing(props) {
                 style={{ background:"linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+CARD_BORDER, borderRadius:14, padding:"16px 16px", display:"flex", gap:12, alignItems:"flex-start", transition:"all 0.2s ease", boxShadow:"inset 0 1px 0 rgba(255,255,255,0.05)", fontFamily:FONT }}>
                 <div style={{ fontSize:26, flexShrink:0 }}>{c.icon}</div>
                 <div>
-                  <div style={{ fontSize:10, color:GOLD, fontFamily:FONT_MONO, marginBottom:3, fontWeight:700, letterSpacing:"1px" }}>{"GUN " + c.day.toString().padStart(2,"0")}</div>
+                  <div style={{ fontSize:10, color:GOLD, fontFamily:FONT_MONO, marginBottom:3, fontWeight:700, letterSpacing:"1px" }}>{"GÜN " + c.day.toString().padStart(2,"0")}</div>
                   <div style={{ fontWeight:700, fontSize:13, marginBottom:3, color:TEXT }}>{c.tool}</div>
                   {c.day > 14 && <div style={{ fontSize:10, color:PURPLE, fontFamily:FONT_MONO, fontWeight:600 }}>Pro+</div>}
                 </div>
@@ -576,8 +576,8 @@ function Landing(props) {
       </div>
       <div id="pricing" style={{ background:"linear-gradient(180deg, rgba(124,92,252,0.04), rgba(201,168,76,0.04))", borderTop:"1px solid "+CARD_BORDER, padding:"72px 20px" }}>
         <div style={{ maxWidth:1000, margin:"0 auto" }}>
-          <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planini Sec</h2>
-          <p style={{ textAlign:"center", color:TEXT2, marginBottom:44, fontSize:14, fontFamily:FONT }}>Hedefine uygun plani sec ve bugun basla</p>
+          <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planını Seç</h2>
+          <p style={{ textAlign:"center", color:TEXT2, marginBottom:44, fontSize:14, fontFamily:FONT }}>Hedefine uygun plani seç ve bugün başla</p>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:22 }}>
             {PLANS.map(function(plan) {
               return (
@@ -585,7 +585,7 @@ function Landing(props) {
                   onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-4px)"; }}
                   onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; }}
                   style={{ background: plan.popular ? "linear-gradient(145deg, rgba(201,168,76,0.12), rgba(124,92,252,0.06))" : "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+(plan.popular?"rgba(201,168,76,0.45)":CARD_BORDER2), borderRadius:24, padding:32, position:"relative", boxShadow: plan.popular ? "0 8px 32px rgba(201,168,76,0.20), inset 0 1px 0 rgba(255,255,255,0.1)" : "0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)", transition:"all 0.2s ease", fontFamily:FONT }}>
-                  {plan.popular && <div style={{ position:"absolute", top:-12, left:"50%", transform:"translateX(-50%)", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", fontSize:11, fontWeight:800, padding:"5px 18px", borderRadius:100, letterSpacing:"1px", boxShadow:SHADOW_GOLD, textTransform:"uppercase" }}>En Populer</div>}
+                  {plan.popular && <div style={{ position:"absolute", top:-12, left:"50%", transform:"translateX(-50%)", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", fontSize:11, fontWeight:800, padding:"5px 18px", borderRadius:100, letterSpacing:"1px", boxShadow:SHADOW_GOLD, textTransform:"uppercase" }}>En Popüler</div>}
                   <div style={{ fontSize:14, fontWeight:700, marginBottom:8, color:TEXT2, textTransform:"uppercase", letterSpacing:"1.5px" }}>{plan.name}</div>
                   <div style={{ display:"flex", alignItems:"baseline", gap:6, marginBottom:24 }}>
                     <span style={{ fontSize:48, fontWeight:800, color: plan.popular ? GOLD2 : plan.color, fontFamily:FONT_MONO, letterSpacing:"-0.03em" }}>{"$"+plan.price}</span>
@@ -600,7 +600,7 @@ function Landing(props) {
                     onMouseEnter={function(e){ if(plan.popular){ e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; } else { e.currentTarget.style.background="rgba(255,255,255,0.06)"; } }}
                     onMouseLeave={function(e){ if(plan.popular){ e.currentTarget.style.boxShadow=SHADOW_GOLD; } else { e.currentTarget.style.background="transparent"; } }}
                     style={{ width:"100%", background: plan.popular ? "linear-gradient(135deg,#c9a84c,#f5cc6a)" : "transparent", color: plan.popular ? "#08080f" : plan.color, border:"1px solid "+(plan.popular?"transparent":plan.color), borderRadius:14, padding:"14px 0", fontSize:14, fontWeight:700, cursor:"pointer", boxShadow: plan.popular ? SHADOW_GOLD : "none", transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
-                    {plan.popular ? "Hemen Kayit Ol" : "Sec"}
+                    {plan.popular ? "Hemen Kayıt Ol" : "Seç"}
                   </button>
                 </div>
               );
@@ -622,10 +622,10 @@ function Register(props) {
   var inviteData = props.inviteData;
 
   function submit() {
-    if (!name || !email || !pass) { setErr("Tum alanlari doldurun"); return; }
-    if (email.indexOf("@") < 0) { setErr("Gecerli email girin"); return; }
-    if (pass.length < 6) { setErr("Sifre en az 6 karakter"); return; }
-    if (emailExists(email)) { setErr("Bu email zaten kayitli. Giris Yap butonunu kullan."); return; }
+    if (!name || !email || !pass) { setErr("Tüm alanlari doldurun"); return; }
+    if (email.indexOf("@") < 0) { setErr("Geçerli email girin"); return; }
+    if (pass.length < 6) { setErr("Şifre en az 6 karakter"); return; }
+    if (emailExists(email)) { setErr("Bu email zaten kayıtlı. Giriş Yap butonunu kullan."); return; }
     setLoading(true);
     setTimeout(function() {
       setLoading(false);
@@ -651,7 +651,7 @@ function Register(props) {
           {!inviteData && props.plan && <div style={{ marginTop:10, display:"inline-block", background:"rgba(212,168,83,0.1)", border:"1px solid rgba(212,168,83,0.3)", borderRadius:7, padding:"5px 14px", fontSize:12, color:GOLD }}>{props.plan.name + " - $" + props.plan.price + "/ay"}</div>}
         </div>
         <div style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:16, padding:28 }}>
-          <h2 style={{ color:"#fff", fontWeight:700, marginBottom:20, fontSize:19 }}>Hesap Olustur</h2>
+          <h2 style={{ color:"#fff", fontWeight:700, marginBottom:20, fontSize:19 }}>Hesap Oluştur</h2>
           <div style={{ marginBottom:14 }}>
             <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Ad Soyad</label>
             <input type="text" value={name} onChange={function(e) { setName(e.target.value); }}
@@ -663,18 +663,18 @@ function Register(props) {
               style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box" }} />
           </div>
           <div style={{ marginBottom:14 }}>
-            <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Sifre</label>
+            <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Şifre</label>
             <input type="password" value={pass} onChange={function(e) { setPass(e.target.value); }}
               style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box" }} />
           </div>
           {err && <div style={{ color:"#ef4444", fontSize:12, marginBottom:12 }}>{"! " + err}</div>}
           <button onClick={submit} disabled={loading}
             style={{ width:"100%", background: loading ? "#444" : "linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"13px 0", fontSize:15, fontWeight:700, cursor: loading ? "not-allowed" : "pointer", marginTop:6 }}>
-            {loading ? "Kayit olusturuluyor..." : "Kayit Ol"}
+            {loading ? "Kayıt oluşturuluyor..." : "Kayıt Ol"}
           </button>
           <p style={{ textAlign:"center", marginTop:16, fontSize:12, color:"#555577" }}>
-            Zaten hesabin var mi?
-            <button onClick={props.onLogin} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:12, marginLeft:4 }}>Giris Yap</button>
+            Zaten hesabın var mi?
+            <button onClick={props.onLogin} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:12, marginLeft:4 }}>Giriş Yap</button>
           </p>
         </div>
       </div>
@@ -739,10 +739,10 @@ function AdminPanel(props) {
   var totalXP = users.reduce(function(acc, u) { return acc + (u.xp || 0); }, 0);
 
   var summary = [
-    { label:"Toplam Uye", val: total, color: GOLD },
+    { label:"Toplam Üye", val: total, color: GOLD },
     { label:"Pro", val: proCount, color: "#d4a853" },
     { label:"Business", val: bizCount, color: "#10a37f" },
-    { label:"Bugun Kayit", val: todayCount, color: "#6366f1" },
+    { label:"Bugün Kayıt", val: todayCount, color: "#6366f1" },
     { label:"Toplam XP", val: totalXP, color: "#ec4899" },
   ];
 
@@ -751,10 +751,10 @@ function AdminPanel(props) {
       <div style={{ maxWidth:1200, margin:"0 auto" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24 }}>
           <div>
-            <div style={{ fontSize:13, color:"#888899" }}>Yonetim Paneli</div>
+            <div style={{ fontSize:13, color:"#888899" }}>Yönetim Paneli</div>
             <div style={{ fontSize:28, fontWeight:800, color:GOLD }}>Admin Dashboard</div>
           </div>
-          <button onClick={props.onLogout} style={{ background:"rgba(239,68,68,0.1)", color:"#ef4444", border:"1px solid rgba(239,68,68,0.3)", borderRadius:10, padding:"10px 20px", fontSize:13, cursor:"pointer", fontWeight:600 }}>Cikis Yap</button>
+          <button onClick={props.onLogout} style={{ background:"rgba(239,68,68,0.1)", color:"#ef4444", border:"1px solid rgba(239,68,68,0.3)", borderRadius:10, padding:"10px 20px", fontSize:13, cursor:"pointer", fontWeight:600 }}>Çıkış Yap</button>
         </div>
 
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))", gap:12, marginBottom:24 }}>
@@ -773,7 +773,7 @@ function AdminPanel(props) {
             return (
               <button key={t} onClick={function() { setTab(t); }}
                 style={{ background: tab===t ? GOLD : "transparent", color: tab===t ? "#08080f" : "#888899", border:"1px solid "+(tab===t ? GOLD : CARD_BORDER), borderRadius:8, padding:"8px 18px", fontSize:13, fontWeight:600, cursor:"pointer" }}>
-                {t === "users" ? "Kullanicilar" : "Plan Dagilimi"}
+                {t === "users" ? "Kullanıcılar" : "Plan Dağılımı"}
               </button>
             );
           })}
@@ -781,15 +781,15 @@ function AdminPanel(props) {
 
         <div style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, overflow:"hidden" }}>
           {loading ? (
-            <div style={{ padding:60, textAlign:"center", color:"#888899" }}>Yukleniyor...</div>
+            <div style={{ padding:60, textAlign:"center", color:"#888899" }}>Yükleniyor...</div>
           ) : users.length === 0 ? (
-            <div style={{ padding:60, textAlign:"center", color:"#888899" }}>Henuz kayitli kullanici yok</div>
+            <div style={{ padding:60, textAlign:"center", color:"#888899" }}>Henüz kayıtlı kullanıcı yok</div>
           ) : tab === "users" ? (
             <div style={{ overflowX:"auto" }}>
               <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
                 <thead>
                   <tr style={{ background:"rgba(255,255,255,0.03)" }}>
-                    {["#","Ad Soyad","Email","Plan","XP","İlerleme","Kayit Tarihi","Son Giris"].map(function(h) {
+                    {["#","Ad Soyad","Email","Plan","XP","İlerleme","Kayıt Tarihi","Son Giriş"].map(function(h) {
                       return <th key={h} style={{ padding:"12px 14px", color:"#888899", fontWeight:600, textAlign:"left", whiteSpace:"nowrap" }}>{h}</th>;
                     })}
                   </tr>
@@ -835,7 +835,7 @@ function AdminPanel(props) {
                   <div key={pn} style={{ marginBottom:20 }}>
                     <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
                       <span style={{ fontWeight:600, color:pc }}>{pn}</span>
-                      <span style={{ color:"#888899" }}>{count} kullanici ({pct}%)</span>
+                      <span style={{ color:"#888899" }}>{count} kullanıcı ({pct}%)</span>
                     </div>
                     <div style={{ height:10, background:"rgba(255,255,255,0.06)", borderRadius:5, overflow:"hidden" }}>
                       <div style={{ width:pct+"%", height:"100%", background:pc, borderRadius:5, transition:"width 0.6s" }} />
@@ -847,7 +847,7 @@ function AdminPanel(props) {
           )}
         </div>
         <div style={{ marginTop:12, textAlign:"right", fontSize:11, color:"#555577" }}>
-          Son guncelleme: {fmt(Date.now())} · {total} kullanici
+          Son güncelleme: {fmt(Date.now())} · {total} kullanıcı
         </div>
       </div>
     </div>
@@ -862,24 +862,24 @@ function Login(props) {
   var [showAdmin, setShowAdmin] = useState(false);
 
   function submit() {
-    if (!email || !pass) { setErr("Tum alanlari doldurun"); return; }
+    if (!email || !pass) { setErr("Tüm alanlari doldurun"); return; }
     if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
       setErr("");
       setShowAdmin(true);
       return;
     }
-    if (pass.length < 6) { setErr("Sifre en az 6 karakter"); return; }
+    if (pass.length < 6) { setErr("Şifre en az 6 karakter"); return; }
     setLoading(true);
     setTimeout(function() {
       setLoading(false);
       var existing = getUserByEmail(email);
       if (!existing) {
-        setErr("Bu email ile kayitli hesap bulunamadi. Lutfen once kayit ol.");
+        setErr("Bu email ile kayıtlı hesap bulunamadı. Lütfen önce kayıt ol.");
         return;
       }
-      // Basit sifre kontrolu - gercek uygulamada Supabase Auth kullanilir
+      // Basit şifre kontrolü - gerçek uygulamada Supabase Auth kullanılır
       if (pass.length < 6) {
-        setErr("Sifre hatali.");
+        setErr("Şifre hatali.");
         return;
       }
       saveUser(existing);
@@ -899,25 +899,25 @@ function Login(props) {
           <div style={{ fontSize:17, fontWeight:600 }}>Certification Academy</div>
         </div>
         <div style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:16, padding:28 }}>
-          <h2 style={{ color:"#fff", fontWeight:700, marginBottom:20, fontSize:19 }}>Giris Yap</h2>
+          <h2 style={{ color:"#fff", fontWeight:700, marginBottom:20, fontSize:19 }}>Giriş Yap</h2>
           <div style={{ marginBottom:14 }}>
             <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Email</label>
             <input type="email" value={email} onChange={function(e) { setEmail(e.target.value); }}
               style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box" }} />
           </div>
           <div style={{ marginBottom:14 }}>
-            <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Sifre</label>
+            <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Şifre</label>
             <input type="password" value={pass} onChange={function(e) { setPass(e.target.value); }}
               style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box" }} />
           </div>
           {err && <div style={{ color:"#ef4444", fontSize:12, marginBottom:12 }}>{err}</div>}
           <button onClick={submit} disabled={loading}
             style={{ width:"100%", background: loading ? "#444" : "linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"13px 0", fontSize:15, fontWeight:700, cursor: loading ? "not-allowed" : "pointer" }}>
-            {loading ? "Kontrol ediliyor..." : "Giris Yap"}
+            {loading ? "Kontrol ediliyor..." : "Giriş Yap"}
           </button>
           <p style={{ textAlign:"center", marginTop:16, fontSize:12, color:"#555577" }}>
-            Hesabin yok mu?
-            <button onClick={props.onRegister} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:12, marginLeft:4 }}>Kayit Ol</button>
+            Hesabın yok mu?
+            <button onClick={props.onRegister} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:12, marginLeft:4 }}>Kayıt Ol</button>
           </p>
         </div>
       </div>
@@ -947,12 +947,12 @@ function TeamPanel(props) {
   }, []);
 
   function sendInvite() {
-    if (!inviteEmail || inviteEmail.indexOf("@") < 0) { setInviteMsg("Gecerli email girin"); return; }
+    if (!inviteEmail || inviteEmail.indexOf("@") < 0) { setInviteMsg("Geçerli email girin"); return; }
     if (!team) return;
     var activeMembers = team.members.filter(function(m) { return m.status === "active"; }).length;
-    if (activeMembers >= team.limit) { setInviteMsg("Takim limiti doldu (maks. " + team.limit + " kisi)"); return; }
+    if (activeMembers >= team.limit) { setInviteMsg("Takım limiti doldu (maks. " + team.limit + " kişi)"); return; }
     var existingMember = team.members.find(function(m) { return m.email === inviteEmail; });
-    if (existingMember) { setInviteMsg("Bu kullanici zaten takimda"); return; }
+    if (existingMember) { setInviteMsg("Bu kullanıcı zaten takımda"); return; }
     var code = generateInviteCode(team.id, inviteEmail);
     var newMember = { email: inviteEmail, name: "Davet Bekleniyor", role:"member", status:"pending", inviteCode: code, invitedAt: Date.now() };
     var updatedTeam = Object.assign({}, team, { members: team.members.concat([newMember]) });
@@ -960,7 +960,7 @@ function TeamPanel(props) {
     saveTeam(user.email, updatedTeam);
     var link = window.location.origin + "?invite=" + code;
     setInviteLink(link);
-    setInviteMsg("Davet linki olusturuldu!");
+    setInviteMsg("Davet linki oluşturuldu!");
     setInviteEmail("");
   }
 
@@ -974,11 +974,11 @@ function TeamPanel(props) {
   function copyLink() {
     if (inviteLink) {
       try { navigator.clipboard.writeText(inviteLink); } catch(e) {}
-      setInviteMsg("Link kopyalandi!");
+      setInviteMsg("Link kopyalandı!");
     }
   }
 
-  if (loading) return <div style={{ padding:40, textAlign:"center", color:"#666688" }}>Yukleniyor...</div>;
+  if (loading) return <div style={{ padding:40, textAlign:"center", color:"#666688" }}>Yükleniyor...</div>;
   if (!team) return null;
 
   var activeCount = team.members.filter(function(m) { return m.status === "active"; }).length;
@@ -989,9 +989,9 @@ function TeamPanel(props) {
     <div>
       <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))", gap:14, marginBottom:28 }}>
         {[
-          { label:"Aktif Uye",   val:activeCount,  color:"#10a37f" },
+          { label:"Aktif Üye",   val:activeCount,  color:"#10a37f" },
           { label:"Davet Bekleyen", val:pendingCount, color:GOLD },
-          { label:"Bos Slot",    val:remaining,    color:"#6366f1" },
+          { label:"Boş Slot",    val:remaining,    color:"#6366f1" },
           { label:"Limit",       val:team.limit,   color:"#888899" },
         ].map(function(s) {
           return (
@@ -1005,14 +1005,14 @@ function TeamPanel(props) {
 
       {remaining > 0 ? (
         <div style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, padding:20, marginBottom:24 }}>
-          <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16, color:GOLD }}>Kullanici Davet Et</h3>
+          <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16, color:GOLD }}>Kullanıcı Davet Et</h3>
           <div style={{ display:"flex", gap:10, marginBottom:12, flexWrap:"wrap" }}>
             <input value={inviteEmail} onChange={function(e) { setInviteEmail(e.target.value); }}
-              placeholder="ornek@sirket.com" type="email"
+              placeholder="örnek@şirket.com" type="email"
               style={{ flex:1, minWidth:200, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"10px 14px", color:"#fff", fontSize:13, outline:"none" }} />
             <button onClick={sendInvite}
               style={{ background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"10px 20px", fontWeight:700, cursor:"pointer", fontSize:13 }}>
-              Davet Gonder
+              Davet Gönder
             </button>
           </div>
           {inviteMsg && (
@@ -1020,7 +1020,7 @@ function TeamPanel(props) {
           )}
           {inviteLink && (
             <div style={{ background:"rgba(16,163,127,0.08)", border:"1px solid rgba(16,163,127,0.3)", borderRadius:10, padding:12 }}>
-              <div style={{ fontSize:11, color:"#10a37f", marginBottom:6 }}>Davet Linki - Bu linki kullaniciya gonder:</div>
+              <div style={{ fontSize:11, color:"#10a37f", marginBottom:6 }}>Davet Linki - Bu linki kullanıcıya gönder:</div>
               <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
                 <code style={{ flex:1, fontSize:10, color:"#888899", wordBreak:"break-all" }}>{inviteLink}</code>
                 <button onClick={copyLink} style={{ background:"rgba(212,168,83,0.15)", border:"1px solid rgba(212,168,83,0.3)", borderRadius:8, padding:"6px 12px", color:GOLD, cursor:"pointer", fontSize:12 }}>Kopyala</button>
@@ -1030,13 +1030,13 @@ function TeamPanel(props) {
         </div>
       ) : (
         <div style={{ background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.3)", borderRadius:12, padding:16, marginBottom:24, textAlign:"center" }}>
-          <div style={{ color:"#ef4444", fontWeight:700, marginBottom:4 }}>Takim Limiti Doldu</div>
-          <div style={{ color:"#888899", fontSize:13 }}>5 kullanici limitine ulasildi. Uye cikararak yer acabilirsiniz.</div>
+          <div style={{ color:"#ef4444", fontWeight:700, marginBottom:4 }}>Takım Limiti Doldu</div>
+          <div style={{ color:"#888899", fontSize:13 }}>5 kullanıcı limitine ulaşıldı. Üye çıkararak yer açabilirsiniz.</div>
         </div>
       )}
 
       <div>
-        <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16 }}>Takim Uyeleri</h3>
+        <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16 }}>Takım Uyeleri</h3>
         {team.members.map(function(m, i) {
           return (
             <div key={i} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:12, padding:"14px 16px", marginBottom:10, display:"flex", alignItems:"center", gap:14, flexWrap:"wrap" }}>
@@ -1047,7 +1047,7 @@ function TeamPanel(props) {
                 <div style={{ fontWeight:600, fontSize:13 }}>{m.name}</div>
                 <div style={{ fontSize:11, color:"#555577" }}>{m.email}</div>
               </div>
-              <div style={{ fontSize:11, color:"#888899" }}>{m.role === "admin" ? "Admin" : "Uye"}</div>
+              <div style={{ fontSize:11, color:"#888899" }}>{m.role === "admin" ? "Admin" : "Üye"}</div>
               <div style={{ fontSize:11, color: m.status === "active" ? "#10a37f" : GOLD, background: m.status === "active" ? "rgba(16,163,127,0.1)" : "rgba(212,168,83,0.1)", border:"1px solid "+(m.status==="active"?"rgba(16,163,127,0.3)":"rgba(212,168,83,0.3)"), borderRadius:20, padding:"2px 9px" }}>
                 {m.status === "active" ? "Aktif" : "Davet Bekleniyor"}
               </div>
@@ -1112,13 +1112,13 @@ function Dashboard(props) {
           </button>
           <div style={{ background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.3)", borderRadius:8, padding:"5px 12px", fontSize:11, color:GOLD2, fontWeight:700, textTransform:"uppercase", letterSpacing:"0.5px" }}>{user.plan ? user.plan.name : ""}</div>
           <span style={{ color:TEXT2, fontSize:12 }}>{user.name}</span>
-          <button onClick={props.onLogout} style={{ background:"rgba(255,255,255,0.04)", border:"1px solid "+CARD_BORDER, borderRadius:10, padding:"6px 14px", color:TEXT2, cursor:"pointer", fontSize:12, fontFamily:FONT, transition:"all 0.2s ease" }}>Cikis</button>
+          <button onClick={props.onLogout} style={{ background:"rgba(255,255,255,0.04)", border:"1px solid "+CARD_BORDER, borderRadius:10, padding:"6px 14px", color:TEXT2, cursor:"pointer", fontSize:12, fontFamily:FONT, transition:"all 0.2s ease" }}>Çıkış</button>
         </div>
       </div>
       <div style={{ maxWidth:1040, margin:"0 auto", padding:"28px 20px" }}>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))", gap:14, marginBottom:28 }}>
           <div style={{ background:"linear-gradient(145deg, rgba(201,168,76,0.12), rgba(201,168,76,0.03))", backdropFilter:"blur(12px)", border:"1px solid rgba(201,168,76,0.25)", borderRadius:16, padding:22, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)", transition:"all 0.2s ease" }}>
-            <div style={{ fontSize:10, color:TEXT2, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px", fontWeight:600 }}>Kurs Ilerlemesi</div>
+            <div style={{ fontSize:10, color:TEXT2, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px", fontWeight:600 }}>Kurs İlerlemesi</div>
             <div style={{ fontSize:36, fontWeight:800, color:GOLD2, fontFamily:FONT_MONO, letterSpacing:"-0.02em" }}>{pct + "%"}</div>
             <div style={{ color:TEXT2, fontSize:11, marginTop:4 }}>{done + "/" + total + " ders"}</div>
             <div style={{ background:"rgba(255,255,255,0.08)", borderRadius:4, height:8, overflow:"hidden", marginTop:10 }}>
@@ -1136,12 +1136,12 @@ function Dashboard(props) {
           <div style={{ background:"linear-gradient(145deg, rgba(239,68,68,0.10), rgba(239,68,68,0.02))", backdropFilter:"blur(12px)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:16, padding:22, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)", transition:"all 0.2s ease" }}>
             <div style={{ fontSize:10, color:TEXT2, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px", fontWeight:600 }}>Streak</div>
             <div style={{ fontSize:36, fontWeight:800, color:"#ef4444", fontFamily:FONT_MONO, letterSpacing:"-0.02em" }}>{streak}</div>
-            <div style={{ color:TEXT2, fontSize:11, marginTop:4 }}>Ardisik gun</div>
+            <div style={{ color:TEXT2, fontSize:11, marginTop:4 }}>Ardışık gün</div>
           </div>
           <div style={{ background:"linear-gradient(145deg, rgba(0,201,167,0.12), rgba(0,201,167,0.03))", backdropFilter:"blur(12px)", border:"1px solid rgba(0,201,167,0.25)", borderRadius:16, padding:22, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)", transition:"all 0.2s ease" }}>
             <div style={{ fontSize:10, color:TEXT2, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px", fontWeight:600 }}>Liderboard</div>
             <div style={{ fontSize:36, fontWeight:800, color:TEAL, fontFamily:FONT_MONO, letterSpacing:"-0.02em" }}>{"#"+myRank}</div>
-            <div style={{ color:TEXT2, fontSize:11, marginTop:4 }}>{lbEntries.length + " kisi arasinda"}</div>
+            <div style={{ color:TEXT2, fontSize:11, marginTop:4 }}>{lbEntries.length + " kişi arasinda"}</div>
           </div>
         </div>
 
@@ -1169,7 +1169,7 @@ function Dashboard(props) {
                 var sc = scores[c.day];
                 return (
                   <div key={c.day} onClick={function() {
-                    if (isLocked) { setUpgrade("Gun " + c.day + ": " + c.tool); return; }
+                    if (isLocked) { setUpgrade("Gün " + c.day + ": " + c.tool); return; }
                     props.onLesson(c);
                   }}
                   onMouseEnter={function(e){ if(!isLocked){ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.borderColor= isDone ? "rgba(0,201,167,0.5)" : CARD_BORDER2; e.currentTarget.style.boxShadow="0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)"; } }}
@@ -1178,7 +1178,7 @@ function Dashboard(props) {
                     {isDone && <div style={{ position:"absolute", top:10, right:10, background:"linear-gradient(135deg,#00c9a7,#10a37f)", borderRadius:100, width:22, height:22, display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, color:"#04150f", fontWeight:800, boxShadow:"0 2px 8px rgba(0,201,167,0.4)" }}>✓</div>}
                     {isLocked && <div style={{ position:"absolute", top:10, right:10, fontSize:14, color:TEXT2 }}>🔒</div>}
                     <div style={{ fontSize:28, marginBottom:10 }}>{c.icon}</div>
-                    <div style={{ fontSize:10, color:GOLD, fontFamily:FONT_MONO, marginBottom:4, fontWeight:700, letterSpacing:"1px" }}>{"GUN " + c.day.toString().padStart(2,"0")}</div>
+                    <div style={{ fontSize:10, color:GOLD, fontFamily:FONT_MONO, marginBottom:4, fontWeight:700, letterSpacing:"1px" }}>{"GÜN " + c.day.toString().padStart(2,"0")}</div>
                     <div style={{ fontWeight:700, fontSize:14, marginBottom:4, color:TEXT }}>{c.tool}</div>
                     {isDone && sc !== undefined && <div style={{ fontSize:11, color:TEAL, fontFamily:FONT_MONO, fontWeight:600 }}>{sc + "/5 · +" + xpFor(sc) + "XP"}</div>}
                     {isLocked && <div style={{ fontSize:10, color:TEXT2, fontFamily:FONT_MONO }}>Pro gerekli</div>}
@@ -1190,7 +1190,7 @@ function Dashboard(props) {
             {done === total && (
               <div style={{ marginTop:32, textAlign:"center", background:"linear-gradient(145deg, rgba(201,168,76,0.12), rgba(124,92,252,0.06))", border:"1px solid rgba(201,168,76,0.4)", borderRadius:24, padding:40, boxShadow:SHADOW_GOLD+", inset 0 1px 0 rgba(255,255,255,0.1)" }}>
                 <div style={{ fontSize:56, marginBottom:12 }}>🏆</div>
-                <h2 style={{ fontSize:28, fontWeight:800, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", marginBottom:8, letterSpacing:"-0.02em" }}>Programi Tamamladin!</h2>
+                <h2 style={{ fontSize:28, fontWeight:800, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", marginBottom:8, letterSpacing:"-0.02em" }}>Programı Tamamladın!</h2>
                 <p style={{ color:TEXT2, marginBottom:24, fontSize:13, fontFamily:FONT_MONO }}>{"Sertifika: " + p.cert + " · Toplam " + xp + " XP"}</p>
                 <button onClick={function() {
                   var dataUrl = generateCertificate(user.name, p.cert, xp);
@@ -1199,7 +1199,7 @@ function Dashboard(props) {
                 onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; }}
                 onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
                 style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"15px 40px", fontSize:16, fontWeight:700, cursor:"pointer", boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT }}>
-                  Sertifikamı Indir
+                  Sertifikamı İndir
                 </button>
               </div>
             )}
@@ -1208,7 +1208,7 @@ function Dashboard(props) {
 
         {tab === "leaderboard" && (
           <div style={{ maxWidth:580 }}>
-            <p style={{ color:TEXT2, fontSize:13, marginBottom:20, fontFamily:FONT_MONO }}>Tum kullanicilar arasindaki XP siralaması</p>
+            <p style={{ color:TEXT2, fontSize:13, marginBottom:20, fontFamily:FONT_MONO }}>Tüm kullanıcılar arasındaki XP siralaması</p>
             {lbEntries.map(function(e, i) {
               var isMe = e.name.indexOf("(Sen)") >= 0;
               var medal = String(i + 1).padStart(2,"0");
@@ -1233,10 +1233,10 @@ function Dashboard(props) {
         {tab === "bonus" && p.bonus && (
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:18 }}>
             {[
-              { icon:"P", title:"500+ Prompt Sablonu",   desc:"Her arac icin hazir kullanisli promptlar" },
-              { icon:"G", title:"AI ile Gelir Rehberi",  desc:"AI araclariyla $1000+ kazanma stratejileri" },
-              { icon:"O", title:"Otomasyon Akislari",    desc:"Make + Zapier entegrasyon sablonlari" },
-              { icon:"D", title:"Discord Toplulugu",     desc:"Pro uyelere ozel kanal ve sorular" },
+              { icon:"P", title:"500+ Prompt Şablonu",   desc:"Her araç için hazır kullanışlı promptlar" },
+              { icon:"G", title:"AI ile Gelir Rehberi",  desc:"AI araçlarıyla $1000+ kazanma stratejileri" },
+              { icon:"O", title:"Otomasyon Akışları",    desc:"Make + Zapier entegrasyon şablonları" },
+              { icon:"D", title:"Discord Topluluğu",     desc:"Pro üyelere özel kanal ve sorular" },
             ].map(function(m) {
               return (
                 <div key={m.title}
@@ -1246,7 +1246,7 @@ function Dashboard(props) {
                   <div style={{ width:48, height:48, borderRadius:12, background:"linear-gradient(135deg, rgba(201,168,76,0.20), rgba(124,92,252,0.15))", border:"1px solid rgba(201,168,76,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, color:GOLD2, marginBottom:14, fontSize:18, fontFamily:FONT_MONO }}>{m.icon}</div>
                   <div style={{ fontWeight:700, marginBottom:8, fontSize:15, color:TEXT }}>{m.title}</div>
                   <div style={{ color:TEXT2, fontSize:13, lineHeight:1.6, marginBottom:18 }}>{m.desc}</div>
-                  <button style={{ background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.35)", borderRadius:10, padding:"9px 18px", color:GOLD2, cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:FONT, transition:"all 0.2s ease", textTransform:"uppercase", letterSpacing:"0.5px" }}>Erisim Sagla</button>
+                  <button style={{ background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.35)", borderRadius:10, padding:"9px 18px", color:GOLD2, cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:FONT, transition:"all 0.2s ease", textTransform:"uppercase", letterSpacing:"0.5px" }}>Erişim Sağla</button>
                 </div>
               );
             })}
@@ -1321,27 +1321,27 @@ function Lesson(props) {
 
   function parseCards(text) {
     var sections = [
-      { key:"NEDIR",           icon:"L", title:"Bu Arac Nedir?",              color:"#4285f4" },
-      { key:"TARIHCE",         icon:"T", title:"Tarihce ve Gelisim",           color:"#6366f1" },
-      { key:"TEMEL_OZELLIK_1", icon:"1", title:"Temel Ozellik 1",              color:"#d4a853" },
-      { key:"TEMEL_OZELLIK_2", icon:"2", title:"Temel Ozellik 2",              color:"#d4a853" },
-      { key:"TEMEL_OZELLIK_3", icon:"3", title:"Temel Ozellik 3",              color:"#d4a853" },
-      { key:"TEMEL_OZELLIK_4", icon:"4", title:"Temel Ozellik 4",              color:"#d4a853" },
-      { key:"TEMEL_OZELLIK_5", icon:"5", title:"Temel Ozellik 5",              color:"#d4a853" },
-      { key:"KULLANIM_1",      icon:"A", title:"Baslangic Adim 1",             color:"#10a37f" },
-      { key:"KULLANIM_2",      icon:"B", title:"Baslangic Adim 2",             color:"#10a37f" },
-      { key:"KULLANIM_3",      icon:"C", title:"Baslangic Adim 3",             color:"#10a37f" },
-      { key:"KULLANIM_4",      icon:"D", title:"Baslangic Adim 4",             color:"#10a37f" },
-      { key:"KULLANIM_ILERI_1",icon:"E", title:"Ileri Seviye Kullanim 1",      color:"#059669" },
-      { key:"KULLANIM_ILERI_2",icon:"F", title:"Ileri Seviye Kullanim 2",      color:"#059669" },
-      { key:"KULLANIM_ILERI_3",icon:"G", title:"Ileri Seviye Kullanim 3",      color:"#059669" },
-      { key:"KULLANIM_ILERI_4",icon:"H", title:"Ileri Seviye Kullanim 4",      color:"#059669" },
+      { key:"NEDIR",           icon:"L", title:"Bu Araç Nedir?",              color:"#4285f4" },
+      { key:"TARIHÇE",         icon:"T", title:"Tarihçe ve Gelisim",           color:"#6366f1" },
+      { key:"TEMEL_ÖZELLIK_1", icon:"1", title:"Temel Özellik 1",              color:"#d4a853" },
+      { key:"TEMEL_ÖZELLIK_2", icon:"2", title:"Temel Özellik 2",              color:"#d4a853" },
+      { key:"TEMEL_ÖZELLIK_3", icon:"3", title:"Temel Özellik 3",              color:"#d4a853" },
+      { key:"TEMEL_ÖZELLIK_4", icon:"4", title:"Temel Özellik 4",              color:"#d4a853" },
+      { key:"TEMEL_ÖZELLIK_5", icon:"5", title:"Temel Özellik 5",              color:"#d4a853" },
+      { key:"KULLANIM_1",      icon:"A", title:"Baslangic Adım 1",             color:"#10a37f" },
+      { key:"KULLANIM_2",      icon:"B", title:"Baslangic Adım 2",             color:"#10a37f" },
+      { key:"KULLANIM_3",      icon:"C", title:"Baslangic Adım 3",             color:"#10a37f" },
+      { key:"KULLANIM_4",      icon:"D", title:"Baslangic Adım 4",             color:"#10a37f" },
+      { key:"KULLANIM_ILERI_1",icon:"E", title:"Ileri Seviye Kullanım 1",      color:"#059669" },
+      { key:"KULLANIM_ILERI_2",icon:"F", title:"Ileri Seviye Kullanım 2",      color:"#059669" },
+      { key:"KULLANIM_ILERI_3",icon:"G", title:"Ileri Seviye Kullanım 3",      color:"#059669" },
+      { key:"KULLANIM_ILERI_4",icon:"H", title:"Ileri Seviye Kullanım 4",      color:"#059669" },
       { key:"PROMPT_ZAYIF",    icon:"X", title:"Zayif Prompt - Kacin!",        color:"#ef4444" },
       { key:"PROMPT_GUCLU",    icon:"P", title:"Guclu Prompt Teknigi",         color:"#8b5cf6" },
       { key:"PROMPT_UZMAN",    icon:"U", title:"Uzman Prompt Teknigi",         color:"#7c3aed" },
-      { key:"PROMPT_SEKTOR_1", icon:"S", title:"Pazarlama Promptlari",         color:"#9333ea" },
-      { key:"PROMPT_SEKTOR_2", icon:"K", title:"Teknoloji Promptlari",         color:"#9333ea" },
-      { key:"PROMPT_SEKTOR_3", icon:"M", title:"E-Ticaret Promptlari",         color:"#9333ea" },
+      { key:"PROMPT_SEKTOR_1", icon:"S", title:"Pazarlama Promptları",         color:"#9333ea" },
+      { key:"PROMPT_SEKTOR_2", icon:"K", title:"Teknoloji Promptları",         color:"#9333ea" },
+      { key:"PROMPT_SEKTOR_3", icon:"M", title:"E-Ticaret Promptları",         color:"#9333ea" },
       { key:"ENTEGRASYON_1",   icon:"Z", title:"Entegrasyon 1",                color:"#0891b2" },
       { key:"ENTEGRASYON_2",   icon:"Y", title:"Entegrasyon 2",                color:"#0891b2" },
       { key:"ENTEGRASYON_3",   icon:"W", title:"Entegrasyon 3",                color:"#0891b2" },
@@ -1362,12 +1362,12 @@ function Lesson(props) {
       { key:"KARSILASTIRMA_2", icon:"V", title:"Rakip Karsilastirma 2",        color:"#64748b" },
       { key:"KARSILASTIRMA_3", icon:"V", title:"Rakip Karsilastirma 3",        color:"#64748b" },
       { key:"GELECEK",         icon:"R", title:"Gelecek ve Trendler",          color:"#0ea5e9" },
-      { key:"SEKTOR_KULLANIM_1",icon:"N",title:"Finans Sektorunde Kullanim",   color:"#10b981" },
-      { key:"SEKTOR_KULLANIM_2",icon:"N",title:"Saglik Sektorunde Kullanim",   color:"#10b981" },
-      { key:"SEKTOR_KULLANIM_3",icon:"N",title:"Egitim Sektorunde Kullanim",   color:"#10b981" },
+      { key:"SEKTOR_KULLANIM_1",icon:"N",title:"Finans Sektorunde Kullanım",   color:"#10b981" },
+      { key:"SEKTOR_KULLANIM_2",icon:"N",title:"Saglik Sektorunde Kullanım",   color:"#10b981" },
+      { key:"SEKTOR_KULLANIM_3",icon:"N",title:"Egitim Sektorunde Kullanım",   color:"#10b981" },
       { key:"SEKTOR_KULLANIM_4",icon:"N",title:"Yaratici Endustriler",         color:"#10b981" },
-      { key:"OTOMASYON_AKISI", icon:"O", title:"Otomasyon Akisi Kur",          color:"#8b5cf6" },
-      { key:"VAKA_CALISMASI",  icon:"Q", title:"Gercek Vaka Calismasi",        color:"#f59e0b" },
+      { key:"OTOMASYON_AKISI", icon:"O", title:"Otomasyon Akışı Kur",          color:"#8b5cf6" },
+      { key:"VAKA_CALISMASI",  icon:"Q", title:"Gerçek Vaka Calismasi",        color:"#f59e0b" },
       { key:"SERTIFIKA_HAZIRLIK",icon:"J",title:"Sertifika Hazirlik",          color:"#d4a853" },
     ];
     var result = [];
@@ -1390,24 +1390,24 @@ function Lesson(props) {
   function getFallbackCards() {
     return [
       {
-        icon: "L", title: "Bu Arac Nedir?", color: "#4285f4",
-        body: lesson.tool + " — " + lesson.desc + "\n\nBu ders boyunca araci sifirdan ogrenecek, gercek is senaryolarinda nasil kullanacagini kesfedeceksin. Her kart somut bir beceri kazandiriyor."
+        icon: "L", title: "Bu Araç Nedir?", color: "#4285f4",
+        body: lesson.tool + " — " + lesson.desc + "\n\nBu ders boyunca aracı sıfırdan öğrenecek, gerçek iş senaryolarında nasıl kullanacağını keşfedeceksin. Her kart somut bir beceri kazandırıyor."
       },
       {
-        icon: "O", title: "Temel Ozellikler", color: "#d4a853",
-        body: "- Metin Uretimi: Tek bir aciklama ile profesyonel seviyede icerik, email, rapor ve kod uretir\n- Baglamsal Anlama: Onceki mesajlari hatirlar, uzun konusmalarda tutarli kalir\n- Cok Dilli Destek: Turkce dahil 50+ dilde akici ve dogal yanit verir\n- Dosya Analizi: PDF, Word, Excel ve gorsel dosyalari yukleyerek analiz ettirebilirsin\n- Kod Yazma: Python, JavaScript, SQL ve daha fazlasinda kod yazar, hata ayiklar"
+        icon: "O", title: "Temel Özellikler", color: "#d4a853",
+        body: "- Metin Üretimi: Tek bir açıklama ile profesyonel seviyede içerik, email, rapor ve kod üretir\n- Bağlamsal Anlama: Önceki mesajları hatırlar, uzun konuşmalarda tutarlı kalır\n- Çok Dilli Destek: Türkçe dahil 50+ dilde akıcı ve doğal yanıt verir\n- Dosya Analizi: PDF, Word, Excel ve görsel dosyaları yükleyerek analiz ettirebilirsin\n- Kod Yazma: Python, JavaScript, SQL ve daha fazlasında kod yazar, hata ayıklar"
       },
       {
-        icon: "B", title: "Baslangic: Ilk 3 Adim", color: "#10a37f",
-        body: "1. Hesap Olustur: Platforma git, Google hesabinla 30 saniyede kaydol. Ucretsiz plan gunluk kullanim icin yeterli.\n\n2. Net Prompt Yaz: 'Bir sey yaz' degil, 'Hedef kitle: 30-45 yas profesyoneller. Ton: samimi. 3 paragraflik LinkedIn gonderisi yaz' gibi spesifik talimatlar ver.\n\n3. Iteratif Gelistir: Ilk yanit mekemmel olmayabilir. 'Daha kisa yap', 'Ornek ekle', 'Daha guvenilir ton kullan' diyerek adim adim iyilestir."
+        icon: "B", title: "Baslangic: Ilk 3 Adım", color: "#10a37f",
+        body: "1. Hesap Oluştur: Platforma git, Google hesabınla 30 saniyede kaydol. Ücretsiz plan günlük kullanım için yeterli.\n\n2. Net Prompt Yaz: 'Bir şey yaz' değil, 'Hedef kitle: 30-45 yaş profesyoneller. Ton: samimi. 3 paragraflık LinkedIn gönderisi yaz' gibi spesifik talimatlar ver.\n\n3. İteratif Geliştir: İlk yanıt mükemmel olmayabilir. 'Daha kısa yap', 'Örnek ekle', 'Daha güvenilir ton kullan' diyerek adım adım iyileştir."
       },
       {
-        icon: "P", title: "Gercek Hayat Prompt Ornegi", color: "#8b5cf6",
-        body: "SENARYO: Bir e-ticaret sitesi icin urun aciklamasi yazman gerekiyor.\n\nZAYIF PROMPT:\n'Urun aciklamasi yaz'\n\nGUCLU PROMPT:\n'Sen deneyimli bir e-ticaret metin yazarisin. Hedef kitle: 25-40 yas kadin musteriler. Urun: el yapimi seramik kupa. Ton: sicak ve hikaye anlatan. Format: baslik + 3 madde ozellik + duygusal CTA. Maks 100 kelime.'\n\nFARK: Guclu prompt ile uretilen icerik direkt kullanilabilir, zayif prompt ile defalarca duzenleme gerekir."
+        icon: "P", title: "Gerçek Hayat Prompt Ornegi", color: "#8b5cf6",
+        body: "SENARYO: Bir e-ticaret sitesi için ürün açıklaması yazman gerekiyor.\n\nZAYIF PROMPT:\n'Ürün açıklaması yaz'\n\nGÜÇLÜ PROMPT:\n'Sen deneyimli bir e-ticaret metin yazarsın. Hedef kitle: 25-40 yaş kadın müşteriler. Ürün: el yapımı seramik kupa. Ton: sıcak ve hikaye anlatan. Format: başlık + 3 madde özellik + duygusal CTA. Maks 100 kelime.'\n\nFARK: Güçlü prompt ile üretilen içerik direkt kullanılabilir, zayıf prompt ile defalarca düzenleme gerekir."
       },
       {
-        icon: "!", title: "En Cok Yapilan 3 Hata", color: "#ef4444",
-        body: "HATA 1 - Belirsiz Sormak:\n'Bana bir sey anlat' yerine net hedef, format ve ton belirt. Belirsizlik = ortalama sonuc.\n\nHATA 2 - Tek Seferlik Kullanim:\nGercek gu cu iterasyonda. 'Su satirlari duzenle', 'Daha kisa yap', 'B2B tona cevir' diyerek gelistir.\n\nHATA 3 - Dogrulamadan Kullanmak:\nYapay zeka yanilabilir. Ozellikle tarih, istatistik ve hukuki bilgileri mutlaka dogrula."
+        icon: "!", title: "En Çok Yapılan 3 Hata", color: "#ef4444",
+        body: "HATA 1 - Belirsiz Sormak:\n'Bana bir şey anlat' yerine net hedef, format ve ton belirt. Belirsizlik = ortalama sonuç.\n\nHATA 2 - Tek Seferlik Kullanım:\nGerçek güç iterasyonda. 'Şu satırları düzenle', 'Daha kısa yap', 'B2B tona çevir' diyerek geliştir.\n\nHATA 3 - Doğrulamadan Kullanmak:\nYapay zeka yanılabilir. Özellikle tarih, istatistik ve hukuki bilgileri mutlaka doğrula."
       },
     ];
   }
@@ -1440,7 +1440,7 @@ function Lesson(props) {
 
     var topics = [
       "Bu araç nedir, ne işe yarar, kimler kullanır — sıfırdan anlat",
-      "Arayüz turu: ilk açtığında ne görürsün, hangi butona basarsın",
+      "Arayüz türü: ilk açtığında ne görürsün, hangi butona basarsın",
       "İlk 5 dakikada yapman gereken temel ayarlar ve kurulum",
       "En temel özellik #1 — gerçek hayat örneğiyle adım adım kullanım",
       "En temel özellik #2 — iş hayatından somut senaryo",
@@ -1529,7 +1529,7 @@ function Lesson(props) {
       <div style={{ borderBottom:"1px solid rgba(255,255,255,0.06)", padding:"12px 24px", display:"flex", alignItems:"center", gap:12 }}>
         <button onClick={props.onBack} style={{ background:"transparent", border:"none", color:"#888899", cursor:"pointer", fontSize:18 }}>{"<"}</button>
         <span style={{ fontSize:18 }}>{lesson.icon}</span>
-        <span style={{ fontWeight:700, fontSize:14 }}>{"Gun " + lesson.day + ": " + lesson.tool}</span>
+        <span style={{ fontWeight:700, fontSize:14 }}>{"Gün " + lesson.day + ": " + lesson.tool}</span>
         <div style={{ marginLeft:"auto", display:"flex", gap:5 }}>
           {["intro","learn","quiz","result"].map(function(pp, i) {
             return <div key={pp} style={{ width:24, height:3, borderRadius:2, background: phase===pp ? GOLD : i < ["intro","learn","quiz","result"].indexOf(phase) ? "#10a37f" : "rgba(255,255,255,0.1)" }} />;
@@ -1553,10 +1553,10 @@ function Lesson(props) {
               onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; }}
               onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
               style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"16px 48px", fontSize:17, fontWeight:700, cursor:"pointer", width:"100%", boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
-              Dersi Baslat
+              Dersi Başlat
             </button>
             <div style={{ marginTop:14, fontSize:12, textAlign:"center", color: cached === true ? TEAL : cached === false ? TEXT2 : TEXT2, fontFamily:FONT_MONO }}>
-              {cached === true ? "✓ Icerik hazir - aninda yuklenecek" : cached === false ? "⚡ Ilk acilis - AI icerik uretecek (~20 sn)" : "Kontrol ediliyor..."}
+              {cached === true ? "✓ Içerik hazır - anında yüklenecek" : cached === false ? "⚡ Ilk acilis - AI içerik üretecek (~20 sn)" : "Kontrol ediliyor..."}
             </div>
           </div>
         )}
@@ -1566,11 +1566,11 @@ function Lesson(props) {
             {loading ? (
               <div style={{ padding:"60px 20px", textAlign:"center" }}>
                 <div style={{ fontSize:48, marginBottom:20 }}>{lesson.icon}</div>
-                <h3 style={{ fontWeight:700, fontSize:18, marginBottom:6 }}>{lesson.tool + " dersi hazirlaniyor"}</h3>
-                <p style={{ color:"#888899", fontSize:13, marginBottom:32 }}>Yapay zeka kapsamli ders icerigi olusturuyor...</p>
+                <h3 style={{ fontWeight:700, fontSize:18, marginBottom:6 }}>{lesson.tool + " dersi hazırlanıyor"}</h3>
+                <p style={{ color:"#888899", fontSize:13, marginBottom:32 }}>Yapay zeka kapsamlı ders içeriği oluşturuyor...</p>
                 <div style={{ maxWidth:360, margin:"0 auto", marginBottom:16 }}>
                   <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8, fontSize:12, color:"#555577" }}>
-                    <span>Icerik uretiliyor</span>
+                    <span>Içerik uretiliyor</span>
                     <span style={{ color:GOLD, fontFamily:FONT_MONO, fontWeight:700 }}>{loadProgress + "%"}</span>
                   </div>
                   <div style={{ background:"rgba(255,255,255,0.07)", borderRadius:100, height:10, overflow:"hidden" }}>
@@ -1578,7 +1578,7 @@ function Lesson(props) {
                   </div>
                 </div>
                 <div style={{ display:"flex", gap:8, justifyContent:"center", flexWrap:"wrap" }}>
-                  {["Tarihce","Ozellikler","Kullanim","Promptlar","Ipuclari","Hatalar"].map(function(s, i) {
+                  {["Tarihçe","Özellikler","Kullanım","Promptlar","İpuçları","Hatalar"].map(function(s, i) {
                     return (
                       <div key={s} style={{ fontSize:11, padding:"4px 10px", borderRadius:20, background: loadProgress > i*15 ? "rgba(212,168,83,0.2)" : "rgba(255,255,255,0.04)", border:"1px solid "+(loadProgress>i*15?"rgba(212,168,83,0.4)":"rgba(255,255,255,0.07)"), color: loadProgress>i*15 ? GOLD : "#444466" }}>
                         {(loadProgress > i*15 ? "v " : "o ") + s}
@@ -1590,8 +1590,8 @@ function Lesson(props) {
             ) : loadError ? (
               <div style={{ textAlign:"center", padding:60 }}>
                 <div style={{ fontSize:48, marginBottom:16 }}>!</div>
-                <h3 style={{ color:"#ef4444", fontWeight:700, marginBottom:8 }}>Baglanti Hatasi</h3>
-                <p style={{ color:"#888899", fontSize:13, marginBottom:24 }}>Proxy URL'nin dogru ayarlandigini kontrol et.</p>
+                <h3 style={{ color:"#ef4444", fontWeight:700, marginBottom:8 }}>Baglanti Hatası</h3>
+                <p style={{ color:"#888899", fontSize:13, marginBottom:24 }}>Proxy URL'nin doğru ayarlandığını kontrol et.</p>
                 <button onClick={startLesson} style={{ background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"12px 28px", fontWeight:700, cursor:"pointer", fontSize:14 }}>Tekrar Dene</button>
               </div>
             ) : cards.length > 0 ? (
@@ -1658,7 +1658,7 @@ function Lesson(props) {
                       onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(0,201,167,0.4)"; }}
                       onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 4px 24px rgba(0,201,167,0.25)"; }}
                       style={{ flex:2, background:"linear-gradient(135deg,#00c9a7,#10a37f)", color:"#04150f", border:"none", borderRadius:14, padding:"16px 0", fontSize:15, fontWeight:700, cursor:"pointer", boxShadow:"0 4px 24px rgba(0,201,167,0.25)", transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
-                      Sinava Gec
+                      Sinava Geç
                     </button>
                   )}
                 </div>
@@ -1669,8 +1669,8 @@ function Lesson(props) {
 
         {phase === "quiz" && (
           <div>
-            <h2 style={{ fontSize:24, fontWeight:800, marginBottom:6, color:TEXT, letterSpacing:"-0.01em" }}>{lesson.tool + " Sinavi"}</h2>
-            <p style={{ color:TEXT2, fontSize:13, marginBottom:28, fontFamily:FONT_MONO }}>{"5 soru · +" + xpFor(1) + " XP / dogru"}</p>
+            <h2 style={{ fontSize:24, fontWeight:800, marginBottom:6, color:TEXT, letterSpacing:"-0.01em" }}>{lesson.tool + " Sınavı"}</h2>
+            <p style={{ color:TEXT2, fontSize:13, marginBottom:28, fontFamily:FONT_MONO }}>{"5 soru · +" + xpFor(1) + " XP / doğru"}</p>
             {quiz.map(function(q, qi) {
               return (
                 <div key={qi} style={{ background:"linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+CARD_BORDER2, borderRadius:20, padding:24, marginBottom:18, boxShadow:"0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
@@ -1701,18 +1701,18 @@ function Lesson(props) {
               onMouseEnter={function(e){ if(answeredCount>=quiz.length){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.4)"; } }}
               onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow= answeredCount>=quiz.length ? SHADOW_GOLD : "none"; }}
               style={{ width:"100%", background: answeredCount < quiz.length ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#c9a84c,#f5cc6a)", color: answeredCount < quiz.length ? TEXT2 : "#08080f", border: answeredCount < quiz.length ? "1px solid "+CARD_BORDER2 : "none", borderRadius:14, padding:"16px 0", fontSize:15, fontWeight:700, cursor: answeredCount < quiz.length ? "not-allowed" : "pointer", boxShadow: answeredCount < quiz.length ? "none" : SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
-              {answeredCount < quiz.length ? ((quiz.length - answeredCount) + " soru kaldi") : "Sinavi Bitir"}
+              {answeredCount < quiz.length ? ((quiz.length - answeredCount) + " soru kaldi") : "Sınavı Bitir"}
             </button>
           </div>
         )}
 
         {phase === "result" && (
           <div style={{ textAlign:"center", paddingTop:32 }}>
-            <div style={{ fontSize:68, marginBottom:18 }}>{score >= 4 ? "Mukemmel" : score >= 3 ? "Iyi" : "Tekrar"}</div>
-            <h2 style={{ fontSize:30, fontWeight:800, marginBottom:8, color:TEXT, letterSpacing:"-0.02em" }}>{score >= 4 ? "Mukemmel!" : score >= 3 ? "Iyi Is!" : "Biraz Daha Calis!"}</h2>
+            <div style={{ fontSize:68, marginBottom:18 }}>{score >= 4 ? "Mükemmel" : score >= 3 ? "Iyi" : "Tekrar"}</div>
+            <h2 style={{ fontSize:30, fontWeight:800, marginBottom:8, color:TEXT, letterSpacing:"-0.02em" }}>{score >= 4 ? "Mükemmel!" : score >= 3 ? "Iyi Is!" : "Biraz Daha Çalış!"}</h2>
             <div style={{ fontSize:64, fontWeight:800, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", fontFamily:FONT_MONO, margin:"18px 0", letterSpacing:"-0.04em" }}>{score + "/5"}</div>
             <div style={{ display:"inline-flex", alignItems:"center", gap:7, background:"rgba(201,168,76,0.12)", border:"1px solid rgba(201,168,76,0.35)", borderRadius:12, padding:"12px 24px", marginBottom:28, fontSize:16, fontWeight:700, color:GOLD2, boxShadow:SHADOW_GOLD }}>
-              {"+" + earnedXP + " XP Kazandin!"}
+              {"+" + earnedXP + " XP Kazandın!"}
             </div>
             <div style={{ display:"flex", gap:8, justifyContent:"center", marginBottom:32 }}>
               {[0,1,2,3,4].map(function(i) {
@@ -1751,15 +1751,15 @@ function Auth(props) {
   function submit() {
     setErr("");
     setInfo("");
-    if (!email || !pass) { setErr("Tum alanlari doldurun"); return; }
+    if (!email || !pass) { setErr("Tüm alanlari doldurun"); return; }
     if (email === ADMIN_EMAIL && pass === ADMIN_PASS) { setShowAdmin(true); return; }
-    if (pass.length < 6) { setErr("Sifre en az 6 karakter"); return; }
+    if (pass.length < 6) { setErr("Şifre en az 6 karakter"); return; }
     if (tab === "register") {
       if (!name) { setErr("Ad Soyad gerekli"); return; }
-      if (email.indexOf("@") < 0) { setErr("Gecerli email girin"); return; }
-      if (pass !== pass2) { setErr("Sifreler eslesmiyor"); return; }
-      if (!terms) { setErr("Devam etmek icin kosullari kabul et"); return; }
-      if (emailExists(email)) { setErr("Bu email zaten kayitli. Giris Yap'a gec."); return; }
+      if (email.indexOf("@") < 0) { setErr("Geçerli email girin"); return; }
+      if (pass !== pass2) { setErr("Şifreler eşleşmiyor"); return; }
+      if (!terms) { setErr("Devam etmek için koşulları kabul et"); return; }
+      if (emailExists(email)) { setErr("Bu email zaten kayıtlı. Giriş Yap'a geç."); return; }
       setLoading(true);
       setTimeout(function() {
         setLoading(false);
@@ -1774,14 +1774,14 @@ function Auth(props) {
         setVerifyCode(code);
         setPendingUser(userData);
         setCodeInput("");
-        setInfo("Dogrulama kodu " + email + " adresine gonderildi.");
+        setInfo("Doğrulama kodu " + email + " adresine gönderildi.");
       }, 800);
     } else {
       setLoading(true);
       setTimeout(function() {
         setLoading(false);
         var existing = getUserByEmail(email);
-        if (!existing) { setErr("Bu email ile kayitli hesap yok. Kayit Ol sekmesini kullan."); return; }
+        if (!existing) { setErr("Bu email ile kayıtlı hesap yok. Kayıt Ol sekmesini kullan."); return; }
         props.onLogin(existing);
       }, 600);
     }
@@ -1790,7 +1790,7 @@ function Auth(props) {
   function verifySubmit() {
     setErr("");
     if (!codeInput || codeInput.length !== 6) { setErr("6 haneli kodu gir"); return; }
-    if (codeInput !== verifyCode) { setErr("Kod hatali. Tekrar dene."); return; }
+    if (codeInput !== verifyCode) { setErr("Kod hatalı. Tekrar dene."); return; }
     setLoading(true);
     setTimeout(function() {
       setLoading(false);
@@ -1806,7 +1806,7 @@ function Auth(props) {
       setTerms(false);
       setTab("login");
       setEmail(savedEmail);
-      setInfo("Hesabin dogrulandi! Sifrenle giris yap.");
+      setInfo("Hesabın doğrulandı! Şifrenle giriş yap.");
     }, 500);
   }
 
@@ -1814,7 +1814,7 @@ function Auth(props) {
     var code = String(Math.floor(100000 + Math.random() * 900000));
     setVerifyCode(code);
     setCodeInput("");
-    setInfo("Yeni kod gonderildi.");
+    setInfo("Yeni kod gönderildi.");
     setErr("");
   }
 
@@ -1852,13 +1852,13 @@ function Auth(props) {
             <div style={{ padding:40 }}>
               <div style={{ textAlign:"center", marginBottom:24 }}>
                 <div style={{ fontSize:40, marginBottom:10 }}>✉️</div>
-                <div style={{ fontSize:20, fontWeight:800, color:TEXT, marginBottom:6 }}>Email Dogrulama</div>
+                <div style={{ fontSize:20, fontWeight:800, color:TEXT, marginBottom:6 }}>Email Doğrulama</div>
                 <div style={{ fontSize:13, color:TEXT2, lineHeight:1.5 }}>
-                  <span style={{ color:GOLD2, fontWeight:600 }}>{pendingUser ? pendingUser.email : email}</span> adresine gonderdigimiz 6 haneli kodu gir.
+                  <span style={{ color:GOLD2, fontWeight:600 }}>{pendingUser ? pendingUser.email : email}</span> adresine gönderdiğimiz 6 haneli kodu gir.
                 </div>
               </div>
               <div style={{ marginBottom:14 }}>
-                <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Dogrulama Kodu</label>
+                <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Doğrulama Kodu</label>
                 <input type="text" inputMode="numeric" maxLength={6} value={codeInput}
                   onChange={function(e) { setCodeInput((e.target.value || "").replace(/\D/g,"").slice(0,6)); }}
                   onKeyDown={function(e){ if(e.key==="Enter") verifySubmit(); }}
@@ -1873,18 +1873,18 @@ function Auth(props) {
               {err && <div style={{ color:"#ef4444", fontSize:12, marginBottom:12, padding:"10px 12px", background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:10 }}>{err}</div>}
               <button onClick={verifySubmit} disabled={loading}
                 style={{ width:"100%", background: loading ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg,#c9a84c,#f5cc6a)", color: loading ? TEXT2 : "#08080f", border:"none", borderRadius:14, padding:"15px 0", fontSize:15, fontWeight:700, cursor: loading ? "not-allowed" : "pointer", boxShadow: loading ? "none" : SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, marginBottom:10 }}>
-                {loading ? "Dogrulaniyor..." : "Dogrula ve Devam Et"}
+                {loading ? "Doğrulanıyor..." : "Doğrula ve Devam Et"}
               </button>
               <div style={{ display:"flex", justifyContent:"space-between", fontSize:12, marginTop:6 }}>
                 <button onClick={cancelVerify} style={{ background:"transparent", border:"none", color:TEXT2, cursor:"pointer", fontFamily:FONT, padding:0 }}>← Geri</button>
-                <button onClick={resendCode} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontFamily:FONT, padding:0, fontWeight:600 }}>Kodu Tekrar Gonder</button>
+                <button onClick={resendCode} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontFamily:FONT, padding:0, fontWeight:600 }}>Kodu Tekrar Gönder</button>
               </div>
             </div>
           ) : (
           <>
           <div style={{ display:"flex", borderBottom:"1px solid "+CARD_BORDER }}>
-            {tabBtn("login", "Giris Yap")}
-            {tabBtn("register", "Kayit Ol")}
+            {tabBtn("login", "Giriş Yap")}
+            {tabBtn("register", "Kayıt Ol")}
           </div>
           <div style={{ padding:40 }}>
             {tab === "register" && (
@@ -1904,7 +1904,7 @@ function Auth(props) {
                 style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"14px 16px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box", fontFamily:FONT, transition:"border-color 0.2s ease" }} />
             </div>
             <div style={{ marginBottom:18 }}>
-              <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Sifre</label>
+              <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Şifre</label>
               <input type="password" value={pass} onChange={function(e) { setPass(e.target.value); }} onKeyDown={function(e) { if (e.key === "Enter") submit(); }}
                 onFocus={function(e){ e.currentTarget.style.borderColor=GOLD; }}
                 onBlur={function(e){ e.currentTarget.style.borderColor="rgba(255,255,255,0.12)"; }}
@@ -1912,7 +1912,7 @@ function Auth(props) {
             </div>
             {tab === "register" && (
               <div style={{ marginBottom:18 }}>
-                <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Sifre (Tekrar)</label>
+                <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Şifre (Tekrar)</label>
                 <input type="password" value={pass2} onChange={function(e) { setPass2(e.target.value); }} onKeyDown={function(e) { if (e.key === "Enter") submit(); }}
                   onFocus={function(e){ e.currentTarget.style.borderColor=GOLD; }}
                   onBlur={function(e){ e.currentTarget.style.borderColor="rgba(255,255,255,0.12)"; }}
@@ -1923,7 +1923,7 @@ function Auth(props) {
               <label style={{ display:"flex", alignItems:"flex-start", gap:10, marginBottom:18, cursor:"pointer", color:TEXT2, fontSize:12, lineHeight:1.5, fontFamily:FONT }}>
                 <input type="checkbox" checked={terms} onChange={function(e){ setTerms(e.target.checked); }}
                   style={{ marginTop:2, accentColor:GOLD, width:16, height:16, cursor:"pointer" }} />
-                <span><span style={{ color:GOLD2 }}>Kullanim Kosullari</span> ve <span style={{ color:GOLD2 }}>Gizlilik Politikasini</span> okudum, kabul ediyorum.</span>
+                <span><span style={{ color:GOLD2 }}>Kullanım Koşulları</span> ve <span style={{ color:GOLD2 }}>Gizlilik Politikasını</span> okudum, kabul ediyorum.</span>
               </label>
             )}
             {info && <div style={{ color:"#10a37f", fontSize:12, marginBottom:12, padding:"10px 12px", background:"rgba(16,163,127,0.08)", border:"1px solid rgba(16,163,127,0.25)", borderRadius:10 }}>{info}</div>}
@@ -1932,7 +1932,7 @@ function Auth(props) {
               onMouseEnter={function(e){ if(!loading){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.4)"; } }}
               onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
               style={{ width:"100%", background: loading ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg,#c9a84c,#f5cc6a)", color: loading ? TEXT2 : "#08080f", border:"none", borderRadius:14, padding:"15px 0", fontSize:15, fontWeight:700, cursor: loading ? "not-allowed" : "pointer", boxShadow: loading ? "none" : SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
-              {loading ? "Lutfen bekleyin..." : (tab === "register" ? "Kayit Ol" : "Giris Yap")}
+              {loading ? "Lütfen bekleyin..." : (tab === "register" ? "Kayıt Ol" : "Giriş Yap")}
             </button>
           </div>
           </>
@@ -1947,8 +1947,8 @@ function PlanSelect(props) {
   return (
     <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, padding:"60px 20px", backgroundImage:"radial-gradient(ellipse at 50% 0%,rgba(124,92,252,0.15) 0%,rgba(201,168,76,0.08) 35%,transparent 70%), radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize:"auto, 32px 32px" }}>
       <div style={{ maxWidth:1000, margin:"0 auto" }}>
-        <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planini Sec</h2>
-        <p style={{ textAlign:"center", color:TEXT2, marginBottom:44, fontSize:14, fontFamily:FONT }}>Hedefine uygun plani sec ve bugun basla</p>
+        <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planını Seç</h2>
+        <p style={{ textAlign:"center", color:TEXT2, marginBottom:44, fontSize:14, fontFamily:FONT }}>Hedefine uygun plani seç ve bugün başla</p>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:22 }}>
           {PLANS.map(function(plan) {
             return (
@@ -1956,7 +1956,7 @@ function PlanSelect(props) {
                 onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-4px)"; }}
                 onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; }}
                 style={{ background: plan.popular ? "linear-gradient(145deg, rgba(201,168,76,0.12), rgba(124,92,252,0.06))" : "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+(plan.popular?"rgba(201,168,76,0.45)":CARD_BORDER2), borderRadius:24, padding:32, position:"relative", boxShadow: plan.popular ? "0 8px 32px rgba(201,168,76,0.20), inset 0 1px 0 rgba(255,255,255,0.1)" : "0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)", transition:"all 0.2s ease" }}>
-                {plan.popular && <div style={{ position:"absolute", top:-12, left:"50%", transform:"translateX(-50%)", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", fontSize:11, fontWeight:800, padding:"5px 18px", borderRadius:100, letterSpacing:"1px", boxShadow:SHADOW_GOLD, textTransform:"uppercase" }}>En Populer</div>}
+                {plan.popular && <div style={{ position:"absolute", top:-12, left:"50%", transform:"translateX(-50%)", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", fontSize:11, fontWeight:800, padding:"5px 18px", borderRadius:100, letterSpacing:"1px", boxShadow:SHADOW_GOLD, textTransform:"uppercase" }}>En Popüler</div>}
                 <div style={{ fontSize:14, fontWeight:700, marginBottom:8, color:TEXT2, textTransform:"uppercase", letterSpacing:"1.5px" }}>{plan.name}</div>
                 <div style={{ display:"flex", alignItems:"baseline", gap:6, marginBottom:24 }}>
                   <span style={{ fontSize:48, fontWeight:800, color: plan.popular ? GOLD2 : plan.color, fontFamily:FONT_MONO, letterSpacing:"-0.03em" }}>{"$"+plan.price}</span>
@@ -1971,7 +1971,7 @@ function PlanSelect(props) {
                   onMouseEnter={function(e){ if(plan.popular){ e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; } else { e.currentTarget.style.background="rgba(255,255,255,0.06)"; } }}
                   onMouseLeave={function(e){ if(plan.popular){ e.currentTarget.style.boxShadow=SHADOW_GOLD; } else { e.currentTarget.style.background="transparent"; } }}
                   style={{ width:"100%", background: plan.popular ? "linear-gradient(135deg,#c9a84c,#f5cc6a)" : "transparent", color: plan.popular ? "#08080f" : plan.color, border:"1px solid "+(plan.popular?"transparent":plan.color), borderRadius:14, padding:"14px 0", fontSize:14, fontWeight:700, cursor:"pointer", boxShadow: plan.popular ? SHADOW_GOLD : "none", transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
-                  Sec
+                  Seç
                 </button>
               </div>
             );
@@ -1995,7 +1995,7 @@ export default function App() {
 
   useEffect(function() {
     if (typeof window === "undefined") { setBooting(false); return; }
-    // Davet linki kontrolu
+    // Davet linki kontrolü
     try {
       var params = new URLSearchParams(window.location.search);
       var inviteCode = params.get("invite");
@@ -2004,7 +2004,7 @@ export default function App() {
         if (parsed) setInviteData(parsed);
       }
     } catch(e) {}
-    // Kayitli kullanici kontrolu
+    // Kayıtlı kullanıcı kontrolü
     try {
       var su = lsGet("aica-user");
       if (su) { var u = JSON.parse(su); setUser(u); setPage("dashboard"); }
@@ -2038,7 +2038,7 @@ export default function App() {
       <div style={{ minHeight:"100vh", background:BG, display:"flex", alignItems:"center", justifyContent:"center" }}>
         <div style={{ textAlign:"center", fontFamily:FONT }}>
           <div style={{ fontSize:40, fontWeight:800, color:GOLD, marginBottom:10 }}>AI</div>
-          <div style={{ color:"#555577", fontSize:13 }}>Yukleniyor...</div>
+          <div style={{ color:"#555577", fontSize:13 }}>Yükleniyor...</div>
         </div>
       </div>
     );
