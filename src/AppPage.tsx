@@ -169,7 +169,7 @@ var COURSES = [
   { day:11, tool:"Leonardo AI",        icon:"\uD83C\uDFA8", color:"#ec4899", desc:"AI gorsel uretiminde uzmanlasin" },
   { day:12, tool:"Meta AI",            icon:"\uD83C\uDF10", color:"#0668e1", desc:"Meta AI ekosistemini ogreyin" },
   { day:13, tool:"Assembly AI",        icon:"\uD83C\uDF99", color:"#14b8a6", desc:"Ses transkripsiyon AI kullanin" },
-  { day:14, tool:"Canva AI",           icon:"\uD83D\uDD8C", color:"#7c3aed", desc:"AI destekli tasarim araclarini ogreyin" },
+  { day:14, tool:"Canva AI",           icon:"\uD83D\uDD8C", color:"#7c3aed", desc:"AI destekli tasarım araçlarını öğrenin" },
   { day:15, tool:"Veo 3",              icon:"\uD83C\uDFAC", color:"#dc2626", desc:"Google video uretim AI kesfedin" },
   { day:16, tool:"Sora 2",             icon:"\uD83C\uDFA5", color:"#059669", desc:"OpenAI video AI modelini kullanin" },
   { day:17, tool:"Kimi",               icon:"\uD83C\uDF19", color:"#7c3aed", desc:"Moonshot AI guclu modelini ogreyin" },
