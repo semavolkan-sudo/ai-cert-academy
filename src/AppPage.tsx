@@ -2885,6 +2885,25 @@ function Auth(props) {
 }
 
 function PlanSelect(props) {
+  var [couponCode, setCouponCode] = useState("");
+  var [couponResult, setCouponResult] = useState(null);
+  var [couponLoading, setCouponLoading] = useState(false);
+
+  function applyCoupon() {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    var userEmail = "";
+    try { var su = lsGet("aica_user"); if (su) { var u = JSON.parse(su); userEmail = u.email || ""; } } catch(e) {}
+    fetch(USERS_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "verify-coupon", couponCode: couponCode.trim(), email: userEmail })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { setCouponResult(d); setCouponLoading(false); })
+      .catch(function() { setCouponResult({ ok: false, reason: "error" }); setCouponLoading(false); });
+  }
+
   return (
     <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, padding:"60px 20px", backgroundImage:"radial-gradient(ellipse at 50% 0%,rgba(124,92,252,0.15) 0%,rgba(201,168,76,0.08) 35%,transparent 70%), radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize:"auto, 32px 32px" }}>
       <div style={{ maxWidth:1000, margin:"0 auto" }}>
@@ -2917,6 +2936,49 @@ function PlanSelect(props) {
               </div>
             );
           })}
+        </div>
+        <div style={{ maxWidth:400, margin:"24px auto 0", textAlign:"center" }}>
+          <div style={{ fontSize:13, color:"#888899", marginBottom:10 }}>Kupon kodun var mı?</div>
+          <div style={{ display:"flex", gap:8 }}>
+            <input value={couponCode} onChange={function(e) { setCouponCode(e.target.value.toUpperCase()); setCouponResult(null); }}
+              placeholder="KUPON KODU"
+              style={{ flex:1, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:10, padding:"11px 14px", color:"#fff", fontSize:13, outline:"none", fontFamily:"monospace", letterSpacing:2 }} />
+            <button onClick={applyCoupon} disabled={couponLoading || !couponCode.trim()}
+              style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:10, padding:"11px 20px", fontSize:13, fontWeight:700, cursor:"pointer" }}>
+              {couponLoading ? "..." : "Uygula"}
+            </button>
+          </div>
+          {couponResult && couponResult.ok && (
+            <div style={{ marginTop:10, background:"rgba(16,163,127,0.1)", border:"1px solid rgba(16,163,127,0.3)", borderRadius:10, padding:"12px 16px" }}>
+              {couponResult.isFree ? (
+                <div>
+                  <div style={{ color:"#10a37f", fontWeight:700, fontSize:14, marginBottom:6 }}>🎉 Bedava erişim kazandın!</div>
+                  <div style={{ color:"#6ee7b7", fontSize:13, marginBottom:12 }}>Bu kupon ile Pro plana ücretsiz erişebilirsin.</div>
+                  <button onClick={function() {
+                    var freeUser = null;
+                    try { var su = lsGet("aica_user"); if (su) freeUser = JSON.parse(su); } catch(e) {}
+                    if (freeUser) {
+                      freeUser.plan = PLANS[1];
+                      freeUser.couponUsed = couponResult.code;
+                      saveUser(freeUser);
+                      props.onPick && props.onPick(PLANS[1]);
+                    }
+                  }} style={{ background:"linear-gradient(135deg,#10a37f,#34d399)", color:"#fff", border:"none", borderRadius:10, padding:"12px 28px", fontSize:14, fontWeight:700, cursor:"pointer", width:"100%" }}>
+                    🚀 Hemen Başla — Ücretsiz
+                  </button>
+                </div>
+              ) : (
+                <div style={{ color:"#10a37f", fontWeight:600, fontSize:13 }}>
+                  ✅ Kupon uygulandı! %{couponResult.discount} indirim kazandın.
+                </div>
+              )}
+            </div>
+          )}
+          {couponResult && !couponResult.ok && (
+            <div style={{ marginTop:10, background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.2)", borderRadius:10, padding:"10px 16px", color:"#ef4444", fontSize:13 }}>
+              ❌ {couponResult.message || "Geçersiz veya kullanılmış kupon kodu"}
+            </div>
+          )}
         </div>
       </div>
     </div>
