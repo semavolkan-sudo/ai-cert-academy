@@ -340,14 +340,14 @@ function UpgradeModal(props) {
     <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.80)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:800, display:"flex", alignItems:"center", justifyContent:"center", padding:24, fontFamily:FONT }}>
       <div style={{ background:"linear-gradient(145deg, rgba(13,13,31,0.95), rgba(7,7,17,0.95))", backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)", border:"1px solid rgba(201,168,76,0.4)", borderRadius:24, padding:44, maxWidth:440, textAlign:"center", boxShadow:"0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
         <div style={{ fontSize:56, marginBottom:16 }}>🔒</div>
-        <h2 style={{ background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", fontWeight:800, fontSize:22, marginBottom:12, letterSpacing:"-0.01em" }}>Pro Ozellik</h2>
-        <p style={{ color:TEXT, marginBottom:28, lineHeight:1.7, fontSize:14 }}><span style={{ color:GOLD2, fontWeight:600 }}>{props.feature}</span> — Pro veya Business plana gecis yaparak bu ozelligi kullanabilirsin.</p>
+        <h2 style={{ background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", fontWeight:800, fontSize:22, marginBottom:12, letterSpacing:"-0.01em" }}>Pro Özellik</h2>
+        <p style={{ color:TEXT, marginBottom:28, lineHeight:1.7, fontSize:14 }}><span style={{ color:GOLD2, fontWeight:600 }}>{props.feature}</span> — Pro veya Business plana geçiş yaparak bu özelliği kullanabilirsin.</p>
         <div style={{ display:"flex", gap:12, justifyContent:"center" }}>
-          <button onClick={props.onClose} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid "+CARD_BORDER2, borderRadius:12, padding:"12px 24px", color:TEXT2, cursor:"pointer", fontSize:13, fontWeight:600, fontFamily:FONT, transition:"all 0.2s ease" }}>Vazgec</button>
+          <button onClick={props.onClose} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid "+CARD_BORDER2, borderRadius:12, padding:"12px 24px", color:TEXT2, cursor:"pointer", fontSize:13, fontWeight:600, fontFamily:FONT, transition:"all 0.2s ease" }}>Vazgeç</button>
           <button onClick={props.onClose}
             onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; }}
             onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
-            style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:12, padding:"12px 26px", fontWeight:700, cursor:"pointer", fontSize:13, boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>Plani Yukselt</button>
+            style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:12, padding:"12px 26px", fontWeight:700, cursor:"pointer", fontSize:13, boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>Plani Yükselt</button>
         </div>
       </div>
     </div>
@@ -374,7 +374,7 @@ function Onboarding(props) {
       <div style={{ width:"100%", maxWidth:500 }}>
         <div style={{ textAlign:"center", marginBottom:36 }}>
           <div style={{ fontSize:36, fontWeight:800, color:GOLD }}>AI</div>
-          <div style={{ color:"#888899", fontSize:13, marginTop:4 }}>Kisisellestirilmis ogrenme yolu olusturuluyor</div>
+          <div style={{ color:"#888899", fontSize:13, marginTop:4 }}>Kisisellestirilmis öğrenme yolu oluşturuluyor</div>
         </div>
         <div style={{ background:"rgba(255,255,255,0.06)", borderRadius:100, height:4, marginBottom:28, overflow:"hidden" }}>
           <div style={{ width:(((step+1)/qs.length)*100)+"%", height:"100%", background:GOLD, borderRadius:100 }} />
@@ -441,7 +441,7 @@ function MentorChat(props) {
       <div style={{ width:"100%", maxWidth:680, height:"88vh", background:"linear-gradient(145deg, rgba(13,13,31,0.98), rgba(7,7,17,0.98))", border:"1px solid "+CARD_BORDER2, borderRadius:24, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
         <div style={{ padding:"16px 20px", borderBottom:"1px solid "+CARD_BORDER, display:"flex", alignItems:"center", gap:12, background:"rgba(201,168,76,0.05)", backdropFilter:"blur(12px)" }}>
           <div style={{ width:42, height:42, borderRadius:"50%", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, fontWeight:800, color:"#08080f", boxShadow:"0 4px 16px rgba(201,168,76,0.4)" }}>🧠</div>
-          <div style={{ flex:1 }}><div style={{ fontWeight:700, color:TEXT, fontSize:15 }}>AI Mentor</div><div style={{ fontSize:11, color:TEAL, fontFamily:FONT_MONO, marginTop:2 }}>● Cevrimici</div></div>
+          <div style={{ flex:1 }}><div style={{ fontWeight:700, color:TEXT, fontSize:15 }}>AI Mentor</div><div style={{ fontSize:11, color:TEAL, fontFamily:FONT_MONO, marginTop:2 }}>● Çevrimiçi</div></div>
           <div style={{ background:"rgba(201,168,76,0.12)", border:"1px solid rgba(201,168,76,0.35)", borderRadius:10, padding:"5px 12px", fontSize:11, color:GOLD2, fontFamily:FONT_MONO, fontWeight:700 }}>
             {p.mentorSessions === 999 ? "Sınırsız" : left + " seans"}
           </div>
@@ -480,7 +480,7 @@ function MentorChat(props) {
         )}
         <div style={{ padding:"12px 16px", borderTop:"1px solid "+CARD_BORDER, display:"flex", gap:10, background:"rgba(7,7,17,0.6)" }}>
           {p.mentorSessions !== 999 && left <= 0 ? (
-            <div style={{ flex:1, textAlign:"center", color:TEXT2, fontSize:13, padding:"12px 0", fontFamily:FONT_MONO }}>Seans hakkin doldu — Pro'ya geç</div>
+            <div style={{ flex:1, textAlign:"center", color:TEXT2, fontSize:13, padding:"12px 0", fontFamily:FONT_MONO }}>Seans hakkın doldu — Pro'ya geç</div>
           ) : (
             <>
               <input value={inp} onChange={function(e) { setInp(e.target.value); }} onKeyDown={function(e) { if (e.key === "Enter") send(); }}
@@ -554,8 +554,8 @@ function Landing(props) {
         </div>
       </div>
       <div style={{ maxWidth:1060, margin:"0 auto", padding:"0 20px 72px" }}>
-        <h2 style={{ textAlign:"center", fontSize:32, fontWeight:800, marginBottom:10, color:TEXT, letterSpacing:"-0.02em" }}>28 Gunluk Program</h2>
-        <p style={{ textAlign:"center", color:TEXT2, marginBottom:40, fontSize:14, fontFamily:FONT_MONO }}>Her gun yeni bir AI araci, her gun yeni bir super guc</p>
+        <h2 style={{ textAlign:"center", fontSize:32, fontWeight:800, marginBottom:10, color:TEXT, letterSpacing:"-0.02em" }}>28 Günlük Program</h2>
+        <p style={{ textAlign:"center", color:TEXT2, marginBottom:40, fontSize:14, fontFamily:FONT_MONO }}>Her gün yeni bir AI aracı, her gün yeni bir süper guc</p>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(210px,1fr))", gap:14 }}>
           {COURSES.map(function(c) {
             return (
@@ -576,8 +576,8 @@ function Landing(props) {
       </div>
       <div id="pricing" style={{ background:"linear-gradient(180deg, rgba(124,92,252,0.04), rgba(201,168,76,0.04))", borderTop:"1px solid "+CARD_BORDER, padding:"72px 20px" }}>
         <div style={{ maxWidth:1000, margin:"0 auto" }}>
-          <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planini Sec</h2>
-          <p style={{ textAlign:"center", color:TEXT2, marginBottom:44, fontSize:14, fontFamily:FONT }}>Hedefine uygun plani sec ve bugun basla</p>
+          <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planini Seç</h2>
+          <p style={{ textAlign:"center", color:TEXT2, marginBottom:44, fontSize:14, fontFamily:FONT }}>Hedefine uygun plani seç ve bugün başla</p>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:22 }}>
             {PLANS.map(function(plan) {
               return (
@@ -585,7 +585,7 @@ function Landing(props) {
                   onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-4px)"; }}
                   onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; }}
                   style={{ background: plan.popular ? "linear-gradient(145deg, rgba(201,168,76,0.12), rgba(124,92,252,0.06))" : "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+(plan.popular?"rgba(201,168,76,0.45)":CARD_BORDER2), borderRadius:24, padding:32, position:"relative", boxShadow: plan.popular ? "0 8px 32px rgba(201,168,76,0.20), inset 0 1px 0 rgba(255,255,255,0.1)" : "0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)", transition:"all 0.2s ease", fontFamily:FONT }}>
-                  {plan.popular && <div style={{ position:"absolute", top:-12, left:"50%", transform:"translateX(-50%)", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", fontSize:11, fontWeight:800, padding:"5px 18px", borderRadius:100, letterSpacing:"1px", boxShadow:SHADOW_GOLD, textTransform:"uppercase" }}>En Populer</div>}
+                  {plan.popular && <div style={{ position:"absolute", top:-12, left:"50%", transform:"translateX(-50%)", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", fontSize:11, fontWeight:800, padding:"5px 18px", borderRadius:100, letterSpacing:"1px", boxShadow:SHADOW_GOLD, textTransform:"uppercase" }}>En Popüler</div>}
                   <div style={{ fontSize:14, fontWeight:700, marginBottom:8, color:TEXT2, textTransform:"uppercase", letterSpacing:"1.5px" }}>{plan.name}</div>
                   <div style={{ display:"flex", alignItems:"baseline", gap:6, marginBottom:24 }}>
                     <span style={{ fontSize:48, fontWeight:800, color: plan.popular ? GOLD2 : plan.color, fontFamily:FONT_MONO, letterSpacing:"-0.03em" }}>{"$"+plan.price}</span>
@@ -651,7 +651,7 @@ function Register(props) {
           {!inviteData && props.plan && <div style={{ marginTop:10, display:"inline-block", background:"rgba(212,168,83,0.1)", border:"1px solid rgba(212,168,83,0.3)", borderRadius:7, padding:"5px 14px", fontSize:12, color:GOLD }}>{props.plan.name + " - $" + props.plan.price + "/ay"}</div>}
         </div>
         <div style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:16, padding:28 }}>
-          <h2 style={{ color:"#fff", fontWeight:700, marginBottom:20, fontSize:19 }}>Hesap Olustur</h2>
+          <h2 style={{ color:"#fff", fontWeight:700, marginBottom:20, fontSize:19 }}>Hesap Oluştur</h2>
           <div style={{ marginBottom:14 }}>
             <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Ad Soyad</label>
             <input type="text" value={name} onChange={function(e) { setName(e.target.value); }}
@@ -663,7 +663,7 @@ function Register(props) {
               style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box" }} />
           </div>
           <div style={{ marginBottom:14 }}>
-            <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Sifre</label>
+            <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Şifre</label>
             <input type="password" value={pass} onChange={function(e) { setPass(e.target.value); }}
               style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box" }} />
           </div>
@@ -673,8 +673,8 @@ function Register(props) {
             {loading ? "Kayıt oluşturuluyor..." : "Kayıt Ol"}
           </button>
           <p style={{ textAlign:"center", marginTop:16, fontSize:12, color:"#555577" }}>
-            Zaten hesabin var mi?
-            <button onClick={props.onLogin} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:12, marginLeft:4 }}>Giris Yap</button>
+            Zaten hesabın var mi?
+            <button onClick={props.onLogin} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:12, marginLeft:4 }}>Giriş Yap</button>
           </p>
         </div>
       </div>
@@ -751,10 +751,10 @@ function AdminPanel(props) {
       <div style={{ maxWidth:1200, margin:"0 auto" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24 }}>
           <div>
-            <div style={{ fontSize:13, color:"#888899" }}>Yonetim Paneli</div>
+            <div style={{ fontSize:13, color:"#888899" }}>Yönetim Paneli</div>
             <div style={{ fontSize:28, fontWeight:800, color:GOLD }}>Admin Dashboard</div>
           </div>
-          <button onClick={props.onLogout} style={{ background:"rgba(239,68,68,0.1)", color:"#ef4444", border:"1px solid rgba(239,68,68,0.3)", borderRadius:10, padding:"10px 20px", fontSize:13, cursor:"pointer", fontWeight:600 }}>Cikis Yap</button>
+          <button onClick={props.onLogout} style={{ background:"rgba(239,68,68,0.1)", color:"#ef4444", border:"1px solid rgba(239,68,68,0.3)", borderRadius:10, padding:"10px 20px", fontSize:13, cursor:"pointer", fontWeight:600 }}>Çıkış Yap</button>
         </div>
 
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))", gap:12, marginBottom:24 }}>
@@ -781,9 +781,9 @@ function AdminPanel(props) {
 
         <div style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, overflow:"hidden" }}>
           {loading ? (
-            <div style={{ padding:60, textAlign:"center", color:"#888899" }}>Yukleniyor...</div>
+            <div style={{ padding:60, textAlign:"center", color:"#888899" }}>Yükleniyor...</div>
           ) : users.length === 0 ? (
-            <div style={{ padding:60, textAlign:"center", color:"#888899" }}>Henuz kayitli kullanici yok</div>
+            <div style={{ padding:60, textAlign:"center", color:"#888899" }}>Henüz kayıtlı kullanıcı yok</div>
           ) : tab === "users" ? (
             <div style={{ overflowX:"auto" }}>
               <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
@@ -899,14 +899,14 @@ function Login(props) {
           <div style={{ fontSize:17, fontWeight:600 }}>Certification Academy</div>
         </div>
         <div style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:16, padding:28 }}>
-          <h2 style={{ color:"#fff", fontWeight:700, marginBottom:20, fontSize:19 }}>Giris Yap</h2>
+          <h2 style={{ color:"#fff", fontWeight:700, marginBottom:20, fontSize:19 }}>Giriş Yap</h2>
           <div style={{ marginBottom:14 }}>
             <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Email</label>
             <input type="email" value={email} onChange={function(e) { setEmail(e.target.value); }}
               style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box" }} />
           </div>
           <div style={{ marginBottom:14 }}>
-            <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Sifre</label>
+            <label style={{ display:"block", color:"#888899", fontSize:12, marginBottom:5 }}>Şifre</label>
             <input type="password" value={pass} onChange={function(e) { setPass(e.target.value); }}
               style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box" }} />
           </div>
@@ -916,8 +916,8 @@ function Login(props) {
             {loading ? "Kontrol ediliyor..." : "Giriş Yap"}
           </button>
           <p style={{ textAlign:"center", marginTop:16, fontSize:12, color:"#555577" }}>
-            Hesabin yok mu?
-            <button onClick={props.onRegister} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:12, marginLeft:4 }}>Kayit Ol</button>
+            Hesabın yok mu?
+            <button onClick={props.onRegister} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:12, marginLeft:4 }}>Kayıt Ol</button>
           </p>
         </div>
       </div>
@@ -978,7 +978,7 @@ function TeamPanel(props) {
     }
   }
 
-  if (loading) return <div style={{ padding:40, textAlign:"center", color:"#666688" }}>Yukleniyor...</div>;
+  if (loading) return <div style={{ padding:40, textAlign:"center", color:"#666688" }}>Yükleniyor...</div>;
   if (!team) return null;
 
   var activeCount = team.members.filter(function(m) { return m.status === "active"; }).length;
@@ -1005,14 +1005,14 @@ function TeamPanel(props) {
 
       {remaining > 0 ? (
         <div style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, padding:20, marginBottom:24 }}>
-          <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16, color:GOLD }}>Kullanici Davet Et</h3>
+          <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16, color:GOLD }}>Kullanıcı Davet Et</h3>
           <div style={{ display:"flex", gap:10, marginBottom:12, flexWrap:"wrap" }}>
             <input value={inviteEmail} onChange={function(e) { setInviteEmail(e.target.value); }}
               placeholder="örnek@şirket.com" type="email"
               style={{ flex:1, minWidth:200, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"10px 14px", color:"#fff", fontSize:13, outline:"none" }} />
             <button onClick={sendInvite}
               style={{ background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"10px 20px", fontWeight:700, cursor:"pointer", fontSize:13 }}>
-              Davet Gonder
+              Davet Gönder
             </button>
           </div>
           {inviteMsg && (
@@ -1020,7 +1020,7 @@ function TeamPanel(props) {
           )}
           {inviteLink && (
             <div style={{ background:"rgba(16,163,127,0.08)", border:"1px solid rgba(16,163,127,0.3)", borderRadius:10, padding:12 }}>
-              <div style={{ fontSize:11, color:"#10a37f", marginBottom:6 }}>Davet Linki - Bu linki kullaniciya gonder:</div>
+              <div style={{ fontSize:11, color:"#10a37f", marginBottom:6 }}>Davet Linki - Bu linki kullanıcıya gönder:</div>
               <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
                 <code style={{ flex:1, fontSize:10, color:"#888899", wordBreak:"break-all" }}>{inviteLink}</code>
                 <button onClick={copyLink} style={{ background:"rgba(212,168,83,0.15)", border:"1px solid rgba(212,168,83,0.3)", borderRadius:8, padding:"6px 12px", color:GOLD, cursor:"pointer", fontSize:12 }}>Kopyala</button>
@@ -1030,13 +1030,13 @@ function TeamPanel(props) {
         </div>
       ) : (
         <div style={{ background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.3)", borderRadius:12, padding:16, marginBottom:24, textAlign:"center" }}>
-          <div style={{ color:"#ef4444", fontWeight:700, marginBottom:4 }}>Takim Limiti Doldu</div>
-          <div style={{ color:"#888899", fontSize:13 }}>5 kullanici limitine ulasildi. Uye cikararak yer acabilirsiniz.</div>
+          <div style={{ color:"#ef4444", fontWeight:700, marginBottom:4 }}>Takım Limiti Doldu</div>
+          <div style={{ color:"#888899", fontSize:13 }}>5 kullanıcı limitine ulaşıldı. Üye çıkararak yer açabilirsiniz.</div>
         </div>
       )}
 
       <div>
-        <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16 }}>Takim Uyeleri</h3>
+        <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16 }}>Takım Uyeleri</h3>
         {team.members.map(function(m, i) {
           return (
             <div key={i} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:12, padding:"14px 16px", marginBottom:10, display:"flex", alignItems:"center", gap:14, flexWrap:"wrap" }}>
@@ -1112,13 +1112,13 @@ function Dashboard(props) {
           </button>
           <div style={{ background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.3)", borderRadius:8, padding:"5px 12px", fontSize:11, color:GOLD2, fontWeight:700, textTransform:"uppercase", letterSpacing:"0.5px" }}>{user.plan ? user.plan.name : ""}</div>
           <span style={{ color:TEXT2, fontSize:12 }}>{user.name}</span>
-          <button onClick={props.onLogout} style={{ background:"rgba(255,255,255,0.04)", border:"1px solid "+CARD_BORDER, borderRadius:10, padding:"6px 14px", color:TEXT2, cursor:"pointer", fontSize:12, fontFamily:FONT, transition:"all 0.2s ease" }}>Cikis</button>
+          <button onClick={props.onLogout} style={{ background:"rgba(255,255,255,0.04)", border:"1px solid "+CARD_BORDER, borderRadius:10, padding:"6px 14px", color:TEXT2, cursor:"pointer", fontSize:12, fontFamily:FONT, transition:"all 0.2s ease" }}>Çıkış</button>
         </div>
       </div>
       <div style={{ maxWidth:1040, margin:"0 auto", padding:"28px 20px" }}>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))", gap:14, marginBottom:28 }}>
           <div style={{ background:"linear-gradient(145deg, rgba(201,168,76,0.12), rgba(201,168,76,0.03))", backdropFilter:"blur(12px)", border:"1px solid rgba(201,168,76,0.25)", borderRadius:16, padding:22, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)", transition:"all 0.2s ease" }}>
-            <div style={{ fontSize:10, color:TEXT2, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px", fontWeight:600 }}>Kurs Ilerlemesi</div>
+            <div style={{ fontSize:10, color:TEXT2, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px", fontWeight:600 }}>Kurs İlerlemesi</div>
             <div style={{ fontSize:36, fontWeight:800, color:GOLD2, fontFamily:FONT_MONO, letterSpacing:"-0.02em" }}>{pct + "%"}</div>
             <div style={{ color:TEXT2, fontSize:11, marginTop:4 }}>{done + "/" + total + " ders"}</div>
             <div style={{ background:"rgba(255,255,255,0.08)", borderRadius:4, height:8, overflow:"hidden", marginTop:10 }}>
@@ -1136,7 +1136,7 @@ function Dashboard(props) {
           <div style={{ background:"linear-gradient(145deg, rgba(239,68,68,0.10), rgba(239,68,68,0.02))", backdropFilter:"blur(12px)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:16, padding:22, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)", transition:"all 0.2s ease" }}>
             <div style={{ fontSize:10, color:TEXT2, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px", fontWeight:600 }}>Streak</div>
             <div style={{ fontSize:36, fontWeight:800, color:"#ef4444", fontFamily:FONT_MONO, letterSpacing:"-0.02em" }}>{streak}</div>
-            <div style={{ color:TEXT2, fontSize:11, marginTop:4 }}>Ardisik gun</div>
+            <div style={{ color:TEXT2, fontSize:11, marginTop:4 }}>Ardışık gün</div>
           </div>
           <div style={{ background:"linear-gradient(145deg, rgba(0,201,167,0.12), rgba(0,201,167,0.03))", backdropFilter:"blur(12px)", border:"1px solid rgba(0,201,167,0.25)", borderRadius:16, padding:22, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)", transition:"all 0.2s ease" }}>
             <div style={{ fontSize:10, color:TEXT2, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px", fontWeight:600 }}>Liderboard</div>
@@ -1190,7 +1190,7 @@ function Dashboard(props) {
             {done === total && (
               <div style={{ marginTop:32, textAlign:"center", background:"linear-gradient(145deg, rgba(201,168,76,0.12), rgba(124,92,252,0.06))", border:"1px solid rgba(201,168,76,0.4)", borderRadius:24, padding:40, boxShadow:SHADOW_GOLD+", inset 0 1px 0 rgba(255,255,255,0.1)" }}>
                 <div style={{ fontSize:56, marginBottom:12 }}>🏆</div>
-                <h2 style={{ fontSize:28, fontWeight:800, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", marginBottom:8, letterSpacing:"-0.02em" }}>Programi Tamamladin!</h2>
+                <h2 style={{ fontSize:28, fontWeight:800, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", marginBottom:8, letterSpacing:"-0.02em" }}>Programı Tamamladın!</h2>
                 <p style={{ color:TEXT2, marginBottom:24, fontSize:13, fontFamily:FONT_MONO }}>{"Sertifika: " + p.cert + " · Toplam " + xp + " XP"}</p>
                 <button onClick={function() {
                   var dataUrl = generateCertificate(user.name, p.cert, xp);
@@ -1199,7 +1199,7 @@ function Dashboard(props) {
                 onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; }}
                 onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
                 style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"15px 40px", fontSize:16, fontWeight:700, cursor:"pointer", boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT }}>
-                  Sertifikamı Indir
+                  Sertifikamı İndir
                 </button>
               </div>
             )}
@@ -1208,7 +1208,7 @@ function Dashboard(props) {
 
         {tab === "leaderboard" && (
           <div style={{ maxWidth:580 }}>
-            <p style={{ color:TEXT2, fontSize:13, marginBottom:20, fontFamily:FONT_MONO }}>Tum kullanicilar arasindaki XP siralaması</p>
+            <p style={{ color:TEXT2, fontSize:13, marginBottom:20, fontFamily:FONT_MONO }}>Tüm kullanıcılar arasındaki XP siralaması</p>
             {lbEntries.map(function(e, i) {
               var isMe = e.name.indexOf("(Sen)") >= 0;
               var medal = String(i + 1).padStart(2,"0");
@@ -1246,7 +1246,7 @@ function Dashboard(props) {
                   <div style={{ width:48, height:48, borderRadius:12, background:"linear-gradient(135deg, rgba(201,168,76,0.20), rgba(124,92,252,0.15))", border:"1px solid rgba(201,168,76,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, color:GOLD2, marginBottom:14, fontSize:18, fontFamily:FONT_MONO }}>{m.icon}</div>
                   <div style={{ fontWeight:700, marginBottom:8, fontSize:15, color:TEXT }}>{m.title}</div>
                   <div style={{ color:TEXT2, fontSize:13, lineHeight:1.6, marginBottom:18 }}>{m.desc}</div>
-                  <button style={{ background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.35)", borderRadius:10, padding:"9px 18px", color:GOLD2, cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:FONT, transition:"all 0.2s ease", textTransform:"uppercase", letterSpacing:"0.5px" }}>Erisim Sagla</button>
+                  <button style={{ background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.35)", borderRadius:10, padding:"9px 18px", color:GOLD2, cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:FONT, transition:"all 0.2s ease", textTransform:"uppercase", letterSpacing:"0.5px" }}>Erişim Sağla</button>
                 </div>
               );
             })}
@@ -1553,7 +1553,7 @@ function Lesson(props) {
               onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; }}
               onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
               style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"16px 48px", fontSize:17, fontWeight:700, cursor:"pointer", width:"100%", boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
-              Dersi Baslat
+              Dersi Başlat
             </button>
             <div style={{ marginTop:14, fontSize:12, textAlign:"center", color: cached === true ? TEAL : cached === false ? TEXT2 : TEXT2, fontFamily:FONT_MONO }}>
               {cached === true ? "✓ Içerik hazır - anında yüklenecek" : cached === false ? "⚡ Ilk acilis - AI içerik üretecek (~20 sn)" : "Kontrol ediliyor..."}
@@ -1567,10 +1567,10 @@ function Lesson(props) {
               <div style={{ padding:"60px 20px", textAlign:"center" }}>
                 <div style={{ fontSize:48, marginBottom:20 }}>{lesson.icon}</div>
                 <h3 style={{ fontWeight:700, fontSize:18, marginBottom:6 }}>{lesson.tool + " dersi hazırlanıyor"}</h3>
-                <p style={{ color:"#888899", fontSize:13, marginBottom:32 }}>Yapay zeka kapsamli ders icerigi olusturuyor...</p>
+                <p style={{ color:"#888899", fontSize:13, marginBottom:32 }}>Yapay zeka kapsamlı ders içeriği oluşturuyor...</p>
                 <div style={{ maxWidth:360, margin:"0 auto", marginBottom:16 }}>
                   <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8, fontSize:12, color:"#555577" }}>
-                    <span>Icerik uretiliyor</span>
+                    <span>Içerik uretiliyor</span>
                     <span style={{ color:GOLD, fontFamily:FONT_MONO, fontWeight:700 }}>{loadProgress + "%"}</span>
                   </div>
                   <div style={{ background:"rgba(255,255,255,0.07)", borderRadius:100, height:10, overflow:"hidden" }}>
@@ -1590,7 +1590,7 @@ function Lesson(props) {
             ) : loadError ? (
               <div style={{ textAlign:"center", padding:60 }}>
                 <div style={{ fontSize:48, marginBottom:16 }}>!</div>
-                <h3 style={{ color:"#ef4444", fontWeight:700, marginBottom:8 }}>Baglanti Hatasi</h3>
+                <h3 style={{ color:"#ef4444", fontWeight:700, marginBottom:8 }}>Baglanti Hatası</h3>
                 <p style={{ color:"#888899", fontSize:13, marginBottom:24 }}>Proxy URL'nin doğru ayarlandığını kontrol et.</p>
                 <button onClick={startLesson} style={{ background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"12px 28px", fontWeight:700, cursor:"pointer", fontSize:14 }}>Tekrar Dene</button>
               </div>
@@ -1852,13 +1852,13 @@ function Auth(props) {
             <div style={{ padding:40 }}>
               <div style={{ textAlign:"center", marginBottom:24 }}>
                 <div style={{ fontSize:40, marginBottom:10 }}>✉️</div>
-                <div style={{ fontSize:20, fontWeight:800, color:TEXT, marginBottom:6 }}>Email Dogrulama</div>
+                <div style={{ fontSize:20, fontWeight:800, color:TEXT, marginBottom:6 }}>Email Doğrulama</div>
                 <div style={{ fontSize:13, color:TEXT2, lineHeight:1.5 }}>
                   <span style={{ color:GOLD2, fontWeight:600 }}>{pendingUser ? pendingUser.email : email}</span> adresine gonderdigimiz 6 haneli kodu gir.
                 </div>
               </div>
               <div style={{ marginBottom:14 }}>
-                <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Dogrulama Kodu</label>
+                <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Doğrulama Kodu</label>
                 <input type="text" inputMode="numeric" maxLength={6} value={codeInput}
                   onChange={function(e) { setCodeInput((e.target.value || "").replace(/\D/g,"").slice(0,6)); }}
                   onKeyDown={function(e){ if(e.key==="Enter") verifySubmit(); }}
@@ -1877,7 +1877,7 @@ function Auth(props) {
               </button>
               <div style={{ display:"flex", justifyContent:"space-between", fontSize:12, marginTop:6 }}>
                 <button onClick={cancelVerify} style={{ background:"transparent", border:"none", color:TEXT2, cursor:"pointer", fontFamily:FONT, padding:0 }}>← Geri</button>
-                <button onClick={resendCode} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontFamily:FONT, padding:0, fontWeight:600 }}>Kodu Tekrar Gonder</button>
+                <button onClick={resendCode} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontFamily:FONT, padding:0, fontWeight:600 }}>Kodu Tekrar Gönder</button>
               </div>
             </div>
           ) : (
@@ -1904,7 +1904,7 @@ function Auth(props) {
                 style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"14px 16px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box", fontFamily:FONT, transition:"border-color 0.2s ease" }} />
             </div>
             <div style={{ marginBottom:18 }}>
-              <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Sifre</label>
+              <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Şifre</label>
               <input type="password" value={pass} onChange={function(e) { setPass(e.target.value); }} onKeyDown={function(e) { if (e.key === "Enter") submit(); }}
                 onFocus={function(e){ e.currentTarget.style.borderColor=GOLD; }}
                 onBlur={function(e){ e.currentTarget.style.borderColor="rgba(255,255,255,0.12)"; }}
@@ -1912,7 +1912,7 @@ function Auth(props) {
             </div>
             {tab === "register" && (
               <div style={{ marginBottom:18 }}>
-                <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Sifre (Tekrar)</label>
+                <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Şifre (Tekrar)</label>
                 <input type="password" value={pass2} onChange={function(e) { setPass2(e.target.value); }} onKeyDown={function(e) { if (e.key === "Enter") submit(); }}
                   onFocus={function(e){ e.currentTarget.style.borderColor=GOLD; }}
                   onBlur={function(e){ e.currentTarget.style.borderColor="rgba(255,255,255,0.12)"; }}
@@ -1923,7 +1923,7 @@ function Auth(props) {
               <label style={{ display:"flex", alignItems:"flex-start", gap:10, marginBottom:18, cursor:"pointer", color:TEXT2, fontSize:12, lineHeight:1.5, fontFamily:FONT }}>
                 <input type="checkbox" checked={terms} onChange={function(e){ setTerms(e.target.checked); }}
                   style={{ marginTop:2, accentColor:GOLD, width:16, height:16, cursor:"pointer" }} />
-                <span><span style={{ color:GOLD2 }}>Kullanim Kosullari</span> ve <span style={{ color:GOLD2 }}>Gizlilik Politikasini</span> okudum, kabul ediyorum.</span>
+                <span><span style={{ color:GOLD2 }}>Kullanım Koşulları</span> ve <span style={{ color:GOLD2 }}>Gizlilik Politikasını</span> okudum, kabul ediyorum.</span>
               </label>
             )}
             {info && <div style={{ color:"#10a37f", fontSize:12, marginBottom:12, padding:"10px 12px", background:"rgba(16,163,127,0.08)", border:"1px solid rgba(16,163,127,0.25)", borderRadius:10 }}>{info}</div>}
@@ -1947,8 +1947,8 @@ function PlanSelect(props) {
   return (
     <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, padding:"60px 20px", backgroundImage:"radial-gradient(ellipse at 50% 0%,rgba(124,92,252,0.15) 0%,rgba(201,168,76,0.08) 35%,transparent 70%), radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize:"auto, 32px 32px" }}>
       <div style={{ maxWidth:1000, margin:"0 auto" }}>
-        <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planini Sec</h2>
-        <p style={{ textAlign:"center", color:TEXT2, marginBottom:44, fontSize:14, fontFamily:FONT }}>Hedefine uygun plani sec ve bugun basla</p>
+        <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planini Seç</h2>
+        <p style={{ textAlign:"center", color:TEXT2, marginBottom:44, fontSize:14, fontFamily:FONT }}>Hedefine uygun plani seç ve bugün başla</p>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:22 }}>
           {PLANS.map(function(plan) {
             return (
@@ -1956,7 +1956,7 @@ function PlanSelect(props) {
                 onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-4px)"; }}
                 onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; }}
                 style={{ background: plan.popular ? "linear-gradient(145deg, rgba(201,168,76,0.12), rgba(124,92,252,0.06))" : "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+(plan.popular?"rgba(201,168,76,0.45)":CARD_BORDER2), borderRadius:24, padding:32, position:"relative", boxShadow: plan.popular ? "0 8px 32px rgba(201,168,76,0.20), inset 0 1px 0 rgba(255,255,255,0.1)" : "0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)", transition:"all 0.2s ease" }}>
-                {plan.popular && <div style={{ position:"absolute", top:-12, left:"50%", transform:"translateX(-50%)", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", fontSize:11, fontWeight:800, padding:"5px 18px", borderRadius:100, letterSpacing:"1px", boxShadow:SHADOW_GOLD, textTransform:"uppercase" }}>En Populer</div>}
+                {plan.popular && <div style={{ position:"absolute", top:-12, left:"50%", transform:"translateX(-50%)", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", fontSize:11, fontWeight:800, padding:"5px 18px", borderRadius:100, letterSpacing:"1px", boxShadow:SHADOW_GOLD, textTransform:"uppercase" }}>En Popüler</div>}
                 <div style={{ fontSize:14, fontWeight:700, marginBottom:8, color:TEXT2, textTransform:"uppercase", letterSpacing:"1.5px" }}>{plan.name}</div>
                 <div style={{ display:"flex", alignItems:"baseline", gap:6, marginBottom:24 }}>
                   <span style={{ fontSize:48, fontWeight:800, color: plan.popular ? GOLD2 : plan.color, fontFamily:FONT_MONO, letterSpacing:"-0.03em" }}>{"$"+plan.price}</span>
@@ -1971,7 +1971,7 @@ function PlanSelect(props) {
                   onMouseEnter={function(e){ if(plan.popular){ e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; } else { e.currentTarget.style.background="rgba(255,255,255,0.06)"; } }}
                   onMouseLeave={function(e){ if(plan.popular){ e.currentTarget.style.boxShadow=SHADOW_GOLD; } else { e.currentTarget.style.background="transparent"; } }}
                   style={{ width:"100%", background: plan.popular ? "linear-gradient(135deg,#c9a84c,#f5cc6a)" : "transparent", color: plan.popular ? "#08080f" : plan.color, border:"1px solid "+(plan.popular?"transparent":plan.color), borderRadius:14, padding:"14px 0", fontSize:14, fontWeight:700, cursor:"pointer", boxShadow: plan.popular ? SHADOW_GOLD : "none", transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
-                  Sec
+                  Seç
                 </button>
               </div>
             );
@@ -2038,7 +2038,7 @@ export default function App() {
       <div style={{ minHeight:"100vh", background:BG, display:"flex", alignItems:"center", justifyContent:"center" }}>
         <div style={{ textAlign:"center", fontFamily:FONT }}>
           <div style={{ fontSize:40, fontWeight:800, color:GOLD, marginBottom:10 }}>AI</div>
-          <div style={{ color:"#555577", fontSize:13 }}>Yukleniyor...</div>
+          <div style={{ color:"#555577", fontSize:13 }}>Yükleniyor...</div>
         </div>
       </div>
     );
