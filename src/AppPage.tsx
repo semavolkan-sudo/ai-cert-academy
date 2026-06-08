@@ -2654,9 +2654,6 @@ function Auth(props) {
                   onBlur={function(e){ e.currentTarget.style.borderColor="rgba(255,255,255,0.12)"; }}
                   style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"16px", color:"#fff", fontSize:24, letterSpacing:"10px", textAlign:"center", outline:"none", boxSizing:"border-box", fontFamily:FONT_MONO, fontWeight:700, transition:"border-color 0.2s ease" }} />
               </div>
-              <div style={{ fontSize:11, color:"#555577", textAlign:"center", marginBottom:14, fontFamily:FONT_MONO }}>
-                Demo kodu: <span style={{ color:GOLD2 }}>{verifyCode}</span>
-              </div>
               {info && <div style={{ color:"#10a37f", fontSize:12, marginBottom:12, padding:"10px 12px", background:"rgba(16,163,127,0.08)", border:"1px solid rgba(16,163,127,0.25)", borderRadius:10 }}>{info}</div>}
               {err && <div style={{ color:"#ef4444", fontSize:12, marginBottom:12, padding:"10px 12px", background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:10 }}>{err}</div>}
               <button onClick={verifySubmit} disabled={loading}
@@ -2799,10 +2796,10 @@ export default function App() {
         var u = JSON.parse(su);
         setUser(u);
         var pn = u && u.plan ? (typeof u.plan === "string" ? u.plan : (u.plan.name || "")) : "";
-        var isPaid = pn === "Pro" || pn === "Business" || pn === "Starter";
         var isAdmin = u && u.email === ADMIN_EMAIL;
         var isTest = u && (u.email === "test@aicert.com" || u.email === "testpro@aicert.com" || u.email === "testbiz@aicert.com");
-        if (isAdmin || isTest || isPaid) {
+        var hasPlan = pn === "Pro" || pn === "Business";
+        if (isAdmin || isTest || hasPlan) {
           setPage("dashboard");
         } else {
           setPage("planselect");
@@ -2820,7 +2817,7 @@ export default function App() {
     });
   }
 
-  function handleRegDone(u) { setUser(u); saveUser(u); setPage("onboarding"); }
+  function handleRegDone(u) { setUser(u); saveUser(u); setPage("planselect"); }
   function handleOnbDone(prof) { updateUser(function(p) { return Object.assign({}, p, { profile:prof }); }); setPage("dashboard"); }
   function handleLogout() { setUser(null); deleteUser(); setPage("landing"); }
   function handleLessonStart(l) { setLesson(l); setPage("lesson"); }
@@ -2856,7 +2853,19 @@ export default function App() {
       {page === "landing" && <Landing onGo={function(target) { if (target === "auth") setPage("auth"); }} />}
       {page === "auth" && <Auth
         onRegister={function(u) { setUser(u); saveUser(u); setPage("planselect"); }}
-        onLogin={function(u) { setUser(u); saveUser(u); setPage(u && u.plan && u.paid ? "dashboard" : "planselect"); }}
+        onLogin={function(u) {
+          setUser(u);
+          saveUser(u);
+          var pn = u && u.plan ? (typeof u.plan === "string" ? u.plan : (u.plan.name || "")) : "";
+          var isAdmin = u && u.email === ADMIN_EMAIL;
+          var isTest = u && (u.email === "test@aicert.com" || u.email === "testpro@aicert.com" || u.email === "testbiz@aicert.com");
+          var hasPlan = pn === "Pro" || pn === "Business";
+          if (isAdmin || isTest || hasPlan) {
+            setPage(u && u.profile ? "dashboard" : "onboarding");
+          } else {
+            setPage("planselect");
+          }
+        }}
       />}
       {page === "planselect" && <PlanSelect onPick={function(p) {
         setPlan(p);
