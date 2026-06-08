@@ -1671,18 +1671,27 @@ function Auth(props) {
   var [name, setName] = useState("");
   var [email, setEmail] = useState("");
   var [pass, setPass] = useState("");
+  var [pass2, setPass2] = useState("");
+  var [terms, setTerms] = useState(false);
   var [err, setErr] = useState("");
   var [loading, setLoading] = useState(false);
   var [showAdmin, setShowAdmin] = useState(false);
+  var [verifyCode, setVerifyCode] = useState(null); // generated code (string) while verifying
+  var [codeInput, setCodeInput] = useState("");
+  var [pendingUser, setPendingUser] = useState(null);
+  var [info, setInfo] = useState("");
 
   function submit() {
     setErr("");
+    setInfo("");
     if (!email || !pass) { setErr("Tum alanlari doldurun"); return; }
     if (email === ADMIN_EMAIL && pass === ADMIN_PASS) { setShowAdmin(true); return; }
     if (pass.length < 6) { setErr("Sifre en az 6 karakter"); return; }
     if (tab === "register") {
       if (!name) { setErr("Ad Soyad gerekli"); return; }
       if (email.indexOf("@") < 0) { setErr("Gecerli email girin"); return; }
+      if (pass !== pass2) { setErr("Sifreler eslesmiyor"); return; }
+      if (!terms) { setErr("Devam etmek icin kosullari kabul et"); return; }
       if (emailExists(email)) { setErr("Bu email zaten kayitli. Giris Yap'a gec."); return; }
       setLoading(true);
       setTimeout(function() {
@@ -1693,8 +1702,12 @@ function Auth(props) {
           progress: {}, scores: {}, xp: 0, streak: 0,
           createdAt: Date.now(),
         };
-        addToRegistry(email, userData);
-        props.onRegister(userData);
+        // Generate 6-digit verification code (simulated email send)
+        var code = String(Math.floor(100000 + Math.random() * 900000));
+        setVerifyCode(code);
+        setPendingUser(userData);
+        setCodeInput("");
+        setInfo("Dogrulama kodu " + email + " adresine gonderildi.");
       }, 800);
     } else {
       setLoading(true);
@@ -1707,6 +1720,45 @@ function Auth(props) {
     }
   }
 
+  function verifySubmit() {
+    setErr("");
+    if (!codeInput || codeInput.length !== 6) { setErr("6 haneli kodu gir"); return; }
+    if (codeInput !== verifyCode) { setErr("Kod hatali. Tekrar dene."); return; }
+    setLoading(true);
+    setTimeout(function() {
+      setLoading(false);
+      if (pendingUser) addToRegistry(pendingUser.email, pendingUser);
+      // Reset & switch to login with email prefilled
+      var savedEmail = pendingUser ? pendingUser.email : email;
+      setVerifyCode(null);
+      setPendingUser(null);
+      setCodeInput("");
+      setName("");
+      setPass("");
+      setPass2("");
+      setTerms(false);
+      setTab("login");
+      setEmail(savedEmail);
+      setInfo("Hesabin dogrulandi! Sifrenle giris yap.");
+    }, 500);
+  }
+
+  function resendCode() {
+    var code = String(Math.floor(100000 + Math.random() * 900000));
+    setVerifyCode(code);
+    setCodeInput("");
+    setInfo("Yeni kod gonderildi.");
+    setErr("");
+  }
+
+  function cancelVerify() {
+    setVerifyCode(null);
+    setPendingUser(null);
+    setCodeInput("");
+    setInfo("");
+    setErr("");
+  }
+
   if (showAdmin) {
     return <AdminPanel onLogout={function() { setShowAdmin(false); setEmail(""); setPass(""); }} />;
   }
@@ -1714,7 +1766,7 @@ function Auth(props) {
   function tabBtn(id, label) {
     var active = tab === id;
     return (
-      <button onClick={function() { setTab(id); setErr(""); }}
+      <button onClick={function() { setTab(id); setErr(""); setInfo(""); }}
         style={{ flex:1, background: active ? "rgba(201,168,76,0.12)" : "transparent", color: active ? GOLD2 : TEXT2, border:"none", borderBottom: active ? "2px solid "+GOLD : "2px solid transparent", padding:"14px 0", fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:FONT, textTransform:"uppercase", letterSpacing:"1px", transition:"all 0.2s ease" }}>
         {label}
       </button>
@@ -1729,6 +1781,40 @@ function Auth(props) {
           <div style={{ fontSize:17, fontWeight:600, color:TEXT, marginTop:4 }}>Certification Academy</div>
         </div>
         <div style={{ background:"rgba(13,13,31,0.95)", backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:24, overflow:"hidden", boxShadow:SHADOW }}>
+          {verifyCode ? (
+            <div style={{ padding:40 }}>
+              <div style={{ textAlign:"center", marginBottom:24 }}>
+                <div style={{ fontSize:40, marginBottom:10 }}>✉️</div>
+                <div style={{ fontSize:20, fontWeight:800, color:TEXT, marginBottom:6 }}>Email Dogrulama</div>
+                <div style={{ fontSize:13, color:TEXT2, lineHeight:1.5 }}>
+                  <span style={{ color:GOLD2, fontWeight:600 }}>{pendingUser ? pendingUser.email : email}</span> adresine gonderdigimiz 6 haneli kodu gir.
+                </div>
+              </div>
+              <div style={{ marginBottom:14 }}>
+                <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Dogrulama Kodu</label>
+                <input type="text" inputMode="numeric" maxLength={6} value={codeInput}
+                  onChange={function(e) { setCodeInput((e.target.value || "").replace(/\D/g,"").slice(0,6)); }}
+                  onKeyDown={function(e){ if(e.key==="Enter") verifySubmit(); }}
+                  onFocus={function(e){ e.currentTarget.style.borderColor=GOLD; }}
+                  onBlur={function(e){ e.currentTarget.style.borderColor="rgba(255,255,255,0.12)"; }}
+                  style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"16px", color:"#fff", fontSize:24, letterSpacing:"10px", textAlign:"center", outline:"none", boxSizing:"border-box", fontFamily:FONT_MONO, fontWeight:700, transition:"border-color 0.2s ease" }} />
+              </div>
+              <div style={{ fontSize:11, color:"#555577", textAlign:"center", marginBottom:14, fontFamily:FONT_MONO }}>
+                Demo kodu: <span style={{ color:GOLD2 }}>{verifyCode}</span>
+              </div>
+              {info && <div style={{ color:"#10a37f", fontSize:12, marginBottom:12, padding:"10px 12px", background:"rgba(16,163,127,0.08)", border:"1px solid rgba(16,163,127,0.25)", borderRadius:10 }}>{info}</div>}
+              {err && <div style={{ color:"#ef4444", fontSize:12, marginBottom:12, padding:"10px 12px", background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:10 }}>{err}</div>}
+              <button onClick={verifySubmit} disabled={loading}
+                style={{ width:"100%", background: loading ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg,#c9a84c,#f5cc6a)", color: loading ? TEXT2 : "#08080f", border:"none", borderRadius:14, padding:"15px 0", fontSize:15, fontWeight:700, cursor: loading ? "not-allowed" : "pointer", boxShadow: loading ? "none" : SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, marginBottom:10 }}>
+                {loading ? "Dogrulaniyor..." : "Dogrula ve Devam Et"}
+              </button>
+              <div style={{ display:"flex", justifyContent:"space-between", fontSize:12, marginTop:6 }}>
+                <button onClick={cancelVerify} style={{ background:"transparent", border:"none", color:TEXT2, cursor:"pointer", fontFamily:FONT, padding:0 }}>← Geri</button>
+                <button onClick={resendCode} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontFamily:FONT, padding:0, fontWeight:600 }}>Kodu Tekrar Gonder</button>
+              </div>
+            </div>
+          ) : (
+          <>
           <div style={{ display:"flex", borderBottom:"1px solid "+CARD_BORDER }}>
             {tabBtn("login", "Giris Yap")}
             {tabBtn("register", "Kayit Ol")}
@@ -1757,6 +1843,23 @@ function Auth(props) {
                 onBlur={function(e){ e.currentTarget.style.borderColor="rgba(255,255,255,0.12)"; }}
                 style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"14px 16px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box", fontFamily:FONT, transition:"border-color 0.2s ease" }} />
             </div>
+            {tab === "register" && (
+              <div style={{ marginBottom:18 }}>
+                <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>Sifre (Tekrar)</label>
+                <input type="password" value={pass2} onChange={function(e) { setPass2(e.target.value); }} onKeyDown={function(e) { if (e.key === "Enter") submit(); }}
+                  onFocus={function(e){ e.currentTarget.style.borderColor=GOLD; }}
+                  onBlur={function(e){ e.currentTarget.style.borderColor="rgba(255,255,255,0.12)"; }}
+                  style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"14px 16px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box", fontFamily:FONT, transition:"border-color 0.2s ease" }} />
+              </div>
+            )}
+            {tab === "register" && (
+              <label style={{ display:"flex", alignItems:"flex-start", gap:10, marginBottom:18, cursor:"pointer", color:TEXT2, fontSize:12, lineHeight:1.5, fontFamily:FONT }}>
+                <input type="checkbox" checked={terms} onChange={function(e){ setTerms(e.target.checked); }}
+                  style={{ marginTop:2, accentColor:GOLD, width:16, height:16, cursor:"pointer" }} />
+                <span><span style={{ color:GOLD2 }}>Kullanim Kosullari</span> ve <span style={{ color:GOLD2 }}>Gizlilik Politikasini</span> okudum, kabul ediyorum.</span>
+              </label>
+            )}
+            {info && <div style={{ color:"#10a37f", fontSize:12, marginBottom:12, padding:"10px 12px", background:"rgba(16,163,127,0.08)", border:"1px solid rgba(16,163,127,0.25)", borderRadius:10 }}>{info}</div>}
             {err && <div style={{ color:"#ef4444", fontSize:12, marginBottom:14, padding:"10px 12px", background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:10 }}>{err}</div>}
             <button onClick={submit} disabled={loading}
               onMouseEnter={function(e){ if(!loading){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.4)"; } }}
@@ -1765,6 +1868,8 @@ function Auth(props) {
               {loading ? "Lutfen bekleyin..." : (tab === "register" ? "Kayit Ol" : "Giris Yap")}
             </button>
           </div>
+          </>
+          )}
         </div>
       </div>
     </div>
