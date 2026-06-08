@@ -300,6 +300,27 @@ function saveTeam(ownerId, team) {
   try { lsSet(getTeamKey(ownerId), JSON.stringify(team)); } catch(e) {}
 }
 
+// ─── LEGAL MODAL ─────────────────────────────────────────────────────────────
+function LegalModal(props) {
+  return (
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.80)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:800, display:"flex", alignItems:"center", justifyContent:"center", padding:24, fontFamily:FONT }}>
+      <div style={{ background:"linear-gradient(145deg, rgba(13,13,31,0.95), rgba(7,7,17,0.95))", backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)", border:"1px solid "+CARD_BORDER2, borderRadius:24, padding:0, maxWidth:600, width:"100%", maxHeight:"80vh", display:"flex", flexDirection:"column", boxShadow:"0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"20px 28px", borderBottom:"1px solid "+CARD_BORDER }}>
+          <h2 style={{ color:"#fff", fontWeight:700, fontSize:18, margin:0 }}>{props.title}</h2>
+          <button onClick={props.onClose} style={{ background:"rgba(255,255,255,0.05)", border:"1px solid "+CARD_BORDER, color:TEXT2, cursor:"pointer", fontSize:18, width:32, height:32, borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center" }}>✕</button>
+        </div>
+        <div style={{ padding:"20px 28px", overflowY:"auto", flex:1, color:TEXT, fontSize:13, lineHeight:1.8, whiteSpace:"pre-wrap" }}>
+          {props.text}
+        </div>
+        <div style={{ padding:"16px 28px", borderTop:"1px solid "+CARD_BORDER, display:"flex", justifyContent:"flex-end" }}>
+          <button onClick={props.onClose} style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:10, padding:"10px 22px", fontWeight:700, cursor:"pointer", fontSize:13, fontFamily:FONT }}>Anladım, Kapat</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 function createTeam(owner) {
   var team = {
     id: "team-" + Date.now(),
@@ -660,6 +681,8 @@ function Register(props) {
   var [pass, setPass] = useState("");
   var [err, setErr] = useState("");
   var [loading, setLoading] = useState(false);
+  var [showTerms, setShowTerms] = useState(false);
+  var [showPrivacy, setShowPrivacy] = useState(false);
   var inviteData = props.inviteData;
 
   function submit() {
@@ -713,12 +736,17 @@ function Register(props) {
             style={{ width:"100%", background: loading ? "#444" : "linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"13px 0", fontSize:15, fontWeight:700, cursor: loading ? "not-allowed" : "pointer", marginTop:6 }}>
             {loading ? "Kayıt oluşturuluyor..." : "Kayıt Ol"}
           </button>
-          <p style={{ textAlign:"center", marginTop:16, fontSize:12, color:"#555577" }}>
+          <p style={{ textAlign:"center", marginTop:12, fontSize:11, color:"#555577" }}>
+            Kayıt olarak <button onClick={function() { setShowTerms(true); }} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:11, textDecoration:"underline" }}>Kullanım Koşulları</button> ve <button onClick={function() { setShowPrivacy(true); }} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:11, textDecoration:"underline" }}>Gizlilik Politikası</button>'nı kabul etmiş olursun.
+          </p>
+          <p style={{ textAlign:"center", marginTop:10, fontSize:12, color:"#555577" }}>
             Zaten hesabın var mi?
             <button onClick={props.onLogin} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:12, marginLeft:4 }}>Giriş Yap</button>
           </p>
         </div>
       </div>
+      {showTerms && <LegalModal title="Kullanım Koşulları" text={TERMS_TEXT} onClose={function() { setShowTerms(false); }} />}
+      {showPrivacy && <LegalModal title="Gizlilik Politikası" text={PRIVACY_TEXT} onClose={function() { setShowPrivacy(false); }} />}
     </div>
   );
 }
