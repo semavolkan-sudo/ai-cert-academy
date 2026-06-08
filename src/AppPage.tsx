@@ -2430,7 +2430,8 @@ function Lesson(props) {
     } catch(e) {}
 
     var allCards = [];
-    var totalBatches = 10;
+    var totalBatches = 100;
+    var CONCURRENT = 5;
     var completed = 0;
 
     var topics = [
@@ -2456,11 +2457,12 @@ function Lesson(props) {
       "Mobil uygulama kullanımı — telefon ve tablette verimli kullanım"
     ];
 
-    function fetchBatch(batchIndex) {
+    function fetchBatch(batchIndex, onDone) {
       var topic = topics[batchIndex % topics.length];
-      var prompt = "Sen deneyimli bir AI eğitmensin. Hiç bilmeyen bir öğrenciye " + lesson.tool + " aracını öğretiyorsun.\n\nBu ders kartı seti konusu: " + topic + "\n\nBu konu hakkında 10 adet ders kartı üret. Her kart şu yapıda olmalı:\n\n1. BAŞLIK: Konuyu özetleyen kısa başlık\n2. AÇIKLAMA: Konuyu sade Türkçe ile 2-3 cümle açıkla\n3. ÖRNEK: Gerçek hayattan somut kullanım örneği. 'Örneğin:' diye başlayan 1-2 cümle\n4. GÖRSEL ÖRNEK (gerektiğinde): Eğer konu görsel bir arayüz, adım adım süreç veya karşılaştırma içeriyorsa, ASCII veya emoji ile basit bir görsel şema ekle. Örneğin:\n   - Bir akış şeması: Girdi → İşlem → Çıktı\n   - Bir karşılaştırma: ❌ Kötü prompt vs ✅ İyi prompt\n   - Adım adım: 1️⃣ → 2️⃣ → 3️⃣\n   - Ekran düzeni: [ Metin kutusu ] → [ Gönder ] → 💬 Yanıt\n5. PRATİK İPUCU: Hemen uygulanabilir 1 ipucu\n\nKart içeriğini şu formatta yaz:\nAçıklama metni.\n\n💡 Örnek: Örnek metin.\n\n🖼️ [Görsel şema sadece gerektiğinde — her karta ekleme]\n\n⚡ İpucu: İpucu metni.\n\nSADECE JSON array döndür:\n[{\"title\": \"başlık\", \"content\": \"açıklama\\n\\n💡 Örnek: örnek\\n\\n⚡ İpucu: ipucu\", \"icon\": \"emoji\", \"hasVisual\": false}]\n\nGörsel şema içeren kartlarda hasVisual: true yap ve content içine şemayı ekle.\n\nRASTGELE_SEED: " + Math.floor(Math.random()*999999);
+      var seed = Math.floor(Math.random() * 9999999);
+      var prompt = "Sen deneyimli bir AI eğitmensin. Hiç bilmeyen bir öğrenciye " + lesson.tool + " aracını öğretiyorsun.\n\nKonu: " + topic + " (varyasyon #" + batchIndex + ", seed:" + seed + ")\n\nBu konuda 10 adet FARKLI ders kartı üret. Önceki kartlardan farklı alt konular seç.\n\nHer kart:\nAçıklama: 2-3 cümle sade Türkçe\n\n💡 Örnek: Gerçek hayat örneği\n\n⚡ İpucu: Hemen uygulanabilir ipucu\n\nGerektiğinde görsel şema ekle (→ akış, ❌✅ karşılaştırma, 1️⃣2️⃣3️⃣ adımlar)\n\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"açıklama\\n\\n💡 Örnek: örnek\\n\\n⚡ İpucu: ipucu\",\"icon\":\"emoji\"}]";
 
-      fetch("https://ai-proxy-two-pi.vercel.app/api/proxy", {
+      fetch(PROXY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -2477,41 +2479,41 @@ function Lesson(props) {
         if (parsed.length > 0) {
           allCards = allCards.concat(parsed);
         }
-
-        completed++;
-        setLoadProgress(Math.round((completed / totalBatches) * 100));
-
-        if (completed === totalBatches) {
-          if (allCards.length > 0) {
-            try { lsSet(cacheKey2, JSON.stringify({ cards: allCards, ts: Date.now() })); } catch(e) {}
-            setCards(normalizeCards(allCards));
-            setLoading(false);
-          } else {
-            setCards(getFallbackCards());
-            setLoading(false);
-          }
-        }
+        if (onDone) onDone();
       }).catch(function() {
-        completed++;
-        setLoadProgress(Math.round((completed / totalBatches) * 100));
-
-        if (completed === totalBatches) {
-          if (allCards.length > 0) {
-            setCards(normalizeCards(allCards));
-            setLoading(false);
-          } else {
-            setLoadError(true);
-            setLoading(false);
-          }
-        }
+        if (onDone) onDone();
       });
     }
 
-    for (var b = 0; b < totalBatches; b++) {
-      (function(idx) {
-        setTimeout(function() { fetchBatch(idx); }, idx * 300);
-      })(b);
+    var queue = [];
+    for (var i = 0; i < totalBatches; i++) queue.push(i);
+    var running = 0;
+    var queueIndex = 0;
+    function next() {
+      while (running < CONCURRENT && queueIndex < queue.length) {
+        running++;
+        var batchIdx = queue[queueIndex++];
+        (function(idx) {
+          fetchBatch(idx, function() {
+            completed++;
+            running--;
+            setLoadProgress(Math.round((completed / totalBatches) * 100));
+            if (completed === totalBatches) {
+              if (allCards.length > 0) {
+                try { lsSet(cacheKey2, JSON.stringify({ cards: allCards, ts: Date.now() })); } catch(e) {}
+                setCards(normalizeCards(allCards));
+              } else {
+                setCards(getFallbackCards());
+              }
+              setLoading(false);
+            } else {
+              next();
+            }
+          });
+        })(batchIdx);
+      }
     }
+    next();
   }
 
   function setAnswer(qi, oi) {
