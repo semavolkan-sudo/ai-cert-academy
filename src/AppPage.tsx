@@ -159,7 +159,7 @@ var COURSES = [
   { day:1,  tool:"ChatGPT",            icon:"\uD83E\uDD16", color:"#10a37f", desc:"Dunyanin en popüler AI asistanini ustaca kullanin" },
   { day:2,  tool:"Claude",             icon:"\uD83E\uDDE0", color:"#d4a853", desc:"Anthropic'in gelismis dil modeliyle calisin" },
   { day:3,  tool:"Gemini",             icon:"\u2728",         color:"#4285f4", desc:"Google'in multimodal AI sistemini kesfedin" },
-  { day:4,  tool:"Perplexity",         icon:"\uD83D\uDD0D", color:"#6366f1", desc:"AI destekli arastirma motorunu ogreyin" },
+  { day:4,  tool:"Perplexity",         icon:"\uD83D\uDD0D", color:"#6366f1", desc:"AI destekli araştırma motorunu öğrenin" },
   { day:5,  tool:"Deepseek",           icon:"\uD83D\uDE80", color:"#ef4444", desc:"Cin'in guclu acik kaynak modelini kullanin" },
   { day:6,  tool:"Copilot",            icon:"\uD83D\uDCBB", color:"#0078d4", desc:"Microsoft AI asistaniyla uretkenlik" },
   { day:7,  tool:"Grok",               icon:"\u26A1",         color:"#1d9bf0", desc:"xAI gerçek zamanli AI modelini kesfedin" },
@@ -1036,7 +1036,7 @@ function TeamPanel(props) {
       )}
 
       <div>
-        <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16 }}>Takım Uyeleri</h3>
+        <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16 }}>Takım Üyeleri</h3>
         {team.members.map(function(m, i) {
           return (
             <div key={i} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:12, padding:"14px 16px", marginBottom:10, display:"flex", alignItems:"center", gap:14, flexWrap:"wrap" }}>
@@ -1150,7 +1150,7 @@ function Dashboard(props) {
             var t = item[0]; var label = item[1];
             return (
               <button key={t} onClick={function() {
-                if (t === "bonus" && !p.bonus) { setUpgrade("Bonus Icerikler"); return; }
+                if (t === "bonus" && !p.bonus) { setUpgrade("Bonus İçerikler"); return; }
                 if (t === "team" && !p.team) { setUpgrade("Ekip Yonetimi"); return; }
                 setTab(t);
               }} style={{ background: tab===t ? "rgba(212,168,83,0.14)" : "transparent", border: tab===t ? "1px solid rgba(212,168,83,0.3)" : "1px solid transparent", borderRadius:7, padding:"7px 14px", color: tab===t ? GOLD : "#555577", cursor:"pointer", fontSize:12, fontWeight: tab===t ? 600 : 400 }}>
@@ -1362,13 +1362,13 @@ function Lesson(props) {
       { key:"KARSILASTIRMA_2", icon:"V", title:"Rakip Karsilastirma 2",        color:"#64748b" },
       { key:"KARSILASTIRMA_3", icon:"V", title:"Rakip Karsilastirma 3",        color:"#64748b" },
       { key:"GELECEK",         icon:"R", title:"Gelecek ve Trendler",          color:"#0ea5e9" },
-      { key:"SEKTOR_KULLANIM_1",icon:"N",title:"Finans Sektorunde Kullanım",   color:"#10b981" },
-      { key:"SEKTOR_KULLANIM_2",icon:"N",title:"Saglik Sektorunde Kullanım",   color:"#10b981" },
-      { key:"SEKTOR_KULLANIM_3",icon:"N",title:"Egitim Sektorunde Kullanım",   color:"#10b981" },
+      { key:"SEKTOR_KULLANIM_1",icon:"N",title:"Finans Sektöründe Kullanım",   color:"#10b981" },
+      { key:"SEKTOR_KULLANIM_2",icon:"N",title:"Sağlık Sektöründe Kullanım",   color:"#10b981" },
+      { key:"SEKTOR_KULLANIM_3",icon:"N",title:"Eğitim Sektöründe Kullanım",   color:"#10b981" },
       { key:"SEKTOR_KULLANIM_4",icon:"N",title:"Yaratici Endustriler",         color:"#10b981" },
       { key:"OTOMASYON_AKISI", icon:"O", title:"Otomasyon Akışı Kur",          color:"#8b5cf6" },
       { key:"VAKA_CALISMASI",  icon:"Q", title:"Gerçek Vaka Calismasi",        color:"#f59e0b" },
-      { key:"SERTIFIKA_HAZIRLIK",icon:"J",title:"Sertifika Hazirlik",          color:"#d4a853" },
+      { key:"SERTIFIKA_HAZIRLIK",icon:"J",title:"Sertifika Hazırlık",          color:"#d4a853" },
     ];
     var result = [];
     var keys = sections.map(function(s) { return s.key; });
@@ -1570,7 +1570,7 @@ function Lesson(props) {
                 <p style={{ color:"#888899", fontSize:13, marginBottom:32 }}>Yapay zeka kapsamlı ders içeriği oluşturuyor...</p>
                 <div style={{ maxWidth:360, margin:"0 auto", marginBottom:16 }}>
                   <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8, fontSize:12, color:"#555577" }}>
-                    <span>Içerik uretiliyor</span>
+                    <span>İçerik üretiliyor</span>
                     <span style={{ color:GOLD, fontFamily:FONT_MONO, fontWeight:700 }}>{loadProgress + "%"}</span>
                   </div>
                   <div style={{ background:"rgba(255,255,255,0.07)", borderRadius:100, height:10, overflow:"hidden" }}>
