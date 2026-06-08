@@ -261,7 +261,7 @@ function generateCertificate(userName, tier, totalXP) {
 function XPToast(props) {
   useEffect(function() { var t = setTimeout(props.onDone, 2800); return function() { clearTimeout(t); }; }, []);
   return (
-    <div style={{ position:"fixed", top:20, right:20, zIndex:9999, background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", borderRadius:14, padding:"12px 22px", fontWeight:800, fontSize:18, fontFamily:"monospace", boxShadow:"0 6px 28px rgba(212,168,83,0.5)" }}>
+    <div style={{ position:"fixed", top:20, right:20, zIndex:9999, background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", borderRadius:14, padding:"14px 24px", fontWeight:800, fontSize:18, fontFamily:FONT_MONO, boxShadow:"0 8px 32px rgba(201,168,76,0.5)", letterSpacing:"0.5px", border:"1px solid rgba(255,255,255,0.2)" }}>
       {"+ " + props.xp + " XP"}
     </div>
   );
@@ -270,14 +270,17 @@ function XPToast(props) {
 // ─── UPGRADE MODAL ───────────────────────────────────────────────────────────
 function UpgradeModal(props) {
   return (
-    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.85)", zIndex:800, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-      <div style={{ background:"#0e0e1e", border:"1px solid rgba(212,168,83,0.4)", borderRadius:20, padding:40, maxWidth:420, textAlign:"center" }}>
-        <div style={{ fontSize:52, marginBottom:14 }}>🔒</div>
-        <h2 style={{ color:GOLD, fontWeight:800, fontSize:20, marginBottom:10 }}>Pro Ozellik</h2>
-        <p style={{ color:"#888899", marginBottom:24, lineHeight:1.6, fontSize:14 }}>{props.feature} — Pro veya Business plana gecis yaparak bu ozelligi kullanabilirsin.</p>
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.80)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:800, display:"flex", alignItems:"center", justifyContent:"center", padding:24, fontFamily:FONT }}>
+      <div style={{ background:"linear-gradient(145deg, rgba(13,13,31,0.95), rgba(7,7,17,0.95))", backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)", border:"1px solid rgba(201,168,76,0.4)", borderRadius:24, padding:44, maxWidth:440, textAlign:"center", boxShadow:"0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
+        <div style={{ fontSize:56, marginBottom:16 }}>🔒</div>
+        <h2 style={{ background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", fontWeight:800, fontSize:22, marginBottom:12, letterSpacing:"-0.01em" }}>Pro Ozellik</h2>
+        <p style={{ color:TEXT, marginBottom:28, lineHeight:1.7, fontSize:14 }}><span style={{ color:GOLD2, fontWeight:600 }}>{props.feature}</span> — Pro veya Business plana gecis yaparak bu ozelligi kullanabilirsin.</p>
         <div style={{ display:"flex", gap:12, justifyContent:"center" }}>
-          <button onClick={props.onClose} style={{ background:"transparent", border:"1px solid rgba(255,255,255,0.15)", borderRadius:10, padding:"10px 20px", color:"#888899", cursor:"pointer", fontSize:13 }}>Vazgec</button>
-          <button onClick={props.onClose} style={{ background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"10px 22px", fontWeight:700, cursor:"pointer", fontSize:13 }}>Plani Yukselt</button>
+          <button onClick={props.onClose} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid "+CARD_BORDER2, borderRadius:12, padding:"12px 24px", color:TEXT2, cursor:"pointer", fontSize:13, fontWeight:600, fontFamily:FONT, transition:"all 0.2s ease" }}>Vazgec</button>
+          <button onClick={props.onClose}
+            onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; }}
+            onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
+            style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:12, padding:"12px 26px", fontWeight:700, cursor:"pointer", fontSize:13, boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>Plani Yukselt</button>
         </div>
       </div>
     </div>
@@ -367,58 +370,60 @@ function MentorChat(props) {
   var suggested = ["Hangi araçla başlamalıyım?","Prompt engineering ipuçları","AI ile nasıl para kazanırım?","Öğrenme planımı optimize et"];
 
   return (
-    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.88)", zIndex:700, display:"flex", alignItems:"center", justifyContent:"center", padding:12 }}>
-      <div style={{ width:"100%", maxWidth:680, height:"88vh", background:"#0c0c1a", border:"1px solid rgba(212,168,83,0.3)", borderRadius:18, display:"flex", flexDirection:"column", overflow:"hidden" }}>
-        <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.06)", display:"flex", alignItems:"center", gap:10, background:"rgba(212,168,83,0.05)" }}>
-          <div style={{ width:40, height:40, borderRadius:"50%", background:"linear-gradient(135deg,#d4a853,#f0c060)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:20 }}>T</div>
-          <div style={{ flex:1 }}><div style={{ fontWeight:700, color:"#fff", fontSize:14 }}>AI Mentor</div><div style={{ fontSize:11, color:"#10a37f" }}>Cevrimici</div></div>
-          <div style={{ background:"rgba(212,168,83,0.1)", border:"1px solid rgba(212,168,83,0.3)", borderRadius:7, padding:"3px 10px", fontSize:11, color:GOLD }}>
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.85)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:700, display:"flex", alignItems:"center", justifyContent:"center", padding:12, fontFamily:FONT }}>
+      <div style={{ width:"100%", maxWidth:680, height:"88vh", background:"linear-gradient(145deg, rgba(13,13,31,0.98), rgba(7,7,17,0.98))", border:"1px solid "+CARD_BORDER2, borderRadius:24, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
+        <div style={{ padding:"16px 20px", borderBottom:"1px solid "+CARD_BORDER, display:"flex", alignItems:"center", gap:12, background:"rgba(201,168,76,0.05)", backdropFilter:"blur(12px)" }}>
+          <div style={{ width:42, height:42, borderRadius:"50%", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, fontWeight:800, color:"#08080f", boxShadow:"0 4px 16px rgba(201,168,76,0.4)" }}>🧠</div>
+          <div style={{ flex:1 }}><div style={{ fontWeight:700, color:TEXT, fontSize:15 }}>AI Mentor</div><div style={{ fontSize:11, color:TEAL, fontFamily:FONT_MONO, marginTop:2 }}>● Cevrimici</div></div>
+          <div style={{ background:"rgba(201,168,76,0.12)", border:"1px solid rgba(201,168,76,0.35)", borderRadius:10, padding:"5px 12px", fontSize:11, color:GOLD2, fontFamily:FONT_MONO, fontWeight:700 }}>
             {p.mentorSessions === 999 ? "Sinirirsiz" : left + " seans"}
           </div>
-          <button onClick={props.onClose} style={{ background:"transparent", border:"none", color:"#888899", cursor:"pointer", fontSize:20 }}>x</button>
+          <button onClick={props.onClose} style={{ background:"rgba(255,255,255,0.05)", border:"1px solid "+CARD_BORDER, color:TEXT2, cursor:"pointer", fontSize:18, width:32, height:32, borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center", transition:"all 0.2s ease" }}>×</button>
         </div>
         <div style={{ flex:1, overflowY:"auto", padding:16, display:"flex", flexDirection:"column", gap:12 }}>
           {msgs.map(function(m, i) {
             return (
               <div key={i} style={{ display:"flex", gap:8, justifyContent: m.role === "ai" ? "flex-start" : "flex-end" }}>
-                {m.role === "ai" && <div style={{ width:30, height:30, borderRadius:"50%", background:"linear-gradient(135deg,#d4a853,#f0c060)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, flexShrink:0 }}>T</div>}
-                <div style={{ maxWidth:"78%", background: m.role === "ai" ? "rgba(255,255,255,0.04)" : "rgba(212,168,83,0.15)", border:"1px solid "+(m.role==="ai"?"rgba(255,255,255,0.07)":"rgba(212,168,83,0.3)"), borderRadius: m.role==="ai" ? "14px 14px 14px 3px" : "14px 14px 3px 14px", padding:"11px 14px" }}>
-                  <p style={{ color: m.role==="ai" ? "#ccccdd" : "#f0e0b0", fontSize:13, lineHeight:1.65, margin:0, whiteSpace:"pre-wrap" }}>{m.text}</p>
+                {m.role === "ai" && <div style={{ width:32, height:32, borderRadius:"50%", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, flexShrink:0, boxShadow:"0 2px 8px rgba(201,168,76,0.3)" }}>🧠</div>}
+                <div style={{ maxWidth:"78%", background: m.role === "ai" ? "rgba(255,255,255,0.04)" : "linear-gradient(135deg, rgba(201,168,76,0.18), rgba(124,92,252,0.10))", border:"1px solid "+(m.role==="ai"?CARD_BORDER:"rgba(201,168,76,0.35)"), borderRadius: m.role==="ai" ? "16px 16px 16px 4px" : "16px 16px 4px 16px", padding:"12px 16px", boxShadow:"0 2px 8px rgba(0,0,0,0.2)" }}>
+                  <p style={{ color: m.role==="ai" ? TEXT : GOLD2, fontSize:14, lineHeight:1.7, margin:0, whiteSpace:"pre-wrap", fontFamily:FONT }}>{m.text}</p>
                 </div>
-                {m.role === "user" && <div style={{ width:30, height:30, borderRadius:"50%", background:"rgba(99,102,241,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, color:"#a5b4fc", fontSize:13 }}>{user.name[0]}</div>}
+                {m.role === "user" && <div style={{ width:32, height:32, borderRadius:"50%", background:"linear-gradient(135deg,#7c5cfc,#a78bfa)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, color:"#fff", fontSize:13, flexShrink:0 }}>{user.name[0]}</div>}
               </div>
             );
           })}
           {loading && (
             <div style={{ display:"flex", gap:8 }}>
-              <div style={{ width:30, height:30, borderRadius:"50%", background:"linear-gradient(135deg,#d4a853,#f0c060)", display:"flex", alignItems:"center", justifyContent:"center" }}>T</div>
-              <div style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:"14px 14px 14px 3px", padding:"13px 16px", display:"flex", gap:5 }}>
-                <div style={{ width:7, height:7, borderRadius:"50%", background:GOLD }} />
-                <div style={{ width:7, height:7, borderRadius:"50%", background:GOLD }} />
-                <div style={{ width:7, height:7, borderRadius:"50%", background:GOLD }} />
+              <div style={{ width:32, height:32, borderRadius:"50%", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14 }}>🧠</div>
+              <div style={{ background:"rgba(255,255,255,0.04)", border:"1px solid "+CARD_BORDER, borderRadius:"16px 16px 16px 4px", padding:"14px 18px", display:"flex", gap:6, alignItems:"center" }}>
+                <div className="shimmer" style={{ width:8, height:8, borderRadius:"50%", background:GOLD }} />
+                <div className="shimmer" style={{ width:8, height:8, borderRadius:"50%", background:GOLD, animationDelay:"0.2s" }} />
+                <div className="shimmer" style={{ width:8, height:8, borderRadius:"50%", background:GOLD, animationDelay:"0.4s" }} />
               </div>
             </div>
           )}
           <div ref={botRef} />
         </div>
         {msgs.length <= 1 && (
-          <div style={{ padding:"0 16px 10px", display:"flex", flexWrap:"wrap", gap:7 }}>
+          <div style={{ padding:"0 16px 12px", display:"flex", flexWrap:"wrap", gap:8 }}>
             {suggested.map(function(q) {
-              return <button key={q} onClick={function() { setInp(q); }} style={{ background:"rgba(212,168,83,0.08)", border:"1px solid rgba(212,168,83,0.2)", borderRadius:20, padding:"5px 12px", fontSize:11, color:GOLD, cursor:"pointer" }}>{q}</button>;
+              return <button key={q} onClick={function() { setInp(q); }} style={{ background:"rgba(201,168,76,0.08)", border:"1px solid rgba(201,168,76,0.25)", borderRadius:20, padding:"6px 14px", fontSize:12, color:GOLD2, cursor:"pointer", fontFamily:FONT, transition:"all 0.2s ease" }}>{q}</button>;
             })}
           </div>
         )}
-        <div style={{ padding:"10px 14px", borderTop:"1px solid rgba(255,255,255,0.06)", display:"flex", gap:8 }}>
+        <div style={{ padding:"12px 16px", borderTop:"1px solid "+CARD_BORDER, display:"flex", gap:10, background:"rgba(7,7,17,0.6)" }}>
           {p.mentorSessions !== 999 && left <= 0 ? (
-            <div style={{ flex:1, textAlign:"center", color:"#555577", fontSize:12, padding:"10px 0" }}>Seans hakkin doldu - Pro'ya gec</div>
+            <div style={{ flex:1, textAlign:"center", color:TEXT2, fontSize:13, padding:"12px 0", fontFamily:FONT_MONO }}>Seans hakkin doldu — Pro'ya gec</div>
           ) : (
             <>
               <input value={inp} onChange={function(e) { setInp(e.target.value); }} onKeyDown={function(e) { if (e.key === "Enter") send(); }}
                 placeholder="Sorunuzu yazin..."
-                style={{ flex:1, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:12, padding:"10px 14px", color:"#fff", fontSize:13, outline:"none" }} />
+                onFocus={function(e){ e.currentTarget.style.borderColor=GOLD; }}
+                onBlur={function(e){ e.currentTarget.style.borderColor="rgba(255,255,255,0.12)"; }}
+                style={{ flex:1, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"12px 16px", color:"#fff", fontSize:14, outline:"none", fontFamily:FONT, transition:"border-color 0.2s ease" }} />
               <button onClick={send} disabled={loading || !inp.trim()}
-                style={{ background: loading || !inp.trim() ? "#222" : "linear-gradient(135deg,#d4a853,#f0c060)", color: loading || !inp.trim() ? "#555" : "#08080f", border:"none", borderRadius:12, padding:"10px 18px", fontWeight:700, cursor: loading||!inp.trim() ? "not-allowed" : "pointer", fontSize:16 }}>
-                &gt;
+                style={{ background: loading || !inp.trim() ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#c9a84c,#f5cc6a)", color: loading || !inp.trim() ? TEXT2 : "#08080f", border: loading || !inp.trim() ? "1px solid "+CARD_BORDER : "none", borderRadius:12, padding:"10px 22px", fontWeight:700, cursor: loading||!inp.trim() ? "not-allowed" : "pointer", fontSize:18, boxShadow: loading || !inp.trim() ? "none" : SHADOW_GOLD, transition:"all 0.2s ease" }}>
+                →
               </button>
             </>
           )}
@@ -461,60 +466,73 @@ function Landing(props) {
           Hemen Basla
         </button>
       </div>
-      <div style={{ maxWidth:900, margin:"0 auto", padding:"0 20px 64px" }}>
-        <h2 style={{ textAlign:"center", fontSize:24, fontWeight:700, marginBottom:32 }}>Ogrencilerimiz Ne Diyor?</h2>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))", gap:16 }}>
+      <div style={{ maxWidth:960, margin:"0 auto", padding:"0 20px 72px" }}>
+        <h2 style={{ textAlign:"center", fontSize:28, fontWeight:800, marginBottom:36, color:TEXT, letterSpacing:"-0.02em" }}>Ogrencilerimiz Ne Diyor?</h2>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))", gap:18 }}>
           {reviews.map(function(r, i) {
             return (
-              <div key={i} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:16, padding:24 }}>
-                <div style={{ color:GOLD, fontSize:14, marginBottom:10 }}>{"★★★★★"}</div>
-                <p style={{ color:"#ccccdd", fontSize:13, lineHeight:1.6, marginBottom:14, fontStyle:"italic" }}>{"\"" + r.text + "\""}</p>
-                <div style={{ display:"flex", gap:8, alignItems:"center" }}>
-                  <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(212,168,83,0.2)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, color:GOLD }}>{r.name[0]}</div>
-                  <div><div style={{ fontWeight:600, fontSize:12 }}>{r.name}</div><div style={{ color:"#555577", fontSize:11 }}>{r.role}</div></div>
+              <div key={i}
+                onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.borderColor=CARD_BORDER2; }}
+                onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.borderColor=CARD_BORDER; }}
+                style={{ background:"linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+CARD_BORDER, borderRadius:20, padding:26, transition:"all 0.2s ease", boxShadow:"0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)", fontFamily:FONT }}>
+                <div style={{ color:GOLD2, fontSize:15, marginBottom:12, letterSpacing:"2px" }}>{"★★★★★"}</div>
+                <p style={{ color:TEXT, fontSize:14, lineHeight:1.7, marginBottom:18, fontStyle:"italic" }}>{"\"" + r.text + "\""}</p>
+                <div style={{ display:"flex", gap:10, alignItems:"center" }}>
+                  <div style={{ width:36, height:36, borderRadius:"50%", background:"linear-gradient(135deg, rgba(201,168,76,0.25), rgba(124,92,252,0.20))", border:"1px solid rgba(201,168,76,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, color:GOLD2 }}>{r.name[0]}</div>
+                  <div><div style={{ fontWeight:600, fontSize:13, color:TEXT }}>{r.name}</div><div style={{ color:TEXT2, fontSize:11, fontFamily:FONT_MONO, marginTop:2 }}>{r.role}</div></div>
                 </div>
               </div>
             );
           })}
         </div>
       </div>
-      <div style={{ maxWidth:1060, margin:"0 auto", padding:"0 20px 64px" }}>
-        <h2 style={{ textAlign:"center", fontSize:28, fontWeight:700, marginBottom:10 }}>28 Gunluk Program</h2>
-        <p style={{ textAlign:"center", color:"#666688", marginBottom:36, fontSize:13 }}>Her gun yeni bir AI araci, her gun yeni bir super guc</p>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:12 }}>
+      <div style={{ maxWidth:1060, margin:"0 auto", padding:"0 20px 72px" }}>
+        <h2 style={{ textAlign:"center", fontSize:32, fontWeight:800, marginBottom:10, color:TEXT, letterSpacing:"-0.02em" }}>28 Gunluk Program</h2>
+        <p style={{ textAlign:"center", color:TEXT2, marginBottom:40, fontSize:14, fontFamily:FONT_MONO }}>Her gun yeni bir AI araci, her gun yeni bir super guc</p>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(210px,1fr))", gap:14 }}>
           {COURSES.map(function(c) {
             return (
-              <div key={c.day} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:12, padding:"16px 14px", display:"flex", gap:10, alignItems:"flex-start" }}>
-                <div style={{ fontSize:22, flexShrink:0 }}>{c.icon}</div>
+              <div key={c.day}
+                onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.borderColor=CARD_BORDER2; }}
+                onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.borderColor=CARD_BORDER; }}
+                style={{ background:"linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+CARD_BORDER, borderRadius:14, padding:"16px 16px", display:"flex", gap:12, alignItems:"flex-start", transition:"all 0.2s ease", boxShadow:"inset 0 1px 0 rgba(255,255,255,0.05)", fontFamily:FONT }}>
+                <div style={{ fontSize:26, flexShrink:0 }}>{c.icon}</div>
                 <div>
-                  <div style={{ fontSize:10, color:"#555577", fontFamily:"monospace", marginBottom:2 }}>{"GUN "+c.day}</div>
-                  <div style={{ fontWeight:700, fontSize:13, marginBottom:2 }}>{c.tool}</div>
-                  {c.day > 14 && <div style={{ fontSize:10, color:"#818cf8" }}>Pro+</div>}
+                  <div style={{ fontSize:10, color:GOLD, fontFamily:FONT_MONO, marginBottom:3, fontWeight:700, letterSpacing:"1px" }}>{"GUN " + c.day.toString().padStart(2,"0")}</div>
+                  <div style={{ fontWeight:700, fontSize:13, marginBottom:3, color:TEXT }}>{c.tool}</div>
+                  {c.day > 14 && <div style={{ fontSize:10, color:PURPLE, fontFamily:FONT_MONO, fontWeight:600 }}>Pro+</div>}
                 </div>
               </div>
             );
           })}
         </div>
       </div>
-      <div id="pricing" style={{ background:"rgba(255,255,255,0.02)", borderTop:"1px solid rgba(255,255,255,0.05)", padding:"60px 20px" }}>
-        <div style={{ maxWidth:960, margin:"0 auto" }}>
-          <h2 style={{ textAlign:"center", fontSize:28, fontWeight:700, marginBottom:12 }}>Planini Sec</h2>
-          <p style={{ textAlign:"center", color:"#666688", marginBottom:40, fontSize:13 }}>Hedefine uygun plani sec ve bugun basla</p>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))", gap:20 }}>
+      <div id="pricing" style={{ background:"linear-gradient(180deg, rgba(124,92,252,0.04), rgba(201,168,76,0.04))", borderTop:"1px solid "+CARD_BORDER, padding:"72px 20px" }}>
+        <div style={{ maxWidth:1000, margin:"0 auto" }}>
+          <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planini Sec</h2>
+          <p style={{ textAlign:"center", color:TEXT2, marginBottom:44, fontSize:14, fontFamily:FONT }}>Hedefine uygun plani sec ve bugun basla</p>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:22 }}>
             {PLANS.map(function(plan) {
               return (
-                <div key={plan.name} style={{ background: plan.popular ? "rgba(212,168,83,0.08)" : CARD_BG, border:"1px solid "+(plan.popular?plan.color:CARD_BORDER), borderRadius:16, padding:28, position:"relative" }}>
-                  {plan.popular && <div style={{ position:"absolute", top:-11, left:"50%", transform:"translateX(-50%)", background:GOLD, color:"#08080f", fontSize:11, fontWeight:700, padding:"3px 14px", borderRadius:100 }}>EN POPULER</div>}
-                  <div style={{ fontSize:18, fontWeight:700, marginBottom:6 }}>{plan.name}</div>
-                  <div style={{ fontSize:40, fontWeight:800, color:plan.color, fontFamily:"monospace" }}>{"$"+plan.price}</div>
-                  <div style={{ color:"#555577", fontSize:12, marginBottom:20 }}>/ay</div>
-                  <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:24 }}>
+                <div key={plan.name}
+                  onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-4px)"; }}
+                  onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; }}
+                  style={{ background: plan.popular ? "linear-gradient(145deg, rgba(201,168,76,0.12), rgba(124,92,252,0.06))" : "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+(plan.popular?"rgba(201,168,76,0.45)":CARD_BORDER2), borderRadius:24, padding:32, position:"relative", boxShadow: plan.popular ? "0 8px 32px rgba(201,168,76,0.20), inset 0 1px 0 rgba(255,255,255,0.1)" : "0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)", transition:"all 0.2s ease", fontFamily:FONT }}>
+                  {plan.popular && <div style={{ position:"absolute", top:-12, left:"50%", transform:"translateX(-50%)", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", fontSize:11, fontWeight:800, padding:"5px 18px", borderRadius:100, letterSpacing:"1px", boxShadow:SHADOW_GOLD, textTransform:"uppercase" }}>En Populer</div>}
+                  <div style={{ fontSize:14, fontWeight:700, marginBottom:8, color:TEXT2, textTransform:"uppercase", letterSpacing:"1.5px" }}>{plan.name}</div>
+                  <div style={{ display:"flex", alignItems:"baseline", gap:6, marginBottom:24 }}>
+                    <span style={{ fontSize:48, fontWeight:800, color: plan.popular ? GOLD2 : plan.color, fontFamily:FONT_MONO, letterSpacing:"-0.03em" }}>{"$"+plan.price}</span>
+                    <span style={{ color:TEXT2, fontSize:13, fontFamily:FONT_MONO }}>/ay</span>
+                  </div>
+                  <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:26 }}>
                     {plan.features.map(function(f) {
-                      return <div key={f} style={{ display:"flex", gap:7, alignItems:"center", fontSize:13, color:"#ccccdd" }}><span style={{ color:plan.color }}>v</span>{f}</div>;
+                      return <div key={f} style={{ display:"flex", gap:10, alignItems:"flex-start", fontSize:13, color:TEXT, lineHeight:1.5 }}><span style={{ color: plan.popular ? GOLD2 : plan.color, fontWeight:800, flexShrink:0 }}>✓</span>{f}</div>;
                     })}
                   </div>
                   <button onClick={function() { window.open(PAYMENT_LINKS[plan.name], "_blank"); }}
-                    style={{ width:"100%", background: plan.popular ? "linear-gradient(135deg,#d4a853,#f0c060)" : "transparent", color: plan.popular ? "#08080f" : plan.color, border:"1px solid "+plan.color, borderRadius:10, padding:"12px 0", fontSize:14, fontWeight:700, cursor:"pointer" }}>
+                    onMouseEnter={function(e){ if(plan.popular){ e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; } else { e.currentTarget.style.background="rgba(255,255,255,0.06)"; } }}
+                    onMouseLeave={function(e){ if(plan.popular){ e.currentTarget.style.boxShadow=SHADOW_GOLD; } else { e.currentTarget.style.background="transparent"; } }}
+                    style={{ width:"100%", background: plan.popular ? "linear-gradient(135deg,#c9a84c,#f5cc6a)" : "transparent", color: plan.popular ? "#08080f" : plan.color, border:"1px solid "+(plan.popular?"transparent":plan.color), borderRadius:14, padding:"14px 0", fontSize:14, fontWeight:700, cursor:"pointer", boxShadow: plan.popular ? SHADOW_GOLD : "none", transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
                     {plan.popular ? "Hemen Kayit Ol" : "Sec"}
                   </button>
                 </div>
