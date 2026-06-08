@@ -438,24 +438,26 @@ function Landing(props) {
     { name:"Zeynep A.", role:"Girisimci", text:"Sertifikamı LinkedIn'e ekledim, 3 yeni musteri geldi!", r:5 },
   ];
   return (
-    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:"sans-serif" }}>
-      <div style={{ position:"relative", textAlign:"center", padding:"72px 20px 80px", background:"radial-gradient(ellipse at 50% 0%,rgba(212,168,83,0.13) 0%,transparent 68%)" }}>
-        <div style={{ display:"inline-block", background:"rgba(212,168,83,0.1)", border:"1px solid rgba(212,168,83,0.4)", borderRadius:100, padding:"7px 18px", fontSize:12, color:GOLD, marginBottom:28, fontFamily:"monospace" }}>{"Bu ay " + count + " kisi kayit oldu"}</div>
-        <div style={{ fontSize:80, fontWeight:800, lineHeight:1, color:GOLD }}>AI</div>
-        <div style={{ fontSize:36, fontWeight:700, marginBottom:20 }}>Certification Academy</div>
-        <p style={{ fontSize:16, color:"#9999bb", maxWidth:460, margin:"0 auto 40px", lineHeight:1.65 }}>28 arac - 28 gun - Gunde 15 dakika<br/><span style={{ color:GOLD }}>AI sertifikanı kazan, kariyerini donustur.</span></p>
+    <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, backgroundImage:"radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize:"32px 32px" }}>
+      <div style={{ position:"relative", textAlign:"center", padding:"72px 20px 80px", background:"radial-gradient(ellipse at 50% 0%,rgba(124,92,252,0.18) 0%,rgba(201,168,76,0.10) 30%,transparent 70%)" }}>
+        <div style={{ display:"inline-block", background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.4)", borderRadius:100, padding:"7px 18px", fontSize:12, color:GOLD2, marginBottom:28, fontFamily:FONT_MONO }}>{"Bu ay " + count + " kisi kayit oldu"}</div>
+        <div style={{ fontSize:80, fontWeight:800, lineHeight:1, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>AI</div>
+        <div style={{ fontSize:36, fontWeight:700, marginBottom:20, color:TEXT }}>Certification Academy</div>
+        <p style={{ fontSize:16, color:TEXT2, maxWidth:460, margin:"0 auto 40px", lineHeight:1.65 }}>28 arac - 28 gun - Gunde 15 dakika<br/><span style={{ color:GOLD2 }}>AI sertifikanı kazan, kariyerini donustur.</span></p>
         <div style={{ display:"flex", gap:40, justifyContent:"center", marginBottom:44, flexWrap:"wrap" }}>
           {[["28","Arac"],["28","Gun"],["6","Seviye"],["28","Sınav"]].map(function(item) {
             return (
               <div key={item[1]} style={{ textAlign:"center" }}>
-                <div style={{ fontSize:34, fontWeight:800, color:GOLD, fontFamily:"monospace" }}>{item[0]}</div>
-                <div style={{ fontSize:12, color:"#555577" }}>{item[1]}</div>
+                <div style={{ fontSize:38, fontWeight:800, color:GOLD2, fontFamily:FONT_MONO, letterSpacing:"-0.02em" }}>{item[0]}</div>
+                <div style={{ fontSize:12, color:TEXT2, marginTop:4, textTransform:"uppercase", letterSpacing:"1px" }}>{item[1]}</div>
               </div>
             );
           })}
         </div>
         <button onClick={function() { props.onGo && props.onGo("auth"); }}
-          style={{ background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:12, padding:"16px 44px", fontSize:17, fontWeight:700, cursor:"pointer" }}>
+          onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.4)"; }}
+          onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
+          style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"16px 44px", fontSize:17, fontWeight:700, cursor:"pointer", boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT }}>
           Hemen Basla
         </button>
       </div>
