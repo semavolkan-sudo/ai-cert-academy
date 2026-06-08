@@ -1194,6 +1194,223 @@ function Dashboard(props) {
   );
 }
 
+// ─── TOOL USECASES ─────────────────────────────────────────────────────────────
+var TOOL_USECASES = {
+
+  "ChatGPT": { tagline: "Dünyanın en popüler AI asistanı", usecases: ["📧 Saniyeler içinde profesyonel e-postalar yaz","📊 Toplantı notlarını otomatik özetle","💼 CV ve kapak mektubunu AI ile hazırla","🔍 Karmaşık konuları sade Türkçe ile anla"] },
+
+  "Claude": { tagline: "Uzun belgeleri anlayan, derin düşünen AI", usecases: ["📄 50 sayfalık sözleşmeyi 2 dakikada özetle","✍️ Makale ve rapor taslakları oluştur","🧠 Karmaşık kararlar için detaylı analiz al","💬 Doğal, insan gibi diyaloglarla çalış"] },
+
+  "Gemini": { tagline: "Google'ın çok modlu AI sistemi", usecases: ["🖼️ Fotoğraf yükle, içeriği analiz ettir","🔎 Gerçek zamanlı Google araması ile yanıtlar al","📱 Gmail ve Drive ile entegre çalış","🌍 100+ dilde çeviri ve içerik üret"] },
+
+  "Midjourney": { tagline: "Hayal ettiğin her görseli saniyede üret", usecases: ["🎨 Ürün için profesyonel reklam görseli üret","🏠 İç mekan tasarımı konseptleri oluştur","👔 Marka kimliği için özgün illüstrasyonlar yap","🖼️ Sosyal medya için viral içerik görselleri"] },
+
+  "Perplexity": { tagline: "Kaynak gösteren AI araştırma motoru", usecases: ["📰 Güncel haberleri kaynaklarıyla öğren","🔬 Akademik araştırma raporları hazırla","📈 Rakip analizi ve pazar araştırması yap","✅ Bilgileri gerçek kaynaklarla doğrula"] },
+
+  "Lovable": { tagline: "Kod yazmadan uygulama geliştir", usecases: ["🚀 Fikrini 10 dakikada çalışan uygulamaya dönüştür","💰 SaaS ürünü kur, abonelik sistemi ekle","🛒 E-ticaret sitesi oluştur ve yayınla","🎯 Müşteri için MVP prototip hızla sun"] },
+
+  "ElevenLabs": { tagline: "Sesinizi klonlayın, içerik üretin", usecases: ["🎙️ Kendi sesini klonla, video seslendirmesi yap","🎧 Yazılı içerikleri podcast'e dönüştür","🌐 İçeriklerini 30 dile seslendir","📺 YouTube videoları için profesyonel seslendirme"] },
+
+  "Runway ML": { tagline: "AI ile profesyonel video düzenleme", usecases: ["🎬 Metin yazarak video sahnesi oluştur","✂️ Videoda arka planı tek tıkla kaldır","🎨 Videona sinematik efektler ekle","⚡ Saatlik düzenlemeyi dakikada bitir"] },
+
+  "Make.com": { tagline: "Tekrarlayan işleri otomatikleştir", usecases: ["📬 Gelen e-postaları otomatik sınıflandır","🔄 Formdan gelen veriyi CRM'e otomatik aktar","📱 Sosyal medyayı otomatik yönet","⏰ Haftalık raporları otomatik gönder"] },
+
+  "Notion AI": { tagline: "Düşüncelerini organize eden AI sistemi", usecases: ["📋 Proje planını otomatik oluştur","📝 Toplantı notlarını aksiyonlara dönüştür","🗂️ Tüm bilgi tabanını AI ile yönet","✅ Haftalık görev listeni otomatik hazırla"] },
+
+  "Leonardo AI": { tagline: "Profesyonel AI görsel üretim stüdyosu", usecases: ["🛍️ Ürün fotoğraflarını AI ile yeniden çek","👗 Moda tasarımı konseptleri oluştur","🎮 Oyun karakteri ve ortam görselleri üret","📣 Reklam kampanyası için özgün görseller"] },
+
+  "Canva AI": { tagline: "Tasarımcı olmadan profesyonel tasarım", usecases: ["📊 Sunum slaytlarını saniyede tasarla","📱 Instagram ve TikTok içerikleri üret","🎴 Marka kiti ve logo tasarımı oluştur","📰 Bülten ve katalog tasarımla"] },
+
+  "Stable Diffusion": { tagline: "Açık kaynak görsel AI — tam kontrol", usecases: ["🖥️ Kendi bilgisayarında ücretsiz görsel üret","🎨 Özel model eğiterek kendi stilini oluştur","🔧 Fotoğraf restorasyon ve iyileştirme","🏭 Toplu içerik üretimi için otomatize et"] },
+
+  "Sora 2": { tagline: "OpenAI'ın çığır açan video AI modeli", usecases: ["🎬 Metinden gerçekçi video sahnesi üret","🌅 Ürün tanıtım videosu oluştur","📽️ Kısa film konsepti hayata geçir","✨ Özel efektlerle yaratıcı içerikler"] },
+
+  "Veo 3": { tagline: "Google'ın en gelişmiş video üretim AI'ı", usecases: ["🎥 Sinematik kalitede video üret","🎵 Sesli ve müzikli video içerikler oluştur","📺 Reklam filmi konseptleri hazırla","🌍 Çok dilli video içerik üretimi"] },
+
+  "Grok": { tagline: "X (Twitter) entegreli gerçek zamanlı AI", usecases: ["📡 Anlık gelişmeleri AI ile analiz et","🐦 Twitter trendlerini yorumla","😄 Mizahi ve özgün içerik üret","🔥 Viral içerik fikirleri geliştir"] },
+
+  "Copilot": { tagline: "Microsoft Office'i AI ile güçlendir", usecases: ["📊 Excel'de veri analizi ve grafik oluştur","📝 Word belgeleri otomatik taslak","📧 Outlook'ta e-posta özetleme","🎯 Teams toplantılarını AI ile yönet"] },
+
+  "Deepseek": { tagline: "Güçlü açık kaynak Çin AI modeli", usecases: ["💻 Kod yaz, hata bul ve düzelt","🧮 Karmaşık matematik problemleri çöz","📖 Uzun metinleri analiz et ve özetle","🔬 Araştırma ve veri analizi yap"] },
+
+  "Manus": { tagline: "Tamamen otonom AI ajan sistemi", usecases: ["🤖 Görevi ver, AI baştan sona tamamlasın","🌐 Web araştırması yapıp rapor hazırlasın","💼 İş akışlarını AI ajana devret","📱 Çoklu uygulama görevlerini otomatize et"] },
+
+  "Meta AI": { tagline: "Meta'nın ücretsiz AI ekosistemi", usecases: ["💬 WhatsApp'ta AI asistan olarak kullan","📸 Instagram için içerik fikirleri üret","🎨 Ücretsiz görsel üretimi yap","👥 Sosyal medya stratejisi geliştir"] },
+
+  "Assembly AI": { tagline: "Ses ve video transkripsiyon AI", usecases: ["🎙️ Toplantı kayıtlarını otomatik metne çevir","📝 Podcast bölümlerini yazıya dönüştür","🔍 Video içeriklerinde kelime ara","🌍 Çok dilli transkripsiyon yap"] },
+
+  "Kimi": { tagline: "Moonshot AI'ın güçlü dil modeli", usecases: ["📚 200.000 token ile dev belgeler analiz et","🔬 Akademik makaleler üzerinde çalış","💡 Uzun araştırma projeleri yönet","🌏 Çince içeriklerle çalış"] },
+
+  "Kling": { tagline: "Kuaishou'nun video üretim AI platformu", usecases: ["🎬 Fotoğraftan video animasyonu oluştur","👤 Karakter animasyonları üret","🎭 Yüz ifadesi ve hareket senkronizasyonu","📱 Kısa form video içerik üretimi"] },
+
+  "Pika Labs": { tagline: "Hızlı ve erişilebilir video AI", usecases: ["⚡ Saniyeler içinde kısa video oluştur","🎨 Görselleri animasyona dönüştür","🎬 Sosyal medya için kısa klipler","✨ Yaratıcı video efektleri ekle"] },
+
+  "Zapier AI": { tagline: "7000+ uygulamayı AI ile bağla", usecases: ["🔗 CRM, e-posta ve takvimi otomatik senkronize et","📊 Veri toplama iş akışları kur","🛒 E-ticaret siparişlerini otomatik yönet","📬 Lead'leri otomatik besle ve takip et"] },
+
+  "Prompt Engineering": { tagline: "AI'dan maksimum verim alma sanatı", usecases: ["🎯 Mükemmel sonuç veren promptlar yaz","⚡ AI verimliliğini 10 katına çıkar","🔧 Özel görevler için prompt şablonları oluştur","💡 Chain-of-thought teknikleriyle derin analiz"] },
+
+  "AI İş Stratejisi": { tagline: "AI ile gelir modeli ve iş büyütme", usecases: ["💰 AI tabanlı SaaS gelir modeli kur","📈 İş süreçlerini AI ile optimize et","🚀 Rakiplerden önce AI avantajı yakala","🌍 AI ile global pazara aç"] },
+
+  "NanoBanana": { tagline: "Yeni nesil AI araçlarını keşfet", usecases: ["🔭 En yeni AI trendlerini takip et","⚡ Erken adopter avantajı kazan","🧪 Beta AI araçlarını ilk dene","🌟 Gelecekteki AI araçlarına hazırlan"] }
+
+};
+
+function LessonIntro(props) {
+
+  var lesson = props.lesson;
+
+  var data = TOOL_USECASES[lesson.tool] || { tagline: lesson.desc, usecases: ["🎯 Sıfırdan adım adım öğren","💡 Gerçek örneklerle pratik yap","⭐ XP kazan seviye atla","🏆 Sertifikanı al"] };
+
+  var [phase, setPhase] = useState(0);
+
+  var [visibleUC, setVisibleUC] = useState(0);
+
+  var [progress, setProgress] = useState(0);
+
+  var TOTAL = 16000;
+
+  useEffect(function() {
+
+    var t1 = setTimeout(function() { setPhase(1); }, 800);
+
+    var t2 = setTimeout(function() { setPhase(2); }, 2000);
+
+    var t3 = setTimeout(function() { setPhase(3); setVisibleUC(1); }, 4000);
+
+    var t4 = setTimeout(function() { setVisibleUC(2); }, 6000);
+
+    var t5 = setTimeout(function() { setVisibleUC(3); }, 8000);
+
+    var t6 = setTimeout(function() { setVisibleUC(4); }, 10000);
+
+    var t7 = setTimeout(function() { setPhase(4); }, 12000);
+
+    var t8 = setTimeout(function() { props.onDone(); }, 16000);
+
+    var start = Date.now();
+
+    var ticker = setInterval(function() {
+
+      setProgress(Math.min(100, ((Date.now() - start) / TOTAL) * 100));
+
+    }, 50);
+
+    return function() {
+
+      [t1,t2,t3,t4,t5,t6,t7,t8].forEach(clearTimeout);
+
+      clearInterval(ticker);
+
+    };
+
+  }, []);
+
+  return (
+
+    <div style={{ position:"fixed", inset:0, zIndex:2000, background:"radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.16) 0%, #070711 65%)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"32px 24px" }}>
+
+      <div style={{ position:"absolute", top:0, left:0, right:0, bottom:0, backgroundImage:"radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0)", backgroundSize:"32px 32px", pointerEvents:"none" }} />
+
+      <div style={{ position:"absolute", top:0, left:0, right:0, height:3, background:"rgba(255,255,255,0.06)" }}>
+
+        <div style={{ height:"100%", width:progress+"%", background:"linear-gradient(90deg,#c9a84c,#f5cc6a)", transition:"width 0.1s linear" }} />
+
+      </div>
+
+      <div style={{ textAlign:"center", maxWidth:540, width:"100%" }}>
+
+        <div style={{ fontSize: phase >= 1 ? 88 : 56, marginBottom:16, transition:"font-size 0.9s cubic-bezier(0.34,1.56,0.64,1)", filter:"drop-shadow(0 0 48px rgba(201,168,76,0.6))" }}>
+
+          {lesson.icon}
+
+        </div>
+
+        <div style={{ opacity: phase >= 1 ? 1 : 0, transform: phase >= 1 ? "translateY(0)" : "translateY(24px)", transition:"all 0.7s ease", marginBottom:6 }}>
+
+          <span style={{ fontSize:11, color:"rgba(201,168,76,0.6)", fontFamily:"monospace", letterSpacing:4, textTransform:"uppercase" }}>GÜN {lesson.day} · AI ARACI</span>
+
+        </div>
+
+        <div style={{ opacity: phase >= 1 ? 1 : 0, transform: phase >= 1 ? "translateY(0)" : "translateY(30px)", transition:"all 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.1s", marginBottom:10 }}>
+
+          <span style={{ fontSize:40, fontWeight:800, color:"#fff", lineHeight:1.1 }}>{lesson.tool}</span>
+
+        </div>
+
+        <div style={{ opacity: phase >= 2 ? 1 : 0, transform: phase >= 2 ? "translateY(0)" : "translateY(16px)", transition:"all 0.7s ease", marginBottom:28 }}>
+
+          <span style={{ fontSize:16, color:"#9999b8", lineHeight:1.6 }}>{data.tagline}</span>
+
+        </div>
+
+        <div style={{ opacity: phase >= 3 ? 1 : 0, transition:"opacity 0.5s ease", marginBottom:8 }}>
+
+          <div style={{ fontSize:12, color:"rgba(201,168,76,0.7)", fontFamily:"monospace", letterSpacing:2, textTransform:"uppercase", marginBottom:14 }}>
+
+            🎯 Bunu öğrendikten sonra şunları yapabileceksin:
+
+          </div>
+
+        </div>
+
+        <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:28, textAlign:"left" }}>
+
+          {data.usecases.map(function(uc, i) {
+
+            var show = visibleUC > i;
+
+            return (
+
+              <div key={i} style={{ display:"flex", alignItems:"center", gap:14, background: show ? "rgba(201,168,76,0.07)" : "transparent", border:"1px solid "+(show ? "rgba(201,168,76,0.2)" : "transparent"), borderRadius:12, padding:"12px 16px", opacity: show ? 1 : 0, transform: show ? "translateX(0)" : "translateX(-24px)", transition:"all 0.5s cubic-bezier(0.34,1.56,0.64,1)" }}>
+
+                <span style={{ fontSize:20 }}>{uc.split(" ")[0]}</span>
+
+                <span style={{ fontSize:14, color:"#ccccdd", lineHeight:1.5 }}>{uc.split(" ").slice(1).join(" ")}</span>
+
+              </div>
+
+            );
+
+          })}
+
+        </div>
+
+        <div style={{ opacity: phase >= 4 ? 1 : 0, transform: phase >= 4 ? "scale(1) translateY(0)" : "scale(0.92) translateY(12px)", transition:"all 0.6s cubic-bezier(0.34,1.56,0.64,1)" }}>
+
+          <button onClick={props.onDone} style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"16px 0", fontSize:17, fontWeight:800, cursor:"pointer", boxShadow:"0 6px 32px rgba(201,168,76,0.4)", width:"100%", maxWidth:360, display:"block", margin:"0 auto 10px" }}>
+
+            🚀 Hadi Başlayalım!
+
+          </button>
+
+          <div style={{ fontSize:12, color:"rgba(255,255,255,0.2)" }}>⏱ Tahmini süre: 15 dakika · Dilediğinde devam edebilirsin</div>
+
+        </div>
+
+      </div>
+
+      <button onClick={props.onDone} style={{ position:"absolute", top:18, right:18, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"7px 14px", color:"rgba(255,255,255,0.3)", fontSize:12, cursor:"pointer" }}>
+
+        Atla ✕
+
+      </button>
+
+      <div style={{ position:"absolute", bottom:24, display:"flex", gap:5 }}>
+
+        {[0,1,2,3,4].map(function(i) {
+
+          return <div key={i} style={{ width: phase === i ? 20 : 6, height:6, borderRadius:3, background: phase >= i ? "rgba(201,168,76,0.8)" : "rgba(255,255,255,0.12)", transition:"all 0.3s ease" }} />;
+
+        })}
+
+      </div>
+
+    </div>
+
+  );
+
+}
+
 // ─── LESSON ──────────────────────────────────────────────────────────────────
 function Lesson(props) {
   var lesson = props.lesson;
