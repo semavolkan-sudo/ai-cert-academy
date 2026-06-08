@@ -1499,20 +1499,22 @@ function Lesson(props) {
               </div>
             ) : cards.length > 0 ? (
               <div>
-                <div style={{ display:"flex", gap:4, marginBottom:20 }}>
-                  {cards.map(function(_, i) { return <div key={i} style={{ flex:1, height:3, borderRadius:2, background: i <= cardIndex ? GOLD : "rgba(255,255,255,0.1)" }} />; })}
+                <div style={{ background:"rgba(255,255,255,0.06)", borderRadius:4, height:6, overflow:"hidden", marginBottom:16 }}>
+                  <div style={{ width:(((cardIndex+1)/cards.length)*100)+"%", height:"100%", background:"linear-gradient(90deg,#c9a84c,#f5cc6a,#7c5cfc)", borderRadius:4, transition:"width 0.4s ease" }} />
                 </div>
-                <div style={{ fontSize:12, color:"#555577", textAlign:"center", marginBottom:16 }}>{(cardIndex+1) + " / " + cards.length + " kart"}</div>
+                <div style={{ display:"flex", justifyContent:"center", marginBottom:16 }}>
+                  <span style={{ display:"inline-block", padding:"4px 12px", background:"rgba(201,168,76,0.15)", color:GOLD2, fontFamily:FONT_MONO, fontSize:12, fontWeight:700, borderRadius:8, border:"1px solid rgba(201,168,76,0.3)", letterSpacing:"0.5px" }}>{(cardIndex+1).toString().padStart(2,"0") + " / " + cards.length.toString().padStart(2,"0")}</span>
+                </div>
                 {card && (
-                  <div style={{ background:CARD_BG, border:"1px solid "+(card.color||GOLD)+"44", borderRadius:20, padding:28, marginBottom:20, minHeight:280 }}>
-                    <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20, paddingBottom:16, borderBottom:"1px solid rgba(255,255,255,0.06)" }}>
-                      <div style={{ width:44, height:44, borderRadius:12, background:(card.color||GOLD)+"22", border:"1px solid "+(card.color||GOLD)+"44", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, color:card.color||GOLD, fontSize:16, flexShrink:0 }}>{card.icon}</div>
+                  <div style={{ background:"linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid rgba(255,255,255,0.12)", borderRadius:20, padding:28, marginBottom:20, minHeight:280, boxShadow:"0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)", transition:"all 0.2s ease" }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20, paddingBottom:16, borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
+                      <div style={{ width:44, height:44, borderRadius:12, background:(card.color||GOLD)+"22", border:"1px solid "+(card.color||GOLD)+"55", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, color:card.color||GOLD2, fontSize:18, flexShrink:0 }}>{card.icon}</div>
                       <div>
-                        <h2 style={{ fontSize:17, fontWeight:800, color:card.color||GOLD, margin:0 }}>{card.title}</h2>
-                        <div style={{ fontSize:11, color:"#444466", marginTop:2 }}>{lesson.tool + " - Kart " + (cardIndex+1) + "/" + cards.length}</div>
+                        <h2 style={{ fontSize:17, fontWeight:700, color:GOLD2, margin:0, letterSpacing:"-0.01em" }}>{card.title}</h2>
+                        <div style={{ fontSize:11, color:TEXT2, marginTop:3, fontFamily:FONT_MONO }}>{lesson.tool}</div>
                       </div>
                     </div>
-                    <div style={{ fontSize:14, color:"#ccccdd", lineHeight:1.85 }}>
+                    <div style={{ fontSize:15, color:TEXT, lineHeight:1.8, fontFamily:FONT }}>
                       {card.body.split("\n").map(function(line, li) {
                         if (line.trim() === "") return <div key={li} style={{ height:6 }} />;
                         if (line.match(/^[-*]\s/)) {
@@ -1543,18 +1545,22 @@ function Lesson(props) {
                 <div style={{ display:"flex", gap:12 }}>
                   {cardIndex > 0 && (
                     <button onClick={function() { setCardIndex(cardIndex - 1); }}
-                      style={{ flex:1, background:"transparent", border:"1px solid rgba(255,255,255,0.15)", borderRadius:12, padding:"14px 0", fontSize:14, color:"#888899", cursor:"pointer" }}>
+                      style={{ flex:1, background:"rgba(255,255,255,0.06)", border:"1px solid "+CARD_BORDER2, borderRadius:12, padding:"14px 0", fontSize:14, color:TEXT2, cursor:"pointer", transition:"all 0.2s ease", fontFamily:FONT, fontWeight:600 }}>
                       Geri
                     </button>
                   )}
                   {cardIndex < cards.length - 1 ? (
                     <button onClick={function() { setCardIndex(cardIndex + 1); }}
-                      style={{ flex:2, background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:12, padding:"14px 0", fontSize:15, fontWeight:700, cursor:"pointer" }}>
+                      onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.4)"; }}
+                      onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
+                      style={{ flex:2, background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"16px 0", fontSize:15, fontWeight:700, cursor:"pointer", boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
                       Anladin, Devam Et
                     </button>
                   ) : (
                     <button onClick={function() { setPhase("quiz"); }}
-                      style={{ flex:2, background:"linear-gradient(135deg,#10a37f,#0d8a6a)", color:"#fff", border:"none", borderRadius:12, padding:"14px 0", fontSize:15, fontWeight:700, cursor:"pointer" }}>
+                      onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(0,201,167,0.4)"; }}
+                      onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 4px 24px rgba(0,201,167,0.25)"; }}
+                      style={{ flex:2, background:"linear-gradient(135deg,#00c9a7,#10a37f)", color:"#04150f", border:"none", borderRadius:14, padding:"16px 0", fontSize:15, fontWeight:700, cursor:"pointer", boxShadow:"0 4px 24px rgba(0,201,167,0.25)", transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
                       Sinava Gec
                     </button>
                   )}
