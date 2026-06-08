@@ -2383,6 +2383,7 @@ function Lesson(props) {
   }
 
   function getFallbackCards() {
+    console.log("FALLBACK CARDS CALLED - API failed");
     return [
       {
         icon: "L", title: "Bu Araç Nedir?", color: "#4285f4",
