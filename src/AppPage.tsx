@@ -3214,7 +3214,18 @@ export default function App() {
       {mentor && user && <MentorChat user={user} onClose={function() { setMentor(false); }} />}
       {page === "landing" && <Landing onGo={function(target) { if (target === "auth") setPage("auth"); }} />}
       {page === "auth" && <Auth
-        onRegister={function(u) { setUser(u); saveUser(u); setPage("planselect"); }}
+        onRegister={function(u) {
+          setUser(u);
+          saveUser(u);
+          if (u && u.coupon && u.coupon.isFree) {
+            var updatedUser = Object.assign({}, u, { plan: PLANS[1], paid: true, couponUsed: u.coupon.code });
+            setUser(updatedUser);
+            saveUser(updatedUser);
+            setPage(updatedUser.profile ? "dashboard" : "onboarding");
+          } else {
+            setPage("planselect");
+          }
+        }}
         onLogin={function(u) {
           setUser(u);
           saveUser(u);
