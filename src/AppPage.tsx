@@ -1691,27 +1691,7 @@ function Lesson(props) {
 
       <div style={{ maxWidth:720, margin:"0 auto", padding:"32px 20px" }}>
 
-        {phase === "intro" && (
-          <div style={{ background:"linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+CARD_BORDER2, borderRadius:24, padding:40, textAlign:"center", boxShadow:"0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)", fontFamily:FONT }}>
-            <div style={{ fontSize:64, marginBottom:18 }}>{lesson.icon}</div>
-            <h1 style={{ fontSize:30, fontWeight:800, marginBottom:10, color:TEXT, letterSpacing:"-0.02em" }}>{lesson.tool}</h1>
-            <p style={{ color:TEXT2, fontSize:14, marginBottom:32, lineHeight:1.7, maxWidth:440, margin:"0 auto 32px" }}>{lesson.desc}</p>
-            <div style={{ display:"flex", gap:32, justifyContent:"center", marginBottom:36, flexWrap:"wrap" }}>
-              <div style={{ textAlign:"center" }}><div style={{ fontSize:28, fontWeight:800, color:GOLD2, fontFamily:FONT_MONO, letterSpacing:"-0.02em" }}>14</div><div style={{ fontSize:11, color:TEXT2, textTransform:"uppercase", letterSpacing:"1px", marginTop:4 }}>maks kart</div></div>
-              <div style={{ textAlign:"center" }}><div style={{ fontSize:28, fontWeight:800, color:GOLD2, fontFamily:FONT_MONO, letterSpacing:"-0.02em" }}>5</div><div style={{ fontSize:11, color:TEXT2, textTransform:"uppercase", letterSpacing:"1px", marginTop:4 }}>soru</div></div>
-              <div style={{ textAlign:"center" }}><div style={{ fontSize:28, fontWeight:800, color:GOLD2, fontFamily:FONT_MONO, letterSpacing:"-0.02em" }}>{xpFor(5)}</div><div style={{ fontSize:11, color:TEXT2, textTransform:"uppercase", letterSpacing:"1px", marginTop:4 }}>XP max</div></div>
-            </div>
-            <button onClick={startLesson}
-              onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; }}
-              onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
-              style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"16px 48px", fontSize:17, fontWeight:700, cursor:"pointer", width:"100%", boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
-              Dersi Başlat
-            </button>
-            <div style={{ marginTop:14, fontSize:12, textAlign:"center", color: cached === true ? TEAL : cached === false ? TEXT2 : TEXT2, fontFamily:FONT_MONO }}>
-              {cached === true ? "✓ Içerik hazır - anında yüklenecek" : cached === false ? "⚡ Ilk acilis - AI içerik üretecek (~20 sn)" : "Kontrol ediliyor..."}
-            </div>
-          </div>
-        )}
+        {phase === "intro" && <LessonIntro lesson={lesson} onDone={startLesson} />}
 
         {phase === "learn" && (
           <div>
