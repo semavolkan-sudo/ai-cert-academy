@@ -555,7 +555,7 @@ function Landing(props) {
       </div>
       <div style={{ maxWidth:1060, margin:"0 auto", padding:"0 20px 72px" }}>
         <h2 style={{ textAlign:"center", fontSize:32, fontWeight:800, marginBottom:10, color:TEXT, letterSpacing:"-0.02em" }}>28 Günlük Program</h2>
-        <p style={{ textAlign:"center", color:TEXT2, marginBottom:40, fontSize:14, fontFamily:FONT_MONO }}>Her gün yeni bir AI aracı, her gün yeni bir süper guc</p>
+        <p style={{ textAlign:"center", color:TEXT2, marginBottom:40, fontSize:14, fontFamily:FONT_MONO }}>Her gün yeni bir AI aracı, her gün yeni bir süper güç</p>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(210px,1fr))", gap:14 }}>
           {COURSES.map(function(c) {
             return (
@@ -1402,7 +1402,7 @@ function Lesson(props) {
         body: "1. Hesap Oluştur: Platforma git, Google hesabınla 30 saniyede kaydol. Ücretsiz plan günlük kullanım için yeterli.\n\n2. Net Prompt Yaz: 'Bir şey yaz' değil, 'Hedef kitle: 30-45 yaş profesyoneller. Ton: samimi. 3 paragraflık LinkedIn gönderisi yaz' gibi spesifik talimatlar ver.\n\n3. İteratif Geliştir: İlk yanıt mükemmel olmayabilir. 'Daha kısa yap', 'Örnek ekle', 'Daha güvenilir ton kullan' diyerek adım adım iyileştir."
       },
       {
-        icon: "P", title: "Gerçek Hayat Prompt Ornegi", color: "#8b5cf6",
+        icon: "P", title: "Gerçek Hayat Prompt Örneği", color: "#8b5cf6",
         body: "SENARYO: Bir e-ticaret sitesi için ürün açıklaması yazman gerekiyor.\n\nZAYIF PROMPT:\n'Ürün açıklaması yaz'\n\nGÜÇLÜ PROMPT:\n'Sen deneyimli bir e-ticaret metin yazarsın. Hedef kitle: 25-40 yaş kadın müşteriler. Ürün: el yapımı seramik kupa. Ton: sıcak ve hikaye anlatan. Format: başlık + 3 madde özellik + duygusal CTA. Maks 100 kelime.'\n\nFARK: Güçlü prompt ile üretilen içerik direkt kullanılabilir, zayıf prompt ile defalarca düzenleme gerekir."
       },
       {
@@ -1701,15 +1701,15 @@ function Lesson(props) {
               onMouseEnter={function(e){ if(answeredCount>=quiz.length){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.4)"; } }}
               onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow= answeredCount>=quiz.length ? SHADOW_GOLD : "none"; }}
               style={{ width:"100%", background: answeredCount < quiz.length ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#c9a84c,#f5cc6a)", color: answeredCount < quiz.length ? TEXT2 : "#08080f", border: answeredCount < quiz.length ? "1px solid "+CARD_BORDER2 : "none", borderRadius:14, padding:"16px 0", fontSize:15, fontWeight:700, cursor: answeredCount < quiz.length ? "not-allowed" : "pointer", boxShadow: answeredCount < quiz.length ? "none" : SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
-              {answeredCount < quiz.length ? ((quiz.length - answeredCount) + " soru kaldi") : "Sınavı Bitir"}
+              {answeredCount < quiz.length ? ((quiz.length - answeredCount) + " soru kaldı") : "Sınavı Bitir"}
             </button>
           </div>
         )}
 
         {phase === "result" && (
           <div style={{ textAlign:"center", paddingTop:32 }}>
-            <div style={{ fontSize:68, marginBottom:18 }}>{score >= 4 ? "Mükemmel" : score >= 3 ? "Iyi" : "Tekrar"}</div>
-            <h2 style={{ fontSize:30, fontWeight:800, marginBottom:8, color:TEXT, letterSpacing:"-0.02em" }}>{score >= 4 ? "Mükemmel!" : score >= 3 ? "Iyi Is!" : "Biraz Daha Çalış!"}</h2>
+            <div style={{ fontSize:68, marginBottom:18 }}>{score >= 4 ? "Mükemmel" : score >= 3 ? "İyi" : "Tekrar"}</div>
+            <h2 style={{ fontSize:30, fontWeight:800, marginBottom:8, color:TEXT, letterSpacing:"-0.02em" }}>{score >= 4 ? "Mükemmel!" : score >= 3 ? "İyi İş!" : "Biraz Daha Çalış!"}</h2>
             <div style={{ fontSize:64, fontWeight:800, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", fontFamily:FONT_MONO, margin:"18px 0", letterSpacing:"-0.04em" }}>{score + "/5"}</div>
             <div style={{ display:"inline-flex", alignItems:"center", gap:7, background:"rgba(201,168,76,0.12)", border:"1px solid rgba(201,168,76,0.35)", borderRadius:12, padding:"12px 24px", marginBottom:28, fontSize:16, fontWeight:700, color:GOLD2, boxShadow:SHADOW_GOLD }}>
               {"+" + earnedXP + " XP Kazandın!"}
@@ -1723,7 +1723,7 @@ function Lesson(props) {
               onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.4)"; }}
               onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
               style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"14px 44px", fontSize:15, fontWeight:700, cursor:"pointer", boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
-              Dashboard'a Don
+              Dashboard'a Dön
             </button>
           </div>
         )}
