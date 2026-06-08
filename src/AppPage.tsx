@@ -1406,21 +1406,53 @@ function Login(props) {
     }
     if (pass.length < 6) { setErr("Şifre en az 6 karakter"); return; }
     setLoading(true);
-    setTimeout(function() {
-      setLoading(false);
-      var existing = getUserByEmail(email);
-      if (!existing) {
-        setErr("Bu email ile kayıtlı hesap bulunamadı. Lütfen önce kayıt ol.");
-        return;
-      }
-      // Basit şifre kontrolü - gerçek uygulamada Supabase Auth kullanılır
-      if (pass.length < 6) {
-        setErr("Şifre hatali.");
-        return;
-      }
-      saveUser(existing);
-      props.onDone(existing);
-    }, 1000);
+
+    function normalLogin() {
+      setTimeout(function() {
+        setLoading(false);
+        var existing = getUserByEmail(email);
+        if (!existing) {
+          setErr("Bu email ile kayıtlı hesap bulunamadı. Lütfen önce kayıt ol.");
+          return;
+        }
+        // Basit şifre kontrolü - gerçek uygulamada Supabase Auth kullanılır
+        if (pass.length < 6) {
+          setErr("Şifre hatali.");
+          return;
+        }
+        saveUser(existing);
+        props.onDone(existing);
+      }, 1000);
+    }
+
+    if (typeof fetch === "undefined") { normalLogin(); return; }
+    fetch("https://ai-proxy-two-pi.vercel.app/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "verify-test", user: { email: email.toLowerCase().trim(), pass: pass } })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.ok === true) {
+          var PLAN_MAP = { "Starter": PLANS[0], "Pro": PLANS[1], "Business": PLANS[2] };
+          var testUser = { name: data.name, email: email.toLowerCase().trim(), plan: PLAN_MAP[data.plan] || PLANS[0], paid: true, xp: 0, streak: 0, progress: {}, scores: {} };
+          saveUser(testUser);
+          setLoading(false);
+          props.onLogin && props.onLogin(testUser);
+          if (props.onDone) props.onDone(testUser);
+          return;
+        }
+        if (data.ok === false && data.reason === "wrong_pass") {
+          setErr("Hatalı şifre");
+          setLoading(false);
+          return;
+        }
+        // not_test_user → normal giriş akışına devam et
+        normalLogin();
+      })
+      .catch(function() {
+        normalLogin();
+      });
   }
 
   if (showAdmin) {
