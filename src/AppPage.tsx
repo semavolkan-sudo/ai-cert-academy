@@ -2415,13 +2415,13 @@ function Lesson(props) {
     setLoadProgress(0);
     setLoadError(false);
 
-    var cacheKey2 = "lesson-v10-" + lesson.tool;
+    var cacheKey2 = "lesson-v14-" + lesson.tool;
 
     try {
       var lv = lsGet(cacheKey2);
       if (lv) {
         var ld = JSON.parse(lv);
-        if (Date.now() - ld.ts < 24*60*60*1000 && ld.cards && ld.cards.length >= 50) {
+        if (Date.now() - ld.ts < 24*60*60*1000 && ld.cards && ld.cards.length >= 40) {
           setCards(normalizeCards(ld.cards));
           setLoading(false);
           return;
@@ -2430,44 +2430,34 @@ function Lesson(props) {
     } catch(e) {}
 
     var allCards = [];
-    var totalBatches = 100;
+    var totalBatches = 10;
     var CONCURRENT = 5;
     var completed = 0;
 
     var topics = [
-      "Bu araç nedir, ne işe yarar, kimler kullanır — sıfırdan anlat",
-      "Arayüz turu: ilk açtığında ne görürsün, temel butonlar ve menüler",
-      "Hesap açma, kurulum ve ilk ayarlar adım adım",
-      "Temel özellik #1 — en çok kullanılan fonksiyon detaylı anlatım",
-      "Temel özellik #2 — iş hayatından somut senaryo ve uygulama",
-      "Temel özellik #3 — günlük hayatta pratik kullanım örnekleri",
-      "Gelişmiş özellikler — güç kullanıcıların bildiği ipuçları",
-      "Prompt ve komut yazma teknikleri — bu araçtan maksimum verim",
-      "Sık yapılan 10 hata ve nasıl kaçınırsın — öncesi/sonrası örnekler",
-      "Ücretsiz vs ücretli plan karşılaştırması — hangisi sana uygun",
-      "Zaman kazandıran kısayollar, şablonlar ve hazır komutlar",
-      "Diğer AI araçlarıyla karşılaştırma — güçlü ve zayıf yönler",
-      "Entegrasyon rehberi — diğer uygulamalarla nasıl kullanırsın",
-      "İş hayatında kullanım senaryoları — pazarlama, satış, finans",
-      "Yaratıcı kullanım senaryoları — içerik üretimi ve tasarım",
-      "Otomasyon ve verimlilik — tekrar eden işleri otomatikleştir",
-      "API ve geliştirici özellikleri — teknik kullanıcılar için",
-      "Ekip ve işbirliği özellikleri — birlikte çalışma rehberi",
-      "Güvenlik ve gizlilik — verilerini nasıl korursun",
-      "Mobil uygulama kullanımı — telefon ve tablette verimli kullanım"
+      "Bu araç tam olarak ne işe yarar — sıfırdan başlayan biri için eksiksiz giriş. Aracın hangi sorunu çözdüğünü, kimler için tasarlandığını, rakiplerinden farkını ve gerçek hayatta ne zaman kullanılması gerektiğini somut örneklerle anlat.",
+      "İlk kurulum ve arayüz rehberi — uygulamayı ilk açan biri ne görür, hangi butona basar, menüler ne anlama gelir, ayarlar nerede bulunur. Ekran düzenini ve her alanın işlevini adım adım açıkla.",
+      "Temel kullanım becerileri — en çok kullanılan 3-4 özelliği derinlemesiyle anlat. Her özellik için: Ne işe yarar, nasıl aktif edilir, hangi ayarlar değiştirilebilir, gerçek bir görevde nasıl kullanılır.",
+      "Prompt ve komut yazma sanatı — bu araçtan maksimum verim almak için nasıl sorular sorulur, nasıl komutlar verilir. İyi prompt vs kötü prompt karşılaştırmaları, şablonlar ve hazır komut örnekleri.",
+      "Gerçek iş senaryoları — pazarlama, satış, müşteri hizmetleri, içerik üretimi, proje yönetimi gibi alanlarda bu aracı kullanan gerçekçi senaryolar. Her senaryo için adım adım nasıl yapılır anlat.",
+      "Gelişmiş teknikler ve gizli özellikler — çoğu kullanıcının bilmediği kısayollar, entegrasyonlar, otomasyon seçenekleri, toplu işlem yapma yöntemleri ve güç kullanıcı stratejileri.",
+      "Yaygın hatalar ve çözümleri — kullanıcıların en sık yaptığı 5 hata. Her hata için: Hata nedir, neden olur, nasıl düzeltilir, nasıl önlenir. Öncesi/sonrası örneklerle karşılaştırmalı anlat.",
+      "Verimlilik ve otomasyon — tekrar eden işleri nasıl otomatikleştirirsin, şablonlar nasıl oluşturursun, diğer araçlarla nasıl entegre edersin, günde kaç saat kazanabilirsin.",
+      "Ücretsiz vs ücretli plan derinlemesine karşılaştırma — hangi özellikler ücretsiz, hangisi ücretli, para vermeye değer mi, alternatifler var mı, hangi kullanıcı tipi için hangi plan uygundur.",
+      "Uzman seviyesi ipuçları — bu aracı profesyonel düzeyde kullanan kişilerin stratejileri, sektöre özel kullanım örnekleri ve gerçek başarı hikayeleri."
     ];
 
     function fetchBatch(batchIndex, onDone) {
       var topic = topics[batchIndex % topics.length];
       var seed = Math.floor(Math.random() * 9999999);
-      var prompt = "Sen deneyimli bir AI eğitmensin. Hiç bilmeyen bir öğrenciye " + lesson.tool + " aracını öğretiyorsun.\n\nKonu: " + topic + " (varyasyon #" + batchIndex + ", seed:" + seed + ")\n\nBu konuda 10 adet FARKLI ders kartı üret. Önceki kartlardan farklı alt konular seç.\n\nHer kart:\nAçıklama: 2-3 cümle sade Türkçe\n\n💡 Örnek: Gerçek hayat örneği\n\n⚡ İpucu: Hemen uygulanabilir ipucu\n\nGerektiğinde görsel şema ekle (→ akış, ❌✅ karşılaştırma, 1️⃣2️⃣3️⃣ adımlar)\n\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"açıklama\\n\\n💡 Örnek: örnek\\n\\n⚡ İpucu: ipucu\",\"icon\":\"emoji\"}]";
+      var prompt = "Sen dünyaca tanınan bir AI eğitim uzmanısın. " + lesson.tool + " aracını hiç bilmeyen birine öğretiyorsun.\n\nBu ders için konu: " + topic + "\nSeed: " + seed + "\n\nBu konuda 5 adet ÇOK DETAYLI ders kartı üret. Her kart:\n\n- En az 4-5 cümle açıklama (kapsamlı, bilgilendirici)\n- SOMUT ve GERÇEK bir örnek (kurgusal değil, gerçekten yapılabilir)\n- Adım adım talimat (gerektiğinde 1️⃣2️⃣3️⃣ formatında)\n- Görsel şema (gerektiğinde → akış, ❌✅ karşılaştırma)\n- Hemen uygulanabilir pro ipucu\n\nFormat (bu formatı kesinlikle koru):\nDetaylı açıklama metni. En az 4 cümle. Konuyu derinlemesine anlat.\n\n💡 Gerçek Örnek: Gerçekçi ve uygulanabilir bir senaryo. Kimin, nasıl, hangi adımlarla kullandığını anlat.\n\n📊 Nasıl Yapılır:\n1️⃣ İlk adım\n2️⃣ İkinci adım\n3️⃣ Üçüncü adım\n\n⚡ Pro İpucu: Çoğu kullanıcının bilmediği, zaman kazandıran somut ipucu.\n\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"Başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: örnek\\n\\n📊 Nasıl Yapılır:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ Pro İpucu: ipucu\",\"icon\":\"emoji\"}]";
 
       fetch(PROXY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001",
-          max_tokens: 2000,
+          max_tokens: 3000,
           messages: [{ role: "user", content: prompt }]
         })
       }).then(function(r) { return r.json(); }).then(function(d) {
