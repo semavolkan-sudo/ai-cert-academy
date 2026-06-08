@@ -10,7 +10,7 @@
  */
 
 @theme inline {
-  --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "DM Sans", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
   --font-serif: "Playfair Display", "Georgia", serif;
   --radius-sm: calc(var(--radius) - 4px);
