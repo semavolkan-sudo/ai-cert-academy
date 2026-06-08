@@ -2432,7 +2432,7 @@ function Lesson(props) {
 
     var allCards = [];
     var totalBatches = 10;
-    var CONCURRENT = 5;
+    var CONCURRENT = 1;
     var completed = 0;
 
     var topics = [
@@ -2449,34 +2449,36 @@ function Lesson(props) {
     ];
 
     function fetchBatch(batchIndex, onDone) {
-      var topic = topics[batchIndex % topics.length];
-      var seed = Math.floor(Math.random() * 9999999);
-      var prompt = "Sen dünyaca tanınan bir AI eğitim uzmanısın. " + lesson.tool + " aracını hiç bilmeyen birine öğretiyorsun.\n\nBu ders için konu: " + topic + "\nSeed: " + seed + "\n\nBu konuda 5 adet ÇOK DETAYLI ders kartı üret. Her kart:\n\n- En az 4-5 cümle açıklama (kapsamlı, bilgilendirici)\n- SOMUT ve GERÇEK bir örnek (kurgusal değil, gerçekten yapılabilir)\n- Adım adım talimat (gerektiğinde 1️⃣2️⃣3️⃣ formatında)\n- Görsel şema (gerektiğinde → akış, ❌✅ karşılaştırma)\n- Hemen uygulanabilir pro ipucu\n\nFormat (bu formatı kesinlikle koru):\nDetaylı açıklama metni. En az 4 cümle. Konuyu derinlemesine anlat.\n\n💡 Gerçek Örnek: Gerçekçi ve uygulanabilir bir senaryo. Kimin, nasıl, hangi adımlarla kullandığını anlat.\n\n📊 Nasıl Yapılır:\n1️⃣ İlk adım\n2️⃣ İkinci adım\n3️⃣ Üçüncü adım\n\n⚡ Pro İpucu: Çoğu kullanıcının bilmediği, zaman kazandıran somut ipucu.\n\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"Başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: örnek\\n\\n📊 Nasıl Yapılır:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ Pro İpucu: ipucu\",\"icon\":\"emoji\"}]";
+      var delay = batchIndex * 2000;
+      setTimeout(function() {
+        var topic = topics[batchIndex % topics.length];
+        var seed = Math.floor(Math.random() * 9999999);
+        var prompt = "Sen dünyaca tanınan bir AI eğitim uzmanısın. " + lesson.tool + " aracını hiç bilmeyen birine öğretiyorsun.\n\nBu ders için konu: " + topic + "\nSeed: " + seed + "\n\nBu konuda 5 adet ÇOK DETAYLI ders kartı üret. Her kart:\n\n- En az 4-5 cümle açıklama (kapsamlı, bilgilendirici)\n- SOMUT ve GERÇEK bir örnek (kurgusal değil, gerçekten yapılabilir)\n- Adım adım talimat (1️⃣2️⃣3️⃣ formatında)\n- Görsel şema (gerektiğinde → akış, ❌✅ karşılaştırma)\n- Hemen uygulanabilir pro ipucu\n\nFormat:\nDetaylı açıklama metni. En az 4 cümle.\n\n💡 Gerçek Örnek: Gerçekçi senaryo.\n\n📊 Nasıl Yapılır:\n1️⃣ İlk adım\n2️⃣ İkinci adım\n3️⃣ Üçüncü adım\n\n⚡ Pro İpucu: Somut ipucu.\n\nSADECE JSON döndür:\n[{\"title\":\"Başlık\",\"content\":\"açıklama\\n\\n💡 Gerçek Örnek: örnek\\n\\n📊 Nasıl Yapılır:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ Pro İpucu: ipucu\",\"icon\":\"emoji\"}]";
 
-      console.log("Fetching batch " + batchIndex + " topic:", topic.substring(0, 50));
-
-      fetch(PROXY_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-haiku-4-5-20251001",
-          max_tokens: 3000,
-          messages: [{ role: "user", content: prompt }]
+        fetch(PROXY_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "claude-haiku-4-5-20251001",
+            max_tokens: 3000,
+            messages: [{ role: "user", content: prompt }]
+          })
         })
-      }).then(function(r) { return r.json(); }).then(function(d) {
-        var text = "";
-        if (d && d.content && d.content.length) {
-          for (var j = 0; j < d.content.length; j++) text += d.content[j].text || "";
-        }
-        var parsed = parseCardsFromText(text);
-        if (parsed.length > 0) {
-          allCards = allCards.concat(parsed);
-        }
-        if (onDone) onDone();
-      }).catch(function(err) {
-        console.error("Batch " + batchIndex + " failed:", err);
-        if (onDone) onDone(false);
-      });
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          var text = "";
+          if (d && d.content) {
+            for (var j = 0; j < d.content.length; j++) text += d.content[j].text || "";
+          }
+          var parsed = parseCardsFromText(text);
+          if (parsed.length > 0) allCards = allCards.concat(parsed);
+          onDone(true);
+        })
+        .catch(function(err) {
+          console.error("Batch " + batchIndex + " failed:", err);
+          onDone(false);
+        });
+      }, delay);
     }
 
     var queue = [];
