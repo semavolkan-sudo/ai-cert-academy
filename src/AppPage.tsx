@@ -44,6 +44,7 @@ var TEXT = "#e8e8f0";
 var TEXT2 = "#9999b8";
 var FONT = "'Inter','Segoe UI',system-ui,sans-serif";
 var FONT_MONO = "'JetBrains Mono','Fira Code',monospace";
+var FONT_SERIF = "'Playfair Display','Georgia',serif";
 var RADIUS = "16px";
 var SHADOW = "0 8px 32px rgba(0,0,0,0.4)";
 var SHADOW_GOLD = "0 4px 24px rgba(201,168,76,0.25)";
@@ -84,7 +85,7 @@ function TurkishCharTest(props) {
   var chars = [
     { label: "Büyük", chars: ["Ş","Ç","Ğ","Ü","Ö","İ","I"] },
     { label: "Küçük", chars: ["ş","ç","ğ","ü","ö","ı","i"] },
-    { label: "Cümle (serif)", chars: ["Şimdi çok güzel örnekler ırmakta."] },
+    { label: "Cümle (serif)", chars: ["Şimdi çok güzel örnekler ırmakta."], serif:true },
     { label: "Cümle (mono)", chars: ["İşte çok güzel örnekler ırmakta."], mono:true },
   ];
   if (!open) {
@@ -124,7 +125,7 @@ function TurkishCharTest(props) {
                   <div key={ci}
                     style={{ minWidth:36, height:36, display:"flex", alignItems:"center", justifyContent:"center",
                       background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:"8px",
-                      fontFamily: row.mono ? FONT_MONO : FONT,
+                      fontFamily: row.mono ? FONT_MONO : (row.serif ? FONT_SERIF : FONT),
                       fontSize: row.chars[0].length > 1 ? 13 : 16,
                       fontWeight: row.chars[0].length > 1 ? 500 : 600,
                       color: row.chars[0].length > 1 ? TEXT : GOLD2,
