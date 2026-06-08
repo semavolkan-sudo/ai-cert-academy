@@ -424,8 +424,21 @@ function Onboarding(props) {
   ];
   function pick(i) {
     var na = Object.assign({}, ans); na[step] = i; setAns(na);
-    if (step < qs.length - 1) setStep(step + 1);
-    else props.onDone({ level: na[0] <= 1 ? "baslangic" : na[0] <= 2 ? "orta" : "ileri", goal: qs[1].opts[na[1]], time: qs[2].opts[na[2]], focus: qs[3].opts[na[3]] });
+    if (step < qs.length - 1) {
+      setStep(step + 1);
+    } else {
+      var level = na[0] <= 1 ? "baslangic" : na[0] <= 2 ? "orta" : "ileri";
+      var goalMap = ["kariyer", "is", "freelance", "genel"];
+      var goal = goalMap[na[1]] || "kariyer";
+      var profileKey = level + "_" + goal;
+      props.onDone({
+        level: level,
+        goal: qs[1].opts[na[1]],
+        time: qs[2].opts[na[2]],
+        focus: qs[3].opts[na[3]],
+        profileKey: profileKey
+      });
+    }
   }
   return (
     <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:FONT, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
