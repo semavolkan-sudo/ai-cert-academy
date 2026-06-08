@@ -151,6 +151,94 @@ var TEST_USERS = {
   "testbiz@aicert.com":  { name:"TestBusiness", plan:"Business", pass:"TestSema1605", paid:true  },
 };
 
+var TERMS_TEXT = `
+KULLANIM KOŞULLARI
+Son güncelleme: Haziran 2026
+
+1. TARAFLAR
+Bu Kullanım Koşulları, AI Certification Academy ("Platform") ile platformu kullanan kişi ("Kullanıcı") arasındaki ilişkiyi düzenler.
+
+2. HİZMET KAPSAMI
+Platform; yapay zeka araçlarına yönelik online eğitim içerikleri, interaktif dersler, sınavlar ve sertifika programları sunmaktadır. İçerikler yalnızca abonelik planı satın alınmış kullanıcılara açıktır.
+
+3. ÜYELİK VE GÜVENLİK
+- Kayıt sırasında doğru bilgi vermek zorunludur.
+- Hesap bilgilerinizin güvenliğinden siz sorumlusunuz.
+- Hesabınızı başkasıyla paylaşmak yasaktır.
+- Şüpheli aktivite tespit edilirse hesap askıya alınabilir.
+
+4. ÖDEME VE İADE
+- Abonelik ücretleri Lemon Squeezy altyapısı üzerinden tahsil edilir.
+- Aylık abonelikler, iptal edilmediği sürece otomatik yenilenir.
+- Satın alma tarihinden itibaren 7 gün içinde iade talep edilebilir.
+- Sertifika alındıktan sonra iade yapılmaz.
+
+5. İÇERİK KULLANIMI
+- Platform içerikleri yalnızca kişisel eğitim amaçlıdır.
+- İçeriklerin kopyalanması, dağıtılması veya satılması yasaktır.
+- AI Mentor ile yapılan konuşmalar eğitim amaçlıdır; profesyonel tavsiye niteliği taşımaz.
+
+6. HİZMET DEĞİŞİKLİKLERİ
+Platform, önceden bildirim yapmaksızın içerik ve özellikleri güncelleyebilir. Abonelik fiyatları değiştiğinde kullanıcılara e-posta ile bildirim yapılır.
+
+7. SORUMLULUK SINIRI
+Platform, kullanıcının öğrendiklerini uygulayarak elde ettiği sonuçlardan sorumlu tutulamaz. Hizmet kesintilerinden doğan zararlar için tazminat ödenmez.
+
+8. UYGULANACAK HUKUK
+Bu sözleşme Türkiye Cumhuriyeti hukukuna tabidir. Uyuşmazlıklarda İstanbul mahkemeleri yetkilidir.
+
+İletişim: info@aicert.com
+`;
+
+var PRIVACY_TEXT = `
+GİZLİLİK POLİTİKASI
+Son güncelleme: Haziran 2026
+
+1. VERİ SORUMLUSU
+AI Certification Academy, 6698 sayılı KVKK kapsamında veri sorumlusudur.
+
+2. TOPLANAN VERİLER
+- Kimlik: Ad, soyad, e-posta adresi
+- Kullanım: Ders ilerlemesi, sınav sonuçları, XP puanı, giriş zamanları
+- Teknik: IP adresi, tarayıcı türü, cihaz bilgisi
+- Ödeme: Ödeme işlemleri Lemon Squeezy tarafından yönetilir; kart bilgisi platformda saklanmaz.
+
+3. VERİLERİN KULLANIMI
+Toplanan veriler şu amaçlarla kullanılır:
+- Eğitim içeriklerinin kişiselleştirilmesi
+- Abonelik ve fatura yönetimi
+- Platform güvenliğinin sağlanması
+- Kullanıcı desteği
+- Yasal yükümlülüklerin yerine getirilmesi
+
+4. VERİ SAKLAMA
+Veriler, üyelik süresince ve sonrasında 3 yıl boyunca saklanır. Hesap silme talebinde veriler 30 gün içinde imha edilir.
+
+5. VERİLERİN PAYLAŞIMI
+Verileriniz üçüncü taraflarla satılmaz. Yalnızca şu durumlarda paylaşılır:
+- Lemon Squeezy (ödeme altyapısı)
+- Supabase (veri tabanı altyapısı)
+- Yasal zorunluluk halleri
+
+6. KVKK HAKLARI
+KVKK madde 11 kapsamında şu haklarınız bulunmaktadır:
+- Verilerinizin işlenip işlenmediğini öğrenme
+- İşlenen verilere erişim
+- Hatalı verilerin düzeltilmesini isteme
+- Verilerin silinmesini talep etme
+- İşlemeye itiraz etme
+
+Talepleriniz için: info@aicert.com
+
+7. ÇEREZLER
+Platform, oturum yönetimi için localStorage kullanır. Üçüncü taraf reklam çerezi kullanılmaz.
+
+8. DEĞİŞİKLİKLER
+Politika değişikliklerinde kullanıcılara e-posta ile bildirim yapılır.
+
+İletişim: info@aicert.com
+`;
+
 function buildPaymentUrl(planName, email) {
   var base = PAYMENT_LINKS[planName];
   if (!base) return "";
