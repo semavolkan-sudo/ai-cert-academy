@@ -2278,6 +2278,24 @@ function Lesson(props) {
     return out;
   }
 
+  function renderCardContent(content) {
+    if (!content) return null;
+    var lines = content.split("\n");
+    return lines.map(function(line, i) {
+      if (!line.trim()) return <div key={i} style={{ height:8 }} />;
+      if (line.startsWith("💡 Örnek:")) {
+        return <div key={i} style={{ background:"rgba(201,168,76,0.08)", border:"1px solid rgba(201,168,76,0.2)", borderRadius:10, padding:"10px 14px", fontSize:14, color:"#e8d5a3", lineHeight:1.7, marginTop:4 }}>{line}</div>;
+      }
+      if (line.startsWith("⚡ İpucu:")) {
+        return <div key={i} style={{ background:"rgba(99,102,241,0.08)", border:"1px solid rgba(99,102,241,0.2)", borderRadius:10, padding:"10px 14px", fontSize:14, color:"#a5b4fc", lineHeight:1.7, marginTop:4 }}>{line}</div>;
+      }
+      if (line.startsWith("🖼️") || line.includes("→") || line.includes("❌") || line.includes("✅") || line.match(/^[1-9]️⃣/)) {
+        return <div key={i} style={{ background:"rgba(16,163,127,0.06)", border:"1px solid rgba(16,163,127,0.15)", borderRadius:10, padding:"10px 14px", fontSize:13, color:"#6ee7b7", lineHeight:1.8, fontFamily:"monospace", marginTop:4, whiteSpace:"pre-wrap" }}>{line}</div>;
+      }
+      return <div key={i} style={{ fontSize:15, color:"#ccccdd", lineHeight:1.8 }}>{line}</div>;
+    });
+  }
+
   function parseCardsFromText(text) {
     if (!text) return [];
     var t = String(text).trim();
@@ -2430,7 +2448,7 @@ function Lesson(props) {
 
     function fetchBatch(batchIndex) {
       var topic = topics[batchIndex];
-      var prompt = "Sen deneyimli bir AI eğitmensin. Hiç bilmeyen bir öğrenciye " + lesson.tool + " aracını öğretiyorsun.\n\nBu ders kartı seti konusu: " + topic + "\n\nBu konu hakkında 10 adet ders kartı üret. Her kart:\n- Somut, gerçek hayat örneği içermeli\n- Adım adım açıklama yapmalı\n- Teknik jargondan kaçınmalı, sade Türkçe kullanmalı\n- Birbirinden farklı alt konular işlemeli\n\nSADECE JSON array döndür, başka hiçbir şey yazma:\n[{\"title\": \"kart başlığı\", \"content\": \"detaylı açıklama ve örnek\", \"icon\": \"emoji\"}]\n\nRASTGELE_SEED: " + Math.floor(Math.random()*999999);
+      var prompt = "Sen deneyimli bir AI eğitmensin. Hiç bilmeyen bir öğrenciye " + lesson.tool + " aracını öğretiyorsun.\n\nBu ders kartı seti konusu: " + topic + "\n\nBu konu hakkında 10 adet ders kartı üret. Her kart şu yapıda olmalı:\n\n1. BAŞLIK: Konuyu özetleyen kısa başlık\n2. AÇIKLAMA: Konuyu sade Türkçe ile 2-3 cümle açıkla\n3. ÖRNEK: Gerçek hayattan somut kullanım örneği. 'Örneğin:' diye başlayan 1-2 cümle\n4. GÖRSEL ÖRNEK (gerektiğinde): Eğer konu görsel bir arayüz, adım adım süreç veya karşılaştırma içeriyorsa, ASCII veya emoji ile basit bir görsel şema ekle. Örneğin:\n   - Bir akış şeması: Girdi → İşlem → Çıktı\n   - Bir karşılaştırma: ❌ Kötü prompt vs ✅ İyi prompt\n   - Adım adım: 1️⃣ → 2️⃣ → 3️⃣\n   - Ekran düzeni: [ Metin kutusu ] → [ Gönder ] → 💬 Yanıt\n5. PRATİK İPUCU: Hemen uygulanabilir 1 ipucu\n\nKart içeriğini şu formatta yaz:\nAçıklama metni.\n\n💡 Örnek: Örnek metin.\n\n🖼️ [Görsel şema sadece gerektiğinde — her karta ekleme]\n\n⚡ İpucu: İpucu metni.\n\nSADECE JSON array döndür:\n[{\"title\": \"başlık\", \"content\": \"açıklama\\n\\n💡 Örnek: örnek\\n\\n⚡ İpucu: ipucu\", \"icon\": \"emoji\", \"hasVisual\": false}]\n\nGörsel şema içeren kartlarda hasVisual: true yap ve content içine şemayı ekle.\n\nRASTGELE_SEED: " + Math.floor(Math.random()*999999);
 
       fetch("https://ai-proxy-two-pi.vercel.app/api/proxy", {
         method: "POST",
@@ -2569,30 +2587,7 @@ function Lesson(props) {
                       </div>
                     </div>
                     <div style={{ fontSize:15, color:TEXT, lineHeight:1.8, fontFamily:FONT }}>
-                      {card.body.split("\n").map(function(line, li) {
-                        if (line.trim() === "") return <div key={li} style={{ height:6 }} />;
-                        if (line.match(/^[-*]\s/)) {
-                          var parts = line.slice(2).split(":");
-                          return (
-                            <div key={li} style={{ display:"flex", gap:10, marginBottom:12, padding:"10px 14px", background:"rgba(255,255,255,0.03)", borderRadius:10, borderLeft:"3px solid "+(card.color||GOLD) }}>
-                              <span style={{ color:card.color||GOLD, fontWeight:700, flexShrink:0 }}>v</span>
-                              <span>{parts.length > 1 ? <span><strong style={{ color:"#fff" }}>{parts[0] + ":"}</strong>{parts.slice(1).join(":")}</span> : line.slice(2)}</span>
-                            </div>
-                          );
-                        }
-                        if (line.match(/^\d+\.\s/)) {
-                          var num = line.match(/^\d+/)[0];
-                          var rest = line.replace(/^\d+\.\s/, "");
-                          var rparts = rest.split(":");
-                          return (
-                            <div key={li} style={{ display:"flex", gap:12, marginBottom:12, padding:"10px 14px", background:"rgba(255,255,255,0.03)", borderRadius:10 }}>
-                              <span style={{ color:card.color||GOLD, fontWeight:800, flexShrink:0, minWidth:24, fontSize:15 }}>{num}</span>
-                              <span>{rparts.length > 1 ? <span><strong style={{ color:"#fff" }}>{rparts[0] + ":"}</strong>{rparts.slice(1).join(":")}</span> : rest}</span>
-                            </div>
-                          );
-                        }
-                        return <p key={li} style={{ marginBottom:8 }}>{line}</p>;
-                      })}
+                      {renderCardContent(card.body)}
                     </div>
                   </div>
                 )}
