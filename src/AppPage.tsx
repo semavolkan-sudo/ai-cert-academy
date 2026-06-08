@@ -30,10 +30,23 @@ var ADMIN_PASS = "aicert-admin-2024";
 var ADMIN_KEY = "aicert-admin-2024";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
-var BG = "#08080f";
-var GOLD = "#d4a853";
-var CARD_BG = "rgba(255,255,255,0.03)";
-var CARD_BORDER = "rgba(255,255,255,0.08)";
+var BG = "#070711";
+var BG2 = "#0d0d1f";
+var GOLD = "#c9a84c";
+var GOLD2 = "#f5cc6a";
+var PURPLE = "#7c5cfc";
+var TEAL = "#00c9a7";
+var CARD_BG = "rgba(255,255,255,0.035)";
+var CARD_BG2 = "rgba(255,255,255,0.06)";
+var CARD_BORDER = "rgba(255,255,255,0.09)";
+var CARD_BORDER2 = "rgba(255,255,255,0.16)";
+var TEXT = "#e8e8f0";
+var TEXT2 = "#9999b8";
+var FONT = "'Inter','SF Pro Display',system-ui,sans-serif";
+var FONT_MONO = "'JetBrains Mono','Fira Code',monospace";
+var RADIUS = "16px";
+var SHADOW = "0 8px 32px rgba(0,0,0,0.4)";
+var SHADOW_GOLD = "0 4px 24px rgba(201,168,76,0.25)";
 
 var PLAN_PERMS = {
   Starter:  { mentor: false, mentorSessions: 0,  bonus: false, team: false, teamLimit: 0,  cert: "Temel",    lockAfter: 14  },
