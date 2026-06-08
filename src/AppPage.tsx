@@ -2808,13 +2808,16 @@ export default function App() {
       {page === "landing" && <Landing onGo={function(target) { if (target === "auth") setPage("auth"); }} />}
       {page === "auth" && <Auth
         onRegister={function(u) { setUser(u); saveUser(u); setPage("planselect"); }}
-        onLogin={function(u) { setUser(u); saveUser(u); setPage(u && u.plan ? "dashboard" : "planselect"); }}
+        onLogin={function(u) { setUser(u); saveUser(u); setPage(u && u.plan && u.paid ? "dashboard" : "planselect"); }}
       />}
       {page === "planselect" && <PlanSelect onPick={function(p) {
         setPlan(p);
         updateUser(function(prev) { return Object.assign({}, prev, { plan: p }); });
-        try { window.open(PAYMENT_LINKS[p.name], "_blank"); } catch(e) {}
-        setPage(user && user.profile ? "dashboard" : "onboarding");
+        try {
+          var em = user && user.email ? user.email : "";
+          window.open(buildPaymentUrl(p.name, em), "_blank");
+        } catch(e) {}
+        // Ödeme tamamlanmadan dashboard'a geçilmez; planselect ekranında kalınır
       }} />}
       {page === "onboarding" && <Onboarding onDone={handleOnbDone} />}
       {page === "dashboard" && <Dashboard user={user} onLesson={handleLessonStart} onLogout={handleLogout} onMentor={function() { setMentor(true); }} />}
