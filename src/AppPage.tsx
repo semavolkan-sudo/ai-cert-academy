@@ -2473,8 +2473,9 @@ function Lesson(props) {
           allCards = allCards.concat(parsed);
         }
         if (onDone) onDone();
-      }).catch(function() {
-        if (onDone) onDone();
+      }).catch(function(err) {
+        console.error("Batch " + batchIndex + " failed:", err);
+        if (onDone) onDone(false);
       });
     }
 
