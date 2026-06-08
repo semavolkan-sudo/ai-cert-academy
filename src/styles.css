@@ -12,6 +12,7 @@
 @theme inline {
   --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  --font-serif: "Playfair Display", "Georgia", serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -141,6 +142,12 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6,
+  strong, b, em, blockquote, figcaption {
+    font-family: var(--font-serif);
+    font-feature-settings: "liga" 1, "kern" 1;
   }
 }
 
