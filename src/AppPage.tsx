@@ -1011,52 +1011,52 @@ function Dashboard(props) {
   ];
 
   return (
-    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:"sans-serif" }}>
+    <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, backgroundImage:"radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0)", backgroundSize:"32px 32px" }}>
       {upgrade && <UpgradeModal feature={upgrade} onClose={function() { setUpgrade(null); }} />}
-      <div style={{ borderBottom:"1px solid rgba(255,255,255,0.06)", padding:"12px 20px", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:10 }}>
+      <div style={{ position:"sticky", top:0, zIndex:50, background:"rgba(7,7,17,0.92)", backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)", borderBottom:"1px solid "+CARD_BORDER, padding:"14px 20px", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:10 }}>
         <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-          <span style={{ fontSize:20, fontWeight:800, color:GOLD }}>AI</span>
-          <span style={{ fontSize:12, color:"#555577" }}>Certification Academy</span>
+          <span style={{ fontSize:22, fontWeight:800, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>AI</span>
+          <span style={{ fontSize:12, color:TEXT2 }}>Certification Academy</span>
         </div>
         <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
-          <div style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.09)", borderRadius:9, padding:"5px 10px", fontSize:13, color:"#ef4444" }}>{"x " + streak + " gun"}</div>
-          <div style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.09)", borderRadius:9, padding:"5px 10px", fontSize:12, color:lvl.color }}>{"Lv." + lvl.level + " " + xp + " XP"}</div>
+          <div style={{ background:"rgba(239,68,68,0.10)", backdropFilter:"blur(12px)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:10, padding:"6px 12px", fontSize:13, color:"#ef4444", fontFamily:FONT_MONO, fontWeight:700 }}>{"x " + streak + "g"}</div>
+          <div style={{ background:"rgba(255,255,255,0.04)", backdropFilter:"blur(12px)", border:"1px solid "+CARD_BORDER2, borderRadius:10, padding:"6px 12px", fontSize:12, color:lvl.color, fontFamily:FONT_MONO, fontWeight:700 }}>{"Lv." + lvl.level + " " + xp + "XP"}</div>
           <button onClick={function() { p.mentor ? props.onMentor() : setUpgrade("AI Mentor"); }}
-            style={{ background: p.mentor ? "rgba(212,168,83,0.12)" : CARD_BG, border:"1px solid "+(p.mentor?"rgba(212,168,83,0.45)":CARD_BORDER), borderRadius:9, padding:"6px 14px", color: p.mentor ? GOLD : "#555577", cursor:"pointer", fontSize:12, fontWeight:600 }}>
+            style={{ background: p.mentor ? "rgba(201,168,76,0.12)" : CARD_BG, border:"1px solid "+(p.mentor?"rgba(201,168,76,0.45)":CARD_BORDER), borderRadius:10, padding:"6px 14px", color: p.mentor ? GOLD2 : TEXT2, cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:FONT, transition:"all 0.2s ease" }}>
             {"AI Mentor" + (p.mentor ? "" : " (Pro)")}
           </button>
-          <div style={{ background:"rgba(212,168,83,0.1)", border:"1px solid rgba(212,168,83,0.3)", borderRadius:7, padding:"5px 12px", fontSize:12, color:GOLD }}>{user.plan ? user.plan.name : ""}</div>
-          <span style={{ color:"#555577", fontSize:12 }}>{user.name}</span>
-          <button onClick={props.onLogout} style={{ background:"transparent", border:"1px solid rgba(255,255,255,0.1)", borderRadius:7, padding:"5px 12px", color:"#888899", cursor:"pointer", fontSize:12 }}>Cikis</button>
+          <div style={{ background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.3)", borderRadius:8, padding:"5px 12px", fontSize:11, color:GOLD2, fontWeight:700, textTransform:"uppercase", letterSpacing:"0.5px" }}>{user.plan ? user.plan.name : ""}</div>
+          <span style={{ color:TEXT2, fontSize:12 }}>{user.name}</span>
+          <button onClick={props.onLogout} style={{ background:"rgba(255,255,255,0.04)", border:"1px solid "+CARD_BORDER, borderRadius:10, padding:"6px 14px", color:TEXT2, cursor:"pointer", fontSize:12, fontFamily:FONT, transition:"all 0.2s ease" }}>Cikis</button>
         </div>
       </div>
       <div style={{ maxWidth:1040, margin:"0 auto", padding:"28px 20px" }}>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))", gap:14, marginBottom:28 }}>
-          <div style={{ background:"rgba(212,168,83,0.1)", border:"1px solid rgba(212,168,83,0.2)", borderRadius:14, padding:20 }}>
-            <div style={{ fontSize:11, color:"#666688", marginBottom:6 }}>Kurs Ilerlemesi</div>
-            <div style={{ fontSize:34, fontWeight:800, color:GOLD, fontFamily:"monospace" }}>{pct + "%"}</div>
-            <div style={{ color:"#555577", fontSize:11, marginTop:3 }}>{done + "/" + total + " ders"}</div>
-            <div style={{ background:"rgba(255,255,255,0.07)", borderRadius:100, height:5, overflow:"hidden", marginTop:8 }}>
-              <div style={{ width:pct+"%", height:"100%", background:"linear-gradient(90deg,#d4a853,#f0c060)", borderRadius:100 }} />
+          <div style={{ background:"linear-gradient(145deg, rgba(201,168,76,0.12), rgba(201,168,76,0.03))", backdropFilter:"blur(12px)", border:"1px solid rgba(201,168,76,0.25)", borderRadius:16, padding:22, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)", transition:"all 0.2s ease" }}>
+            <div style={{ fontSize:10, color:TEXT2, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px", fontWeight:600 }}>Kurs Ilerlemesi</div>
+            <div style={{ fontSize:36, fontWeight:800, color:GOLD2, fontFamily:FONT_MONO, letterSpacing:"-0.02em" }}>{pct + "%"}</div>
+            <div style={{ color:TEXT2, fontSize:11, marginTop:4 }}>{done + "/" + total + " ders"}</div>
+            <div style={{ background:"rgba(255,255,255,0.08)", borderRadius:4, height:8, overflow:"hidden", marginTop:10 }}>
+              <div style={{ width:pct+"%", height:"100%", background:"linear-gradient(90deg,#c9a84c,#f5cc6a)", borderRadius:4, transition:"width 0.6s ease" }} />
             </div>
           </div>
-          <div style={{ background:"rgba(99,102,241,0.1)", border:"1px solid rgba(99,102,241,0.2)", borderRadius:14, padding:20 }}>
-            <div style={{ fontSize:11, color:"#666688", marginBottom:6 }}>Seviye ve XP</div>
+          <div style={{ background:"linear-gradient(145deg, rgba(124,92,252,0.12), rgba(124,92,252,0.03))", backdropFilter:"blur(12px)", border:"1px solid rgba(124,92,252,0.25)", borderRadius:16, padding:22, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)", transition:"all 0.2s ease" }}>
+            <div style={{ fontSize:10, color:TEXT2, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px", fontWeight:600 }}>Seviye ve XP</div>
             <div style={{ fontSize:18, fontWeight:800, color:lvl.color }}>{lvl.name}</div>
-            <div style={{ color:"#555577", fontSize:11, marginTop:3 }}>{xp + " XP - +" + xpToNext + " sonraki"}</div>
-            <div style={{ background:"rgba(255,255,255,0.07)", borderRadius:100, height:5, overflow:"hidden", marginTop:8 }}>
-              <div style={{ width:xpPct+"%", height:"100%", background:lvl.color, borderRadius:100 }} />
+            <div style={{ color:TEXT2, fontSize:11, marginTop:4, fontFamily:FONT_MONO }}>{xp + " XP +" + xpToNext}</div>
+            <div style={{ background:"rgba(255,255,255,0.08)", borderRadius:4, height:8, overflow:"hidden", marginTop:10 }}>
+              <div style={{ width:xpPct+"%", height:"100%", background:"linear-gradient(90deg,"+lvl.color+",#7c5cfc)", borderRadius:4, transition:"width 0.6s ease" }} />
             </div>
           </div>
-          <div style={{ background:"rgba(239,68,68,0.1)", border:"1px solid rgba(239,68,68,0.2)", borderRadius:14, padding:20 }}>
-            <div style={{ fontSize:11, color:"#666688", marginBottom:6 }}>Streak</div>
-            <div style={{ fontSize:34, fontWeight:800, color:"#ef4444", fontFamily:"monospace" }}>{streak}</div>
-            <div style={{ color:"#555577", fontSize:11, marginTop:3 }}>Ardisik gun</div>
+          <div style={{ background:"linear-gradient(145deg, rgba(239,68,68,0.10), rgba(239,68,68,0.02))", backdropFilter:"blur(12px)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:16, padding:22, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)", transition:"all 0.2s ease" }}>
+            <div style={{ fontSize:10, color:TEXT2, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px", fontWeight:600 }}>Streak</div>
+            <div style={{ fontSize:36, fontWeight:800, color:"#ef4444", fontFamily:FONT_MONO, letterSpacing:"-0.02em" }}>{streak}</div>
+            <div style={{ color:TEXT2, fontSize:11, marginTop:4 }}>Ardisik gun</div>
           </div>
-          <div style={{ background:"rgba(16,163,127,0.1)", border:"1px solid rgba(16,163,127,0.2)", borderRadius:14, padding:20 }}>
-            <div style={{ fontSize:11, color:"#666688", marginBottom:6 }}>Liderboard</div>
-            <div style={{ fontSize:34, fontWeight:800, color:"#10a37f", fontFamily:"monospace" }}>{myRank + "."}</div>
-            <div style={{ color:"#555577", fontSize:11, marginTop:3 }}>{lbEntries.length + " kisi arasinda"}</div>
+          <div style={{ background:"linear-gradient(145deg, rgba(0,201,167,0.12), rgba(0,201,167,0.03))", backdropFilter:"blur(12px)", border:"1px solid rgba(0,201,167,0.25)", borderRadius:16, padding:22, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)", transition:"all 0.2s ease" }}>
+            <div style={{ fontSize:10, color:TEXT2, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px", fontWeight:600 }}>Liderboard</div>
+            <div style={{ fontSize:36, fontWeight:800, color:TEAL, fontFamily:FONT_MONO, letterSpacing:"-0.02em" }}>{"#"+myRank}</div>
+            <div style={{ color:TEXT2, fontSize:11, marginTop:4 }}>{lbEntries.length + " kisi arasinda"}</div>
           </div>
         </div>
 
