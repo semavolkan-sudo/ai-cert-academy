@@ -261,7 +261,7 @@ function generateCertificate(userName, tier, totalXP) {
 function XPToast(props) {
   useEffect(function() { var t = setTimeout(props.onDone, 2800); return function() { clearTimeout(t); }; }, []);
   return (
-    <div style={{ position:"fixed", top:20, right:20, zIndex:9999, background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", borderRadius:14, padding:"12px 22px", fontWeight:800, fontSize:18, fontFamily:"monospace", boxShadow:"0 6px 28px rgba(212,168,83,0.5)" }}>
+    <div style={{ position:"fixed", top:20, right:20, zIndex:9999, background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", borderRadius:14, padding:"14px 24px", fontWeight:800, fontSize:18, fontFamily:FONT_MONO, boxShadow:"0 8px 32px rgba(201,168,76,0.5)", letterSpacing:"0.5px", border:"1px solid rgba(255,255,255,0.2)" }}>
       {"+ " + props.xp + " XP"}
     </div>
   );
@@ -270,14 +270,17 @@ function XPToast(props) {
 // ─── UPGRADE MODAL ───────────────────────────────────────────────────────────
 function UpgradeModal(props) {
   return (
-    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.85)", zIndex:800, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-      <div style={{ background:"#0e0e1e", border:"1px solid rgba(212,168,83,0.4)", borderRadius:20, padding:40, maxWidth:420, textAlign:"center" }}>
-        <div style={{ fontSize:52, marginBottom:14 }}>🔒</div>
-        <h2 style={{ color:GOLD, fontWeight:800, fontSize:20, marginBottom:10 }}>Pro Ozellik</h2>
-        <p style={{ color:"#888899", marginBottom:24, lineHeight:1.6, fontSize:14 }}>{props.feature} — Pro veya Business plana gecis yaparak bu ozelligi kullanabilirsin.</p>
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.80)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:800, display:"flex", alignItems:"center", justifyContent:"center", padding:24, fontFamily:FONT }}>
+      <div style={{ background:"linear-gradient(145deg, rgba(13,13,31,0.95), rgba(7,7,17,0.95))", backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)", border:"1px solid rgba(201,168,76,0.4)", borderRadius:24, padding:44, maxWidth:440, textAlign:"center", boxShadow:"0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
+        <div style={{ fontSize:56, marginBottom:16 }}>🔒</div>
+        <h2 style={{ background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", fontWeight:800, fontSize:22, marginBottom:12, letterSpacing:"-0.01em" }}>Pro Ozellik</h2>
+        <p style={{ color:TEXT, marginBottom:28, lineHeight:1.7, fontSize:14 }}><span style={{ color:GOLD2, fontWeight:600 }}>{props.feature}</span> — Pro veya Business plana gecis yaparak bu ozelligi kullanabilirsin.</p>
         <div style={{ display:"flex", gap:12, justifyContent:"center" }}>
-          <button onClick={props.onClose} style={{ background:"transparent", border:"1px solid rgba(255,255,255,0.15)", borderRadius:10, padding:"10px 20px", color:"#888899", cursor:"pointer", fontSize:13 }}>Vazgec</button>
-          <button onClick={props.onClose} style={{ background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"10px 22px", fontWeight:700, cursor:"pointer", fontSize:13 }}>Plani Yukselt</button>
+          <button onClick={props.onClose} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid "+CARD_BORDER2, borderRadius:12, padding:"12px 24px", color:TEXT2, cursor:"pointer", fontSize:13, fontWeight:600, fontFamily:FONT, transition:"all 0.2s ease" }}>Vazgec</button>
+          <button onClick={props.onClose}
+            onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; }}
+            onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
+            style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:12, padding:"12px 26px", fontWeight:700, cursor:"pointer", fontSize:13, boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>Plani Yukselt</button>
         </div>
       </div>
     </div>
