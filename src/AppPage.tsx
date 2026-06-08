@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
+import logoAsset from "@/assets/ai-cert-academy-logo.png.asset.json";
 
 
 // ─── SSR-SAFE STORAGE ────────────────────────────────────────────────────────
