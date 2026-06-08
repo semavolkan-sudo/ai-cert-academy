@@ -932,6 +932,22 @@ function AdminPanel(props) {
 
   }
 
+  function getUserStatus(u) {
+    if (u && u._status) return u._status;
+    return lsGet("user-status-" + (u && u.email ? u.email : "")) === "pasif" ? "pasif" : "aktif";
+  }
+
+  function toggleStatus(u) {
+    var key = "user-status-" + u.email;
+    var current = lsGet(key);
+    if (current === "pasif") {
+      lsRemove(key);
+    } else {
+      lsSet(key, "pasif");
+    }
+    setUsers(function(prev) { return prev.map(function(x) { return x.email === u.email ? Object.assign({}, x, { _status: current === "pasif" ? "aktif" : "pasif" }) : x; }); });
+  }
+
   return (
 
     <div style={{ minHeight:"100vh", background:"#070711", color:"#fff", fontFamily:"'Inter',sans-serif" }}>
@@ -1136,7 +1152,7 @@ function AdminPanel(props) {
 
                     <tr style={{ background:"rgba(255,255,255,0.03)" }}>
 
-                      {["#","Ad Soyad","Email","Plan","XP","İlerleme","Kayıt","Son Giriş","İşlem"].map(function(h) {
+                      {["#","Ad Soyad","Email","Durum","Plan","XP","İlerleme","Kayıt","Son Giriş","İşlem"].map(function(h) {
 
                         return <th key={h} style={{ padding:"13px 14px", color:"#555577", fontWeight:600, textAlign:"left", whiteSpace:"nowrap", fontSize:11, textTransform:"uppercase", letterSpacing:1 }}>{h}</th>;
 
@@ -1157,10 +1173,10 @@ function AdminPanel(props) {
                       var prog = u.progress || {};
 
                       var done = Object.keys(prog).filter(function(k) { return prog[k] === true || prog[k] === "done"; }).length;
-
+                      var st = getUserStatus(u);
                       return (
 
-                        <tr key={(u.email||"")+i} style={{ borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+                        <tr key={(u.email||"")+i} style={{ borderTop:"1px solid rgba(255,255,255,0.05)", opacity: st === "pasif" ? 0.5 : 1 }}>
 
                           <td style={{ padding:"12px 14px", color:"#444466" }}>{i+1}</td>
 
@@ -1181,7 +1197,13 @@ function AdminPanel(props) {
                           </td>
 
                           <td style={{ padding:"12px 14px", color:"#9999b8" }}>{u.email||"-"}</td>
-
+                          <td style={{ padding:"12px 14px" }}>
+                            {st === "pasif" ? (
+                              <span style={{ background:"rgba(239,68,68,0.1)", color:"#ef4444", border:"1px solid rgba(239,68,68,0.25)", borderRadius:20, padding:"4px 10px", fontSize:11, fontWeight:700 }}>● Pasif</span>
+                            ) : (
+                              <span style={{ background:"rgba(16,163,127,0.15)", color:"#10a37f", border:"1px solid rgba(16,163,127,0.3)", borderRadius:20, padding:"4px 10px", fontSize:11, fontWeight:700 }}>● Aktif</span>
+                            )}
+                          </td>
                           <td style={{ padding:"12px 14px" }}>
 
                             <span style={{ background:pc+"22", color:pc, border:"1px solid "+pc+"44", borderRadius:20, padding:"4px 12px", fontSize:11, fontWeight:700 }}>{pn}</span>
@@ -1215,7 +1237,11 @@ function AdminPanel(props) {
                             <button onClick={function() { setSelectedUser(u); }} style={{ background:"rgba(99,102,241,0.1)", border:"1px solid rgba(99,102,241,0.3)", borderRadius:7, padding:"5px 12px", color:"#a5b4fc", fontSize:11, cursor:"pointer", marginRight:6 }}>Detay</button>
 
                             {fullAccess && <button onClick={function() { enterAsUser(u); }} style={{ background:"rgba(239,68,68,0.1)", border:"1px solid rgba(239,68,68,0.3)", borderRadius:7, padding:"5px 12px", color:"#fca5a5", fontSize:11, cursor:"pointer" }}>Giriş Yap</button>}
-
+                            {fullAccess && (
+                              st === "pasif"
+                                ? <button onClick={function() { toggleStatus(u); }} style={{ background:"rgba(16,163,127,0.1)", border:"1px solid rgba(16,163,127,0.25)", borderRadius:7, padding:"5px 10px", color:"#6ee7b7", fontSize:11, cursor:"pointer", marginLeft:6 }}>Aktif Yap</button>
+                                : <button onClick={function() { toggleStatus(u); }} style={{ background:"rgba(239,68,68,0.1)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:7, padding:"5px 10px", color:"#fca5a5", fontSize:11, cursor:"pointer", marginLeft:6 }}>Pasif Yap</button>
+                            )}
                           </td>
 
                         </tr>
@@ -1538,6 +1564,12 @@ function Login(props) {
         // Basit şifre kontrolü - gerçek uygulamada Supabase Auth kullanılır
         if (pass.length < 6) {
           setErr("Şifre hatali.");
+          return;
+        }
+        var isAdminL = existing.email === ADMIN_EMAIL;
+        var isTestL = existing.email === "test@aicert.com" || existing.email === "testpro@aicert.com" || existing.email === "testbiz@aicert.com";
+        if (!isAdminL && !isTestL && lsGet("user-status-" + existing.email) === "pasif") {
+          setErr("Hesabınız askıya alınmıştır. Destek için info@aicert.com adresine yazın.");
           return;
         }
         saveUser(existing);
@@ -2683,6 +2715,12 @@ function Auth(props) {
         setLoading(false);
         var existing = getUserByEmail(email);
         if (!existing) { setErr("Bu email ile kayıtlı hesap yok. Kayıt Ol sekmesini kullan."); return; }
+        var isAdminL2 = existing.email === ADMIN_EMAIL;
+        var isTestL2 = existing.email === "test@aicert.com" || existing.email === "testpro@aicert.com" || existing.email === "testbiz@aicert.com";
+        if (!isAdminL2 && !isTestL2 && lsGet("user-status-" + existing.email) === "pasif") {
+          setErr("Hesabınız askıya alınmıştır. Destek için info@aicert.com adresine yazın.");
+          return;
+        }
         if (!existing.paid) {
           setErr("Ödeme yapılmadan sisteme giriş yapılamaz. Lütfen bir plan seçin.");
         }
@@ -2910,6 +2948,16 @@ export default function App() {
       var su = lsGet("aica-user");
       if (su) {
         var u = JSON.parse(su);
+        var statusKey = "user-status-" + (u && u.email ? u.email : "");
+        var isPasif = lsGet(statusKey) === "pasif";
+        var isAdminU = u && u.email === ADMIN_EMAIL;
+        var isTestU = u && (u.email === "test@aicert.com" || u.email === "testpro@aicert.com" || u.email === "testbiz@aicert.com");
+        if (isPasif && !isAdminU && !isTestU) {
+          deleteUser();
+          setPage("landing");
+          setBooting(false);
+          return;
+        }
         setUser(u);
         var pn = u && u.plan ? (typeof u.plan === "string" ? u.plan : (u.plan.name || "")) : "";
         var isAdmin = u && u.email === ADMIN_EMAIL;
