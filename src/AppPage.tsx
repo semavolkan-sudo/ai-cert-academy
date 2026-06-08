@@ -42,7 +42,7 @@ var CARD_BORDER = "rgba(255,255,255,0.09)";
 var CARD_BORDER2 = "rgba(255,255,255,0.16)";
 var TEXT = "#e8e8f0";
 var TEXT2 = "#9999b8";
-var FONT = "'Inter','Segoe UI',system-ui,sans-serif";
+var FONT = "'DM Sans','Segoe UI',system-ui,sans-serif";
 var FONT_MONO = "'JetBrains Mono','Fira Code',monospace";
 var FONT_SERIF = "'Playfair Display','Georgia',serif";
 var RADIUS = "16px";
@@ -370,7 +370,7 @@ function Onboarding(props) {
     else props.onDone({ level: na[0] <= 1 ? "baslangic" : na[0] <= 2 ? "orta" : "ileri", goal: qs[1].opts[na[1]], time: qs[2].opts[na[2]], focus: qs[3].opts[na[3]] });
   }
   return (
-    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:"sans-serif", display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:FONT, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
       <div style={{ width:"100%", maxWidth:500 }}>
         <div style={{ textAlign:"center", marginBottom:36 }}>
           <div style={{ fontSize:36, fontWeight:800, color:GOLD }}>AI</div>
@@ -380,7 +380,7 @@ function Onboarding(props) {
           <div style={{ width:(((step+1)/qs.length)*100)+"%", height:"100%", background:GOLD, borderRadius:100 }} />
         </div>
         <div style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:16, padding:28 }}>
-          <div style={{ fontSize:11, color:GOLD, fontFamily:"monospace", marginBottom:10 }}>{"SORU "+(step+1)+"/"+qs.length}</div>
+          <div style={{ fontSize:11, color:GOLD, fontFamily:FONT_MONO, marginBottom:10 }}>{"SORU "+(step+1)+"/"+qs.length}</div>
           <h2 style={{ color:"#fff", fontWeight:700, fontSize:18, marginBottom:24, lineHeight:1.4 }}>{qs[step].q}</h2>
           <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
             {qs[step].opts.map(function(opt, i) {
@@ -642,7 +642,7 @@ function Register(props) {
   }
 
   return (
-    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:"sans-serif", display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:FONT, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
       <div style={{ width:"100%", maxWidth:420 }}>
         <div style={{ textAlign:"center", marginBottom:32 }}>
           <div style={{ fontSize:40, fontWeight:800, color:GOLD }}>AI</div>
@@ -747,7 +747,7 @@ function AdminPanel(props) {
   ];
 
   return (
-    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:"sans-serif", padding:24 }}>
+    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:FONT, padding:24 }}>
       <div style={{ maxWidth:1200, margin:"0 auto" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24 }}>
           <div>
@@ -892,7 +892,7 @@ function Login(props) {
   }
 
   return (
-    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:"sans-serif", display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:FONT, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
       <div style={{ width:"100%", maxWidth:420 }}>
         <div style={{ textAlign:"center", marginBottom:32 }}>
           <div style={{ fontSize:40, fontWeight:800, color:GOLD }}>AI</div>
@@ -996,7 +996,7 @@ function TeamPanel(props) {
         ].map(function(s) {
           return (
             <div key={s.label} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, padding:16, textAlign:"center" }}>
-              <div style={{ fontSize:30, fontWeight:800, color:s.color, fontFamily:"monospace" }}>{s.val}</div>
+              <div style={{ fontSize:30, fontWeight:800, color:s.color, fontFamily:FONT_MONO }}>{s.val}</div>
               <div style={{ fontSize:11, color:"#555577", marginTop:3 }}>{s.label}</div>
             </div>
           );
@@ -1525,7 +1525,7 @@ function Lesson(props) {
   var card = cards[cardIndex];
 
   return (
-    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:"sans-serif" }}>
+    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:FONT }}>
       <div style={{ borderBottom:"1px solid rgba(255,255,255,0.06)", padding:"12px 24px", display:"flex", alignItems:"center", gap:12 }}>
         <button onClick={props.onBack} style={{ background:"transparent", border:"none", color:"#888899", cursor:"pointer", fontSize:18 }}>{"<"}</button>
         <span style={{ fontSize:18 }}>{lesson.icon}</span>
@@ -1571,7 +1571,7 @@ function Lesson(props) {
                 <div style={{ maxWidth:360, margin:"0 auto", marginBottom:16 }}>
                   <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8, fontSize:12, color:"#555577" }}>
                     <span>Icerik uretiliyor</span>
-                    <span style={{ color:GOLD, fontFamily:"monospace", fontWeight:700 }}>{loadProgress + "%"}</span>
+                    <span style={{ color:GOLD, fontFamily:FONT_MONO, fontWeight:700 }}>{loadProgress + "%"}</span>
                   </div>
                   <div style={{ background:"rgba(255,255,255,0.07)", borderRadius:100, height:10, overflow:"hidden" }}>
                     <div style={{ width:loadProgress+"%", height:"100%", background:"linear-gradient(90deg,#d4a853,#f0c060)", borderRadius:100, transition:"width 0.4s ease" }} />
@@ -2036,7 +2036,7 @@ export default function App() {
   if (booting) {
     return (
       <div style={{ minHeight:"100vh", background:BG, display:"flex", alignItems:"center", justifyContent:"center" }}>
-        <div style={{ textAlign:"center", fontFamily:"sans-serif" }}>
+        <div style={{ textAlign:"center", fontFamily:FONT }}>
           <div style={{ fontSize:40, fontWeight:800, color:GOLD, marginBottom:10 }}>AI</div>
           <div style={{ color:"#555577", fontSize:13 }}>Yukleniyor...</div>
         </div>
