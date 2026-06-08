@@ -1924,6 +1924,7 @@ export default function App() {
   var [xpToast, setXpToast] = useState(null);
   var [booting, setBooting] = useState(true);
   var [inviteData, setInviteData] = useState(null);
+  var [showCharTest, setShowCharTest] = useState(false);
 
   useEffect(function() {
     if (typeof window === "undefined") { setBooting(false); return; }
