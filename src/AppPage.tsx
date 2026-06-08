@@ -370,58 +370,60 @@ function MentorChat(props) {
   var suggested = ["Hangi araçla başlamalıyım?","Prompt engineering ipuçları","AI ile nasıl para kazanırım?","Öğrenme planımı optimize et"];
 
   return (
-    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.88)", zIndex:700, display:"flex", alignItems:"center", justifyContent:"center", padding:12 }}>
-      <div style={{ width:"100%", maxWidth:680, height:"88vh", background:"#0c0c1a", border:"1px solid rgba(212,168,83,0.3)", borderRadius:18, display:"flex", flexDirection:"column", overflow:"hidden" }}>
-        <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.06)", display:"flex", alignItems:"center", gap:10, background:"rgba(212,168,83,0.05)" }}>
-          <div style={{ width:40, height:40, borderRadius:"50%", background:"linear-gradient(135deg,#d4a853,#f0c060)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:20 }}>T</div>
-          <div style={{ flex:1 }}><div style={{ fontWeight:700, color:"#fff", fontSize:14 }}>AI Mentor</div><div style={{ fontSize:11, color:"#10a37f" }}>Cevrimici</div></div>
-          <div style={{ background:"rgba(212,168,83,0.1)", border:"1px solid rgba(212,168,83,0.3)", borderRadius:7, padding:"3px 10px", fontSize:11, color:GOLD }}>
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.85)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:700, display:"flex", alignItems:"center", justifyContent:"center", padding:12, fontFamily:FONT }}>
+      <div style={{ width:"100%", maxWidth:680, height:"88vh", background:"linear-gradient(145deg, rgba(13,13,31,0.98), rgba(7,7,17,0.98))", border:"1px solid "+CARD_BORDER2, borderRadius:24, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
+        <div style={{ padding:"16px 20px", borderBottom:"1px solid "+CARD_BORDER, display:"flex", alignItems:"center", gap:12, background:"rgba(201,168,76,0.05)", backdropFilter:"blur(12px)" }}>
+          <div style={{ width:42, height:42, borderRadius:"50%", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, fontWeight:800, color:"#08080f", boxShadow:"0 4px 16px rgba(201,168,76,0.4)" }}>🧠</div>
+          <div style={{ flex:1 }}><div style={{ fontWeight:700, color:TEXT, fontSize:15 }}>AI Mentor</div><div style={{ fontSize:11, color:TEAL, fontFamily:FONT_MONO, marginTop:2 }}>● Cevrimici</div></div>
+          <div style={{ background:"rgba(201,168,76,0.12)", border:"1px solid rgba(201,168,76,0.35)", borderRadius:10, padding:"5px 12px", fontSize:11, color:GOLD2, fontFamily:FONT_MONO, fontWeight:700 }}>
             {p.mentorSessions === 999 ? "Sinirirsiz" : left + " seans"}
           </div>
-          <button onClick={props.onClose} style={{ background:"transparent", border:"none", color:"#888899", cursor:"pointer", fontSize:20 }}>x</button>
+          <button onClick={props.onClose} style={{ background:"rgba(255,255,255,0.05)", border:"1px solid "+CARD_BORDER, color:TEXT2, cursor:"pointer", fontSize:18, width:32, height:32, borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center", transition:"all 0.2s ease" }}>×</button>
         </div>
         <div style={{ flex:1, overflowY:"auto", padding:16, display:"flex", flexDirection:"column", gap:12 }}>
           {msgs.map(function(m, i) {
             return (
               <div key={i} style={{ display:"flex", gap:8, justifyContent: m.role === "ai" ? "flex-start" : "flex-end" }}>
-                {m.role === "ai" && <div style={{ width:30, height:30, borderRadius:"50%", background:"linear-gradient(135deg,#d4a853,#f0c060)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, flexShrink:0 }}>T</div>}
-                <div style={{ maxWidth:"78%", background: m.role === "ai" ? "rgba(255,255,255,0.04)" : "rgba(212,168,83,0.15)", border:"1px solid "+(m.role==="ai"?"rgba(255,255,255,0.07)":"rgba(212,168,83,0.3)"), borderRadius: m.role==="ai" ? "14px 14px 14px 3px" : "14px 14px 3px 14px", padding:"11px 14px" }}>
-                  <p style={{ color: m.role==="ai" ? "#ccccdd" : "#f0e0b0", fontSize:13, lineHeight:1.65, margin:0, whiteSpace:"pre-wrap" }}>{m.text}</p>
+                {m.role === "ai" && <div style={{ width:32, height:32, borderRadius:"50%", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, flexShrink:0, boxShadow:"0 2px 8px rgba(201,168,76,0.3)" }}>🧠</div>}
+                <div style={{ maxWidth:"78%", background: m.role === "ai" ? "rgba(255,255,255,0.04)" : "linear-gradient(135deg, rgba(201,168,76,0.18), rgba(124,92,252,0.10))", border:"1px solid "+(m.role==="ai"?CARD_BORDER:"rgba(201,168,76,0.35)"), borderRadius: m.role==="ai" ? "16px 16px 16px 4px" : "16px 16px 4px 16px", padding:"12px 16px", boxShadow:"0 2px 8px rgba(0,0,0,0.2)" }}>
+                  <p style={{ color: m.role==="ai" ? TEXT : GOLD2, fontSize:14, lineHeight:1.7, margin:0, whiteSpace:"pre-wrap", fontFamily:FONT }}>{m.text}</p>
                 </div>
-                {m.role === "user" && <div style={{ width:30, height:30, borderRadius:"50%", background:"rgba(99,102,241,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, color:"#a5b4fc", fontSize:13 }}>{user.name[0]}</div>}
+                {m.role === "user" && <div style={{ width:32, height:32, borderRadius:"50%", background:"linear-gradient(135deg,#7c5cfc,#a78bfa)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, color:"#fff", fontSize:13, flexShrink:0 }}>{user.name[0]}</div>}
               </div>
             );
           })}
           {loading && (
             <div style={{ display:"flex", gap:8 }}>
-              <div style={{ width:30, height:30, borderRadius:"50%", background:"linear-gradient(135deg,#d4a853,#f0c060)", display:"flex", alignItems:"center", justifyContent:"center" }}>T</div>
-              <div style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:"14px 14px 14px 3px", padding:"13px 16px", display:"flex", gap:5 }}>
-                <div style={{ width:7, height:7, borderRadius:"50%", background:GOLD }} />
-                <div style={{ width:7, height:7, borderRadius:"50%", background:GOLD }} />
-                <div style={{ width:7, height:7, borderRadius:"50%", background:GOLD }} />
+              <div style={{ width:32, height:32, borderRadius:"50%", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14 }}>🧠</div>
+              <div style={{ background:"rgba(255,255,255,0.04)", border:"1px solid "+CARD_BORDER, borderRadius:"16px 16px 16px 4px", padding:"14px 18px", display:"flex", gap:6, alignItems:"center" }}>
+                <div className="shimmer" style={{ width:8, height:8, borderRadius:"50%", background:GOLD }} />
+                <div className="shimmer" style={{ width:8, height:8, borderRadius:"50%", background:GOLD, animationDelay:"0.2s" }} />
+                <div className="shimmer" style={{ width:8, height:8, borderRadius:"50%", background:GOLD, animationDelay:"0.4s" }} />
               </div>
             </div>
           )}
           <div ref={botRef} />
         </div>
         {msgs.length <= 1 && (
-          <div style={{ padding:"0 16px 10px", display:"flex", flexWrap:"wrap", gap:7 }}>
+          <div style={{ padding:"0 16px 12px", display:"flex", flexWrap:"wrap", gap:8 }}>
             {suggested.map(function(q) {
-              return <button key={q} onClick={function() { setInp(q); }} style={{ background:"rgba(212,168,83,0.08)", border:"1px solid rgba(212,168,83,0.2)", borderRadius:20, padding:"5px 12px", fontSize:11, color:GOLD, cursor:"pointer" }}>{q}</button>;
+              return <button key={q} onClick={function() { setInp(q); }} style={{ background:"rgba(201,168,76,0.08)", border:"1px solid rgba(201,168,76,0.25)", borderRadius:20, padding:"6px 14px", fontSize:12, color:GOLD2, cursor:"pointer", fontFamily:FONT, transition:"all 0.2s ease" }}>{q}</button>;
             })}
           </div>
         )}
-        <div style={{ padding:"10px 14px", borderTop:"1px solid rgba(255,255,255,0.06)", display:"flex", gap:8 }}>
+        <div style={{ padding:"12px 16px", borderTop:"1px solid "+CARD_BORDER, display:"flex", gap:10, background:"rgba(7,7,17,0.6)" }}>
           {p.mentorSessions !== 999 && left <= 0 ? (
-            <div style={{ flex:1, textAlign:"center", color:"#555577", fontSize:12, padding:"10px 0" }}>Seans hakkin doldu - Pro'ya gec</div>
+            <div style={{ flex:1, textAlign:"center", color:TEXT2, fontSize:13, padding:"12px 0", fontFamily:FONT_MONO }}>Seans hakkin doldu — Pro'ya gec</div>
           ) : (
             <>
               <input value={inp} onChange={function(e) { setInp(e.target.value); }} onKeyDown={function(e) { if (e.key === "Enter") send(); }}
                 placeholder="Sorunuzu yazin..."
-                style={{ flex:1, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:12, padding:"10px 14px", color:"#fff", fontSize:13, outline:"none" }} />
+                onFocus={function(e){ e.currentTarget.style.borderColor=GOLD; }}
+                onBlur={function(e){ e.currentTarget.style.borderColor="rgba(255,255,255,0.12)"; }}
+                style={{ flex:1, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"12px 16px", color:"#fff", fontSize:14, outline:"none", fontFamily:FONT, transition:"border-color 0.2s ease" }} />
               <button onClick={send} disabled={loading || !inp.trim()}
-                style={{ background: loading || !inp.trim() ? "#222" : "linear-gradient(135deg,#d4a853,#f0c060)", color: loading || !inp.trim() ? "#555" : "#08080f", border:"none", borderRadius:12, padding:"10px 18px", fontWeight:700, cursor: loading||!inp.trim() ? "not-allowed" : "pointer", fontSize:16 }}>
-                &gt;
+                style={{ background: loading || !inp.trim() ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#c9a84c,#f5cc6a)", color: loading || !inp.trim() ? TEXT2 : "#08080f", border: loading || !inp.trim() ? "1px solid "+CARD_BORDER : "none", borderRadius:12, padding:"10px 22px", fontWeight:700, cursor: loading||!inp.trim() ? "not-allowed" : "pointer", fontSize:18, boxShadow: loading || !inp.trim() ? "none" : SHADOW_GOLD, transition:"all 0.2s ease" }}>
+                →
               </button>
             </>
           )}
