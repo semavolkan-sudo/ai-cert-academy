@@ -1077,7 +1077,7 @@ function Dashboard(props) {
 
         {tab === "lessons" && (
           <div>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(170px,1fr))", gap:12 }}>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))", gap:14 }}>
               {COURSES.map(function(c) {
                 var isDone = progress[c.day] === "done";
                 var isLocked = p.lockAfter && c.day > p.lockAfter;
@@ -1086,28 +1086,34 @@ function Dashboard(props) {
                   <div key={c.day} onClick={function() {
                     if (isLocked) { setUpgrade("Gun " + c.day + ": " + c.tool); return; }
                     props.onLesson(c);
-                  }} style={{ background: isDone ? "rgba(16,163,127,0.07)" : CARD_BG, border:"1px solid "+(isDone?"rgba(16,163,127,0.28)":isLocked?"rgba(255,255,255,0.04)":CARD_BORDER), borderRadius:12, padding:17, cursor: isLocked ? "not-allowed" : "pointer", position:"relative", opacity: isLocked ? 0.5 : 1 }}>
-                    {isDone && <div style={{ position:"absolute", top:8, right:8, background:"#10a37f", borderRadius:100, width:18, height:18, display:"flex", alignItems:"center", justifyContent:"center", fontSize:10, color:"#fff" }}>v</div>}
-                    {isLocked && <div style={{ position:"absolute", top:8, right:8, fontSize:12 }}>x</div>}
-                    <div style={{ fontSize:24, marginBottom:7 }}>{c.icon}</div>
-                    <div style={{ fontSize:10, color:"#444466", fontFamily:"monospace", marginBottom:3 }}>{"GUN " + c.day}</div>
-                    <div style={{ fontWeight:700, fontSize:13, marginBottom:3 }}>{c.tool}</div>
-                    {isDone && sc !== undefined && <div style={{ fontSize:11, color:"#10a37f" }}>{sc + "/5 - +" + xpFor(sc) + " XP"}</div>}
-                    {isLocked && <div style={{ fontSize:10, color:"#444466" }}>Pro gerekli</div>}
-                    {!isDone && !isLocked && <div style={{ fontSize:11, color:"#333355" }}>Basla</div>}
+                  }}
+                  onMouseEnter={function(e){ if(!isLocked){ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.borderColor= isDone ? "rgba(0,201,167,0.5)" : CARD_BORDER2; e.currentTarget.style.boxShadow="0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)"; } }}
+                  onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.borderColor= isDone?"rgba(0,201,167,0.28)":isLocked?"rgba(255,255,255,0.04)":CARD_BORDER; e.currentTarget.style.boxShadow="0 4px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06)"; }}
+                  style={{ background: isDone ? "linear-gradient(145deg, rgba(0,201,167,0.10), rgba(0,201,167,0.02))" : "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+(isDone?"rgba(0,201,167,0.28)":isLocked?"rgba(255,255,255,0.04)":CARD_BORDER), borderRadius:16, padding:18, cursor: isLocked ? "not-allowed" : "pointer", position:"relative", opacity: isLocked ? 0.45 : 1, transition:"all 0.2s ease", boxShadow:"0 4px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06)", fontFamily:FONT }}>
+                    {isDone && <div style={{ position:"absolute", top:10, right:10, background:"linear-gradient(135deg,#00c9a7,#10a37f)", borderRadius:100, width:22, height:22, display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, color:"#04150f", fontWeight:800, boxShadow:"0 2px 8px rgba(0,201,167,0.4)" }}>✓</div>}
+                    {isLocked && <div style={{ position:"absolute", top:10, right:10, fontSize:14, color:TEXT2 }}>🔒</div>}
+                    <div style={{ fontSize:28, marginBottom:10 }}>{c.icon}</div>
+                    <div style={{ fontSize:10, color:GOLD, fontFamily:FONT_MONO, marginBottom:4, fontWeight:700, letterSpacing:"1px" }}>{"GUN " + c.day.toString().padStart(2,"0")}</div>
+                    <div style={{ fontWeight:700, fontSize:14, marginBottom:4, color:TEXT }}>{c.tool}</div>
+                    {isDone && sc !== undefined && <div style={{ fontSize:11, color:TEAL, fontFamily:FONT_MONO, fontWeight:600 }}>{sc + "/5 · +" + xpFor(sc) + "XP"}</div>}
+                    {isLocked && <div style={{ fontSize:10, color:TEXT2, fontFamily:FONT_MONO }}>Pro gerekli</div>}
+                    {!isDone && !isLocked && <div style={{ fontSize:11, color:TEXT2 }}>Başla →</div>}
                   </div>
                 );
               })}
             </div>
             {done === total && (
-              <div style={{ marginTop:32, textAlign:"center", background:"rgba(212,168,83,0.1)", border:"1px solid rgba(212,168,83,0.35)", borderRadius:18, padding:36 }}>
-                <div style={{ fontSize:56, marginBottom:12 }}>Tebrikler!</div>
-                <h2 style={{ fontSize:24, fontWeight:800, color:GOLD, marginBottom:6 }}>Programi Tamamladin!</h2>
-                <p style={{ color:"#888899", marginBottom:20, fontSize:13 }}>{"Sertifika: " + p.cert + " - Toplam XP: " + xp}</p>
+              <div style={{ marginTop:32, textAlign:"center", background:"linear-gradient(145deg, rgba(201,168,76,0.12), rgba(124,92,252,0.06))", border:"1px solid rgba(201,168,76,0.4)", borderRadius:24, padding:40, boxShadow:SHADOW_GOLD+", inset 0 1px 0 rgba(255,255,255,0.1)" }}>
+                <div style={{ fontSize:56, marginBottom:12 }}>🏆</div>
+                <h2 style={{ fontSize:28, fontWeight:800, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", marginBottom:8, letterSpacing:"-0.02em" }}>Programi Tamamladin!</h2>
+                <p style={{ color:TEXT2, marginBottom:24, fontSize:13, fontFamily:FONT_MONO }}>{"Sertifika: " + p.cert + " · Toplam " + xp + " XP"}</p>
                 <button onClick={function() {
                   var dataUrl = generateCertificate(user.name, p.cert, xp);
                   var a = document.createElement("a"); a.href = dataUrl; a.download = "AI-Sertifika.png"; a.click();
-                }} style={{ background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:12, padding:"14px 36px", fontSize:16, fontWeight:700, cursor:"pointer" }}>
+                }}
+                onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; }}
+                onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
+                style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"15px 40px", fontSize:16, fontWeight:700, cursor:"pointer", boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT }}>
                   Sertifikamı Indir
                 </button>
               </div>
@@ -1116,21 +1122,22 @@ function Dashboard(props) {
         )}
 
         {tab === "leaderboard" && (
-          <div style={{ maxWidth:560 }}>
-            <p style={{ color:"#555577", fontSize:13, marginBottom:20 }}>Tum kullanicilar arasindaki XP siralaması</p>
+          <div style={{ maxWidth:580 }}>
+            <p style={{ color:TEXT2, fontSize:13, marginBottom:20, fontFamily:FONT_MONO }}>Tum kullanicilar arasindaki XP siralaması</p>
             {lbEntries.map(function(e, i) {
               var isMe = e.name.indexOf("(Sen)") >= 0;
-              var medal = i === 0 ? "1" : i === 1 ? "2" : i === 2 ? "3" : String(i + 1);
+              var medal = String(i + 1).padStart(2,"0");
+              var rankBg = i === 0 ? "linear-gradient(135deg,#f5cc6a,#c9a84c)" : i === 1 ? "linear-gradient(135deg,#d8d8e0,#9999b8)" : i === 2 ? "linear-gradient(135deg,#cd7f32,#a0522d)" : "rgba(255,255,255,0.06)";
               return (
-                <div key={i} style={{ display:"flex", alignItems:"center", gap:14, background: isMe ? "rgba(212,168,83,0.1)" : CARD_BG, border:"1px solid "+(isMe?"rgba(212,168,83,0.3)":CARD_BORDER), borderRadius:12, padding:"12px 16px", marginBottom:8 }}>
-                  <div style={{ width:30, height:30, borderRadius:7, background: i<3 ? GOLD : "rgba(255,255,255,0.07)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, fontSize:14, color: i<3?"#08080f":"#888899" }}>{medal}</div>
+                <div key={i} style={{ display:"flex", alignItems:"center", gap:14, background: isMe ? "linear-gradient(145deg, rgba(201,168,76,0.12), rgba(201,168,76,0.03))" : "linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))", border:"1px solid "+(isMe?"rgba(201,168,76,0.4)":CARD_BORDER), borderRadius:14, padding:"14px 18px", marginBottom:10, transition:"all 0.2s ease", boxShadow: isMe ? "0 4px 16px rgba(201,168,76,0.15), inset 0 1px 0 rgba(255,255,255,0.08)" : "inset 0 1px 0 rgba(255,255,255,0.04)" }}>
+                  <div style={{ width:36, height:36, borderRadius:10, background: rankBg, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, fontSize:13, color: i<3?"#08080f":TEXT2, fontFamily:FONT_MONO, boxShadow: i<3 ? "0 2px 8px rgba(201,168,76,0.3)" : "none" }}>{medal}</div>
                   <div style={{ flex:1 }}>
-                    <div style={{ fontWeight:600, color: isMe ? GOLD : "#fff", fontSize:13 }}>{e.name}</div>
-                    <div style={{ fontSize:11, color:"#444466" }}>{e.streak + " gun streak"}</div>
+                    <div style={{ fontWeight:600, color: isMe ? GOLD2 : TEXT, fontSize:14 }}>{e.name}</div>
+                    <div style={{ fontSize:11, color:TEXT2, fontFamily:FONT_MONO, marginTop:2 }}>{"🔥 " + e.streak + "g streak"}</div>
                   </div>
                   <div style={{ textAlign:"right" }}>
-                    <div style={{ fontFamily:"monospace", fontWeight:700, color: isMe ? GOLD : "#fff" }}>{e.xp + " XP"}</div>
-                    <div style={{ fontSize:11, color:"#444466" }}>{getLvl(e.xp).name}</div>
+                    <div style={{ fontFamily:FONT_MONO, fontWeight:700, color: isMe ? GOLD2 : TEXT, fontSize:15 }}>{e.xp + " XP"}</div>
+                    <div style={{ fontSize:11, color:TEXT2, marginTop:2 }}>{getLvl(e.xp).name}</div>
                   </div>
                 </div>
               );
@@ -1139,7 +1146,7 @@ function Dashboard(props) {
         )}
 
         {tab === "bonus" && p.bonus && (
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))", gap:16 }}>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:18 }}>
             {[
               { icon:"P", title:"500+ Prompt Sablonu",   desc:"Her arac icin hazir kullanisli promptlar" },
               { icon:"G", title:"AI ile Gelir Rehberi",  desc:"AI araclariyla $1000+ kazanma stratejileri" },
@@ -1147,11 +1154,14 @@ function Dashboard(props) {
               { icon:"D", title:"Discord Toplulugu",     desc:"Pro uyelere ozel kanal ve sorular" },
             ].map(function(m) {
               return (
-                <div key={m.title} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:16, padding:24 }}>
-                  <div style={{ width:40, height:40, borderRadius:10, background:"rgba(212,168,83,0.15)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, color:GOLD, marginBottom:12 }}>{m.icon}</div>
-                  <div style={{ fontWeight:700, marginBottom:6, fontSize:14 }}>{m.title}</div>
-                  <div style={{ color:"#555577", fontSize:12, lineHeight:1.5, marginBottom:16 }}>{m.desc}</div>
-                  <button style={{ background:"rgba(212,168,83,0.09)", border:"1px solid rgba(212,168,83,0.28)", borderRadius:7, padding:"8px 16px", color:GOLD, cursor:"pointer", fontSize:12, fontWeight:600 }}>Erisim Sagla</button>
+                <div key={m.title}
+                  onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.borderColor=CARD_BORDER2; }}
+                  onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.borderColor=CARD_BORDER; }}
+                  style={{ background:"linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+CARD_BORDER, borderRadius:20, padding:26, transition:"all 0.2s ease", boxShadow:"0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)", fontFamily:FONT }}>
+                  <div style={{ width:48, height:48, borderRadius:12, background:"linear-gradient(135deg, rgba(201,168,76,0.20), rgba(124,92,252,0.15))", border:"1px solid rgba(201,168,76,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, color:GOLD2, marginBottom:14, fontSize:18, fontFamily:FONT_MONO }}>{m.icon}</div>
+                  <div style={{ fontWeight:700, marginBottom:8, fontSize:15, color:TEXT }}>{m.title}</div>
+                  <div style={{ color:TEXT2, fontSize:13, lineHeight:1.6, marginBottom:18 }}>{m.desc}</div>
+                  <button style={{ background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.35)", borderRadius:10, padding:"9px 18px", color:GOLD2, cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:FONT, transition:"all 0.2s ease", textTransform:"uppercase", letterSpacing:"0.5px" }}>Erisim Sagla</button>
                 </div>
               );
             })}
