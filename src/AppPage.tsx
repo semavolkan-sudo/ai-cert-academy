@@ -2715,6 +2715,12 @@ function Auth(props) {
         setLoading(false);
         var existing = getUserByEmail(email);
         if (!existing) { setErr("Bu email ile kayıtlı hesap yok. Kayıt Ol sekmesini kullan."); return; }
+        var isAdminL2 = existing.email === ADMIN_EMAIL;
+        var isTestL2 = existing.email === "test@aicert.com" || existing.email === "testpro@aicert.com" || existing.email === "testbiz@aicert.com";
+        if (!isAdminL2 && !isTestL2 && lsGet("user-status-" + existing.email) === "pasif") {
+          setErr("Hesabınız askıya alınmıştır. Destek için info@aicert.com adresine yazın.");
+          return;
+        }
         if (!existing.paid) {
           setErr("Ödeme yapılmadan sisteme giriş yapılamaz. Lütfen bir plan seçin.");
         }
