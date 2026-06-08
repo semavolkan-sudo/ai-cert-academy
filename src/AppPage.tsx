@@ -2431,7 +2431,7 @@ function Lesson(props) {
     } catch(e) {}
 
     var allCards = [];
-    var totalBatches = 10;
+    var totalBatches = 9;
     var CONCURRENT = 1;
     var completed = 0;
 
