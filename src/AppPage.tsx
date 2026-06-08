@@ -1452,6 +1452,8 @@ function AdminPanel(props) {
 
                 </div>
 
+                <CouponPanel />
+
               </div>
 
             )}
