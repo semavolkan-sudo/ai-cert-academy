@@ -143,6 +143,20 @@ var PAYMENT_LINKS = {
   Pro:      "https://ai-cert-academy.lemonsqueezy.com/checkout/buy/1e6783f3-22a7-449c-8946-6c43d5c5e4b7",
   Business: "https://ai-cert-academy.lemonsqueezy.com/checkout/buy/e1487643-af1b-414f-b79b-75d38cc5ff9b",
 };
+
+// ─── TEST USERS (geliştirme amaçlı ödeme atlama) ─────────────────────────────
+var TEST_USERS = {
+  "test@aicert.com":     { name:"Test",         plan:"Starter",  pass:"TestSema1605", paid:true  },
+  "testpro@aicert.com":  { name:"TestPro",      plan:"Pro",      pass:"TestSema1605", paid:true  },
+  "testbiz@aicert.com":  { name:"TestBusiness", plan:"Business", pass:"TestSema1605", paid:true  },
+};
+
+function buildPaymentUrl(planName, email) {
+  var base = PAYMENT_LINKS[planName];
+  if (!base) return "";
+  if (!email) return base;
+  return base + "?checkout[email]=" + encodeURIComponent(email);
+}
 function saveUser(user) {
   try {
     lsSet("aica-user", JSON.stringify(user));
