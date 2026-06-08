@@ -87,8 +87,6 @@ const FORBIDDEN = new Set([
   "ozetle","ozet",
   "sektor","sektorunde","sektorun",
   "hazirlik",
-  // Tek harfli özel durum: Türkçe "İyi" ASCII "Iyi" olarak yazılamaz.
-  "iyi",
 ]);
 
 // İstisna sözcükler (kod kelimeleri, marka adları vs.): regex eşleşse bile atlanır.
