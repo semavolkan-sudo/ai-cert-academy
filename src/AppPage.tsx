@@ -1180,7 +1180,7 @@ function AdminPanel(props) {
 
                 <button onClick={unlockFullAccess} style={{ width:"100%", background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:12, padding:"14px", fontSize:15, fontWeight:700, cursor:"pointer" }}>Doğrula ve Giriş</button>
 
-                <div style={{ fontSize:11, color:"#333344", marginTop:12 }}>Süper admin şifresi: superadmin2024</div>
+                
 
               </div>
 
