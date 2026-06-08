@@ -45,7 +45,7 @@ const FORBIDDEN = new Set([
   "araclari","araclariyla","araclarini","arasindaki",
   "arayuz","ayse",
   "basla","baslat","baslik","basariyla","basarsin",
-  "bekleniyor",
+  
   "cumle","calisma","calisanlari","calis",
   "dagilimi",
   "diger","dogru","dogrula","dogrulandi","dogrulaniyor",
@@ -57,7 +57,7 @@ const FORBIDDEN = new Set([
   "hayatin","hayatinda","hizliyim",
   "hesabinla",
   "inanilmaz",
-  "kapsamli","kazanma",
+  "kapsamli","saglik","saglikli","saglam",
   "kontrolu","kopyalandi","kosullari","kosulu",
   "muduru",
   "nasil",
