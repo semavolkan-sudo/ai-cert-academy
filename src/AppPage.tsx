@@ -143,6 +143,20 @@ var PAYMENT_LINKS = {
   Pro:      "https://ai-cert-academy.lemonsqueezy.com/checkout/buy/1e6783f3-22a7-449c-8946-6c43d5c5e4b7",
   Business: "https://ai-cert-academy.lemonsqueezy.com/checkout/buy/e1487643-af1b-414f-b79b-75d38cc5ff9b",
 };
+
+// ─── TEST USERS (geliştirme amaçlı ödeme atlama) ─────────────────────────────
+var TEST_USERS = {
+  "test@aicert.com":     { name:"Test",         plan:"Starter",  pass:"TestSema1605", paid:true  },
+  "testpro@aicert.com":  { name:"TestPro",      plan:"Pro",      pass:"TestSema1605", paid:true  },
+  "testbiz@aicert.com":  { name:"TestBusiness", plan:"Business", pass:"TestSema1605", paid:true  },
+};
+
+function buildPaymentUrl(planName, email) {
+  var base = PAYMENT_LINKS[planName];
+  if (!base) return "";
+  if (!email) return base;
+  return base + "?checkout[email]=" + encodeURIComponent(email);
+}
 function saveUser(user) {
   try {
     lsSet("aica-user", JSON.stringify(user));
@@ -531,7 +545,7 @@ function Landing(props) {
                       return <div key={f} style={{ display:"flex", gap:10, alignItems:"flex-start", fontSize:13, color:TEXT, lineHeight:1.5 }}><span style={{ color: plan.popular ? GOLD2 : plan.color, fontWeight:800, flexShrink:0 }}>✓</span>{f}</div>;
                     })}
                   </div>
-                  <button onClick={function() { window.open(PAYMENT_LINKS[plan.name], "_blank"); }}
+                  <button onClick={function() { window.open(buildPaymentUrl(plan.name, ""), "_blank"); }}
                     onMouseEnter={function(e){ if(plan.popular){ e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; } else { e.currentTarget.style.background="rgba(255,255,255,0.06)"; } }}
                     onMouseLeave={function(e){ if(plan.popular){ e.currentTarget.style.boxShadow=SHADOW_GOLD; } else { e.currentTarget.style.background="transparent"; } }}
                     style={{ width:"100%", background: plan.popular ? "linear-gradient(135deg,#c9a84c,#f5cc6a)" : "transparent", color: plan.popular ? "#08080f" : plan.color, border:"1px solid "+(plan.popular?"transparent":plan.color), borderRadius:14, padding:"14px 0", fontSize:14, fontWeight:700, cursor:"pointer", boxShadow: plan.popular ? SHADOW_GOLD : "none", transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
@@ -2472,6 +2486,22 @@ function Auth(props) {
     setInfo("");
     if (!email || !pass) { setErr("Tüm alanlari doldurun"); return; }
     if (email === ADMIN_EMAIL && pass === ADMIN_PASS) { setShowAdmin(true); return; }
+    // Test kullanıcıları: ödeme atlanır, doğru planla giriş yapılır
+    var emailKey = (email || "").toLowerCase();
+    var testUser = TEST_USERS[emailKey];
+    if (testUser && tab === "login") {
+      if (pass !== testUser.pass) { setErr("Hatalı şifre"); return; }
+      var planObj = PLANS.find(function(p) { return p.name === testUser.plan; }) || PLANS[0];
+      var tu = {
+        name: testUser.name, email: emailKey,
+        plan: planObj, paid: true,
+        progress: {}, scores: {}, xp: 0, streak: 0,
+        createdAt: Date.now(),
+      };
+      addToRegistry(emailKey, tu);
+      props.onLogin(tu);
+      return;
+    }
     if (pass.length < 6) { setErr("Şifre en az 6 karakter"); return; }
     if (tab === "register") {
       if (!name) { setErr("Ad Soyad gerekli"); return; }
@@ -2484,7 +2514,7 @@ function Auth(props) {
         setLoading(false);
         var userData = {
           name: name, email: email,
-          plan: null,
+          plan: null, paid: false,
           progress: {}, scores: {}, xp: 0, streak: 0,
           createdAt: Date.now(),
         };
@@ -2501,6 +2531,9 @@ function Auth(props) {
         setLoading(false);
         var existing = getUserByEmail(email);
         if (!existing) { setErr("Bu email ile kayıtlı hesap yok. Kayıt Ol sekmesini kullan."); return; }
+        if (!existing.paid) {
+          setErr("Ödeme yapılmadan sisteme giriş yapılamaz. Lütfen bir plan seçin.");
+        }
         props.onLogin(existing);
       }, 600);
     }
@@ -2775,13 +2808,16 @@ export default function App() {
       {page === "landing" && <Landing onGo={function(target) { if (target === "auth") setPage("auth"); }} />}
       {page === "auth" && <Auth
         onRegister={function(u) { setUser(u); saveUser(u); setPage("planselect"); }}
-        onLogin={function(u) { setUser(u); saveUser(u); setPage(u && u.plan ? "dashboard" : "planselect"); }}
+        onLogin={function(u) { setUser(u); saveUser(u); setPage(u && u.plan && u.paid ? "dashboard" : "planselect"); }}
       />}
       {page === "planselect" && <PlanSelect onPick={function(p) {
         setPlan(p);
         updateUser(function(prev) { return Object.assign({}, prev, { plan: p }); });
-        try { window.open(PAYMENT_LINKS[p.name], "_blank"); } catch(e) {}
-        setPage(user && user.profile ? "dashboard" : "onboarding");
+        try {
+          var em = user && user.email ? user.email : "";
+          window.open(buildPaymentUrl(p.name, em), "_blank");
+        } catch(e) {}
+        // Ödeme tamamlanmadan dashboard'a geçilmez; planselect ekranında kalınır
       }} />}
       {page === "onboarding" && <Onboarding onDone={handleOnbDone} />}
       {page === "dashboard" && <Dashboard user={user} onLesson={handleLessonStart} onLogout={handleLogout} onMentor={function() { setMentor(true); }} />}
