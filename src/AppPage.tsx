@@ -1566,6 +1566,12 @@ function Login(props) {
           setErr("Şifre hatali.");
           return;
         }
+        var isAdminL = existing.email === ADMIN_EMAIL;
+        var isTestL = existing.email === "test@aicert.com" || existing.email === "testpro@aicert.com" || existing.email === "testbiz@aicert.com";
+        if (!isAdminL && !isTestL && lsGet("user-status-" + existing.email) === "pasif") {
+          setErr("Hesabınız askıya alınmıştır. Destek için info@aicert.com adresine yazın.");
+          return;
+        }
         saveUser(existing);
         props.onDone(existing);
       }, 1000);
