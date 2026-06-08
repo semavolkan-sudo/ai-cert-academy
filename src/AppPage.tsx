@@ -2885,6 +2885,63 @@ function Auth(props) {
 }
 
 function PlanSelect(props) {
+  return PlanSelectInner(props);
+}
+
+function CouponPanel() {
+  var [coupons, setCoupons] = useState([]);
+  var [loading, setLoading] = useState(true);
+  useEffect(function() {
+    fetch(USERS_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "list-coupons", adminKey: ADMIN_KEY })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { setCoupons(d.coupons || []); setLoading(false); })
+      .catch(function() { setLoading(false); });
+  }, []);
+  function discountColor(d) {
+    if (d >= 100) return "#10a37f";
+    if (d >= 50) return "#f59e0b";
+    if (d >= 25) return "#6366f1";
+    return "#888899";
+  }
+  return (
+    <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:16, padding:24, gridColumn:"1 / -1" }}>
+      <div style={{ fontSize:15, fontWeight:700, color:"#fff", marginBottom:6 }}>🎟️ Kupon Kodları</div>
+      <div style={{ fontSize:12, color:"#666677", marginBottom:20 }}>Vercel → Environment Variables → COUPONS üzerinden yönetilir</div>
+      {loading ? (
+        <div style={{ color:"#888899", fontSize:13 }}>Yükleniyor...</div>
+      ) : coupons.length === 0 ? (
+        <div style={{ color:"#888899", fontSize:13 }}>Henüz kupon tanımlanmamış</div>
+      ) : (
+        <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+          {coupons.map(function(c, i) {
+            var dc = discountColor(c.discount);
+            var usedCount = (c.usedBy || []).length;
+            return (
+              <div key={i} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 18px", background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:12, flexWrap:"wrap", gap:10 }}>
+                <div style={{ display:"flex", alignItems:"center", gap:14, flexWrap:"wrap" }}>
+                  <div style={{ fontFamily:"monospace", fontSize:15, fontWeight:800, color:"#fff", letterSpacing:2, background:"rgba(255,255,255,0.06)", padding:"6px 14px", borderRadius:8, border:"1px dashed rgba(255,255,255,0.15)" }}>{c.code}</div>
+                  {c.assignedTo && <span style={{ fontSize:11, color:"#a5b4fc", background:"rgba(99,102,241,0.1)", border:"1px solid rgba(99,102,241,0.25)", borderRadius:20, padding:"3px 10px" }}>👤 {c.assignedTo}</span>}
+                  {c.maxUses && <span style={{ fontSize:11, color:"#888899" }}>Kullanım: {usedCount}/{c.maxUses}</span>}
+                </div>
+                <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+                  <div style={{ fontSize:20, fontWeight:800, color:dc }}>{c.type === "free" || c.discount === 100 ? "🆓 Bedava" : "%" + c.discount}</div>
+                  <span style={{ background: c.active ? "rgba(16,163,127,0.15)" : "rgba(239,68,68,0.1)", color: c.active ? "#10a37f" : "#ef4444", border:"1px solid "+(c.active ? "rgba(16,163,127,0.3)" : "rgba(239,68,68,0.25)"), borderRadius:20, padding:"3px 10px", fontSize:11, fontWeight:700 }}>{c.active ? "● Aktif" : "● Pasif"}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      <div style={{ marginTop:16, fontSize:11, color:"#444466" }}>💡 Yeni kupon eklemek için Vercel → Environment Variables → COUPONS değerini güncelle ve redeploy yap</div>
+    </div>
+  );
+}
+
+function PlanSelectInner(props) {
   var [couponCode, setCouponCode] = useState("");
   var [couponResult, setCouponResult] = useState(null);
   var [couponLoading, setCouponLoading] = useState(false);
