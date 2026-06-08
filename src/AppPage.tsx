@@ -462,7 +462,7 @@ function Landing(props) {
     <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, backgroundImage:"radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize:"32px 32px" }}>
       <div style={{ display:"flex", alignItems:"center", gap:12, padding:"16px 24px" }}>
         <img src={logoAsset.url} alt="AI Certification Academy" style={{ width:48, height:48, flexShrink:0, borderRadius:"50%" }} />
-        <div style={{ fontSize:18, fontWeight:700, color:"#fff", whiteSpace:"nowrap" }}>Certification Academy</div>
+        <div style={{ fontSize:18, fontWeight:700, color:"#fff", whiteSpace:"nowrap" }}>AI Certification Academy</div>
       </div>
       <div style={{ position:"relative", textAlign:"center", padding:"72px 20px 80px", background:"radial-gradient(ellipse at 50% 0%,rgba(124,92,252,0.18) 0%,rgba(201,168,76,0.10) 30%,transparent 70%)" }}>
         <div style={{ display:"inline-block", background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.4)", borderRadius:100, padding:"7px 18px", fontSize:12, color:GOLD2, marginBottom:28, fontFamily:FONT_MONO }}>{"Bu ay " + count + " kişi kayıt oldu"}</div>
