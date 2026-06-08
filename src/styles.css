@@ -160,3 +160,36 @@
     opacity: 0.5;
   }
 }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.10) 50%, rgba(255,255,255,0.04) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+/* Custom scrollbar — Obsidian Lab */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #111;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.4);
+  border-radius: 6px;
+  border: 2px solid #111;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 204, 106, 0.6);
+}
+
+html {
+  scrollbar-color: rgba(201, 168, 76, 0.4) #111;
+  scrollbar-width: thin;
+}
