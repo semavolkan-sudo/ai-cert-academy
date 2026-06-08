@@ -2061,6 +2061,7 @@ export default function App() {
       {page === "onboarding" && <Onboarding onDone={handleOnbDone} />}
       {page === "dashboard" && <Dashboard user={user} onLesson={handleLessonStart} onLogout={handleLogout} onMentor={function() { setMentor(true); }} />}
       {page === "lesson" && <Lesson lesson={lesson} user={user} onDone={handleLessonDone} onBack={function() { setPage("dashboard"); }} />}
+      <TurkishCharTest />
     </div>
   );
 }
