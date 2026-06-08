@@ -2435,19 +2435,29 @@ function Lesson(props) {
 
     var topics = [
       "Bu araç nedir, ne işe yarar, kimler kullanır — sıfırdan anlat",
-      "Arayüz türü: ilk açtığında ne görürsün, hangi butona basarsın",
-      "İlk 5 dakikada yapman gereken temel ayarlar ve kurulum",
-      "En temel özellik #1 — gerçek hayat örneğiyle adım adım kullanım",
-      "En temel özellik #2 — iş hayatından somut senaryo",
-      "En temel özellik #3 — günlük hayatta nasıl kullanırsın",
-      "Sık yapılan 5 hata ve nasıl kaçınırsın — örneklerle",
-      "Ücretsiz vs ücretli plan farkları — hangisini seçmelisin",
-      "Zaman kazandıran 5 kısayol ve ipucu",
-      "Diğer araçlarla entegrasyon — iş akışına nasıl eklersin"
+      "Arayüz turu: ilk açtığında ne görürsün, temel butonlar ve menüler",
+      "Hesap açma, kurulum ve ilk ayarlar adım adım",
+      "Temel özellik #1 — en çok kullanılan fonksiyon detaylı anlatım",
+      "Temel özellik #2 — iş hayatından somut senaryo ve uygulama",
+      "Temel özellik #3 — günlük hayatta pratik kullanım örnekleri",
+      "Gelişmiş özellikler — güç kullanıcıların bildiği ipuçları",
+      "Prompt ve komut yazma teknikleri — bu araçtan maksimum verim",
+      "Sık yapılan 10 hata ve nasıl kaçınırsın — öncesi/sonrası örnekler",
+      "Ücretsiz vs ücretli plan karşılaştırması — hangisi sana uygun",
+      "Zaman kazandıran kısayollar, şablonlar ve hazır komutlar",
+      "Diğer AI araçlarıyla karşılaştırma — güçlü ve zayıf yönler",
+      "Entegrasyon rehberi — diğer uygulamalarla nasıl kullanırsın",
+      "İş hayatında kullanım senaryoları — pazarlama, satış, finans",
+      "Yaratıcı kullanım senaryoları — içerik üretimi ve tasarım",
+      "Otomasyon ve verimlilik — tekrar eden işleri otomatikleştir",
+      "API ve geliştirici özellikleri — teknik kullanıcılar için",
+      "Ekip ve işbirliği özellikleri — birlikte çalışma rehberi",
+      "Güvenlik ve gizlilik — verilerini nasıl korursun",
+      "Mobil uygulama kullanımı — telefon ve tablette verimli kullanım"
     ];
 
     function fetchBatch(batchIndex) {
-      var topic = topics[batchIndex];
+      var topic = topics[batchIndex % topics.length];
       var prompt = "Sen deneyimli bir AI eğitmensin. Hiç bilmeyen bir öğrenciye " + lesson.tool + " aracını öğretiyorsun.\n\nBu ders kartı seti konusu: " + topic + "\n\nBu konu hakkında 10 adet ders kartı üret. Her kart şu yapıda olmalı:\n\n1. BAŞLIK: Konuyu özetleyen kısa başlık\n2. AÇIKLAMA: Konuyu sade Türkçe ile 2-3 cümle açıkla\n3. ÖRNEK: Gerçek hayattan somut kullanım örneği. 'Örneğin:' diye başlayan 1-2 cümle\n4. GÖRSEL ÖRNEK (gerektiğinde): Eğer konu görsel bir arayüz, adım adım süreç veya karşılaştırma içeriyorsa, ASCII veya emoji ile basit bir görsel şema ekle. Örneğin:\n   - Bir akış şeması: Girdi → İşlem → Çıktı\n   - Bir karşılaştırma: ❌ Kötü prompt vs ✅ İyi prompt\n   - Adım adım: 1️⃣ → 2️⃣ → 3️⃣\n   - Ekran düzeni: [ Metin kutusu ] → [ Gönder ] → 💬 Yanıt\n5. PRATİK İPUCU: Hemen uygulanabilir 1 ipucu\n\nKart içeriğini şu formatta yaz:\nAçıklama metni.\n\n💡 Örnek: Örnek metin.\n\n🖼️ [Görsel şema sadece gerektiğinde — her karta ekleme]\n\n⚡ İpucu: İpucu metni.\n\nSADECE JSON array döndür:\n[{\"title\": \"başlık\", \"content\": \"açıklama\\n\\n💡 Örnek: örnek\\n\\n⚡ İpucu: ipucu\", \"icon\": \"emoji\", \"hasVisual\": false}]\n\nGörsel şema içeren kartlarda hasVisual: true yap ve content içine şemayı ekle.\n\nRASTGELE_SEED: " + Math.floor(Math.random()*999999);
 
       fetch("https://ai-proxy-two-pi.vercel.app/api/proxy", {
