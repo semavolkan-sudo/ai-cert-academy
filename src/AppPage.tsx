@@ -1452,6 +1452,8 @@ function AdminPanel(props) {
 
                 </div>
 
+                <CouponPanel />
+
               </div>
 
             )}
@@ -2885,6 +2887,82 @@ function Auth(props) {
 }
 
 function PlanSelect(props) {
+  return PlanSelectInner(props);
+}
+
+function CouponPanel() {
+  var [coupons, setCoupons] = useState([]);
+  var [loading, setLoading] = useState(true);
+  useEffect(function() {
+    fetch(USERS_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "list-coupons", adminKey: ADMIN_KEY })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { setCoupons(d.coupons || []); setLoading(false); })
+      .catch(function() { setLoading(false); });
+  }, []);
+  function discountColor(d) {
+    if (d >= 100) return "#10a37f";
+    if (d >= 50) return "#f59e0b";
+    if (d >= 25) return "#6366f1";
+    return "#888899";
+  }
+  return (
+    <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:16, padding:24, gridColumn:"1 / -1" }}>
+      <div style={{ fontSize:15, fontWeight:700, color:"#fff", marginBottom:6 }}>🎟️ Kupon Kodları</div>
+      <div style={{ fontSize:12, color:"#666677", marginBottom:20 }}>Vercel → Environment Variables → COUPONS üzerinden yönetilir</div>
+      {loading ? (
+        <div style={{ color:"#888899", fontSize:13 }}>Yükleniyor...</div>
+      ) : coupons.length === 0 ? (
+        <div style={{ color:"#888899", fontSize:13 }}>Henüz kupon tanımlanmamış</div>
+      ) : (
+        <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+          {coupons.map(function(c, i) {
+            var dc = discountColor(c.discount);
+            var usedCount = (c.usedBy || []).length;
+            return (
+              <div key={i} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 18px", background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:12, flexWrap:"wrap", gap:10 }}>
+                <div style={{ display:"flex", alignItems:"center", gap:14, flexWrap:"wrap" }}>
+                  <div style={{ fontFamily:"monospace", fontSize:15, fontWeight:800, color:"#fff", letterSpacing:2, background:"rgba(255,255,255,0.06)", padding:"6px 14px", borderRadius:8, border:"1px dashed rgba(255,255,255,0.15)" }}>{c.code}</div>
+                  {c.assignedTo && <span style={{ fontSize:11, color:"#a5b4fc", background:"rgba(99,102,241,0.1)", border:"1px solid rgba(99,102,241,0.25)", borderRadius:20, padding:"3px 10px" }}>👤 {c.assignedTo}</span>}
+                  {c.maxUses && <span style={{ fontSize:11, color:"#888899" }}>Kullanım: {usedCount}/{c.maxUses}</span>}
+                </div>
+                <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+                  <div style={{ fontSize:20, fontWeight:800, color:dc }}>{c.type === "free" || c.discount === 100 ? "🆓 Bedava" : "%" + c.discount}</div>
+                  <span style={{ background: c.active ? "rgba(16,163,127,0.15)" : "rgba(239,68,68,0.1)", color: c.active ? "#10a37f" : "#ef4444", border:"1px solid "+(c.active ? "rgba(16,163,127,0.3)" : "rgba(239,68,68,0.25)"), borderRadius:20, padding:"3px 10px", fontSize:11, fontWeight:700 }}>{c.active ? "● Aktif" : "● Pasif"}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      <div style={{ marginTop:16, fontSize:11, color:"#444466" }}>💡 Yeni kupon eklemek için Vercel → Environment Variables → COUPONS değerini güncelle ve redeploy yap</div>
+    </div>
+  );
+}
+
+function PlanSelectInner(props) {
+  var [couponCode, setCouponCode] = useState("");
+  var [couponResult, setCouponResult] = useState(null);
+  var [couponLoading, setCouponLoading] = useState(false);
+
+  function applyCoupon() {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    var userEmail = "";
+    try { var su = lsGet("aica_user"); if (su) { var u = JSON.parse(su); userEmail = u.email || ""; } } catch(e) {}
+    fetch(USERS_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "verify-coupon", couponCode: couponCode.trim(), email: userEmail })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { setCouponResult(d); setCouponLoading(false); })
+      .catch(function() { setCouponResult({ ok: false, reason: "error" }); setCouponLoading(false); });
+  }
+
   return (
     <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, padding:"60px 20px", backgroundImage:"radial-gradient(ellipse at 50% 0%,rgba(124,92,252,0.15) 0%,rgba(201,168,76,0.08) 35%,transparent 70%), radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize:"auto, 32px 32px" }}>
       <div style={{ maxWidth:1000, margin:"0 auto" }}>
@@ -2917,6 +2995,49 @@ function PlanSelect(props) {
               </div>
             );
           })}
+        </div>
+        <div style={{ maxWidth:400, margin:"24px auto 0", textAlign:"center" }}>
+          <div style={{ fontSize:13, color:"#888899", marginBottom:10 }}>Kupon kodun var mı?</div>
+          <div style={{ display:"flex", gap:8 }}>
+            <input value={couponCode} onChange={function(e) { setCouponCode(e.target.value.toUpperCase()); setCouponResult(null); }}
+              placeholder="KUPON KODU"
+              style={{ flex:1, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:10, padding:"11px 14px", color:"#fff", fontSize:13, outline:"none", fontFamily:"monospace", letterSpacing:2 }} />
+            <button onClick={applyCoupon} disabled={couponLoading || !couponCode.trim()}
+              style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:10, padding:"11px 20px", fontSize:13, fontWeight:700, cursor:"pointer" }}>
+              {couponLoading ? "..." : "Uygula"}
+            </button>
+          </div>
+          {couponResult && couponResult.ok && (
+            <div style={{ marginTop:10, background:"rgba(16,163,127,0.1)", border:"1px solid rgba(16,163,127,0.3)", borderRadius:10, padding:"12px 16px" }}>
+              {couponResult.isFree ? (
+                <div>
+                  <div style={{ color:"#10a37f", fontWeight:700, fontSize:14, marginBottom:6 }}>🎉 Bedava erişim kazandın!</div>
+                  <div style={{ color:"#6ee7b7", fontSize:13, marginBottom:12 }}>Bu kupon ile Pro plana ücretsiz erişebilirsin.</div>
+                  <button onClick={function() {
+                    var freeUser = null;
+                    try { var su = lsGet("aica_user"); if (su) freeUser = JSON.parse(su); } catch(e) {}
+                    if (freeUser) {
+                      freeUser.plan = PLANS[1];
+                      freeUser.couponUsed = couponResult.code;
+                      saveUser(freeUser);
+                      props.onPick && props.onPick(PLANS[1]);
+                    }
+                  }} style={{ background:"linear-gradient(135deg,#10a37f,#34d399)", color:"#fff", border:"none", borderRadius:10, padding:"12px 28px", fontSize:14, fontWeight:700, cursor:"pointer", width:"100%" }}>
+                    🚀 Hemen Başla — Ücretsiz
+                  </button>
+                </div>
+              ) : (
+                <div style={{ color:"#10a37f", fontWeight:600, fontSize:13 }}>
+                  ✅ Kupon uygulandı! %{couponResult.discount} indirim kazandın.
+                </div>
+              )}
+            </div>
+          )}
+          {couponResult && !couponResult.ok && (
+            <div style={{ marginTop:10, background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.2)", borderRadius:10, padding:"10px 16px", color:"#ef4444", fontSize:13 }}>
+              ❌ {couponResult.message || "Geçersiz veya kullanılmış kupon kodu"}
+            </div>
+          )}
         </div>
       </div>
     </div>
