@@ -2936,6 +2936,16 @@ export default function App() {
       var su = lsGet("aica-user");
       if (su) {
         var u = JSON.parse(su);
+        var statusKey = "user-status-" + (u && u.email ? u.email : "");
+        var isPasif = lsGet(statusKey) === "pasif";
+        var isAdminU = u && u.email === ADMIN_EMAIL;
+        var isTestU = u && (u.email === "test@aicert.com" || u.email === "testpro@aicert.com" || u.email === "testbiz@aicert.com");
+        if (isPasif && !isAdminU && !isTestU) {
+          deleteUser();
+          setPage("landing");
+          setBooting(false);
+          return;
+        }
         setUser(u);
         var pn = u && u.plan ? (typeof u.plan === "string" ? u.plan : (u.plan.name || "")) : "";
         var isAdmin = u && u.email === ADMIN_EMAIL;
