@@ -2905,6 +2905,45 @@ function Auth(props) {
                 <span><span style={{ color:GOLD2 }}>Kullanım Koşulları</span> ve <span style={{ color:GOLD2 }}>Gizlilik Politikasını</span> okudum, kabul ediyorum.</span>
               </label>
             )}
+            {tab === "register" && (
+              <div style={{ marginBottom:16 }}>
+                <div style={{ fontSize:12, color:"#888899", marginBottom:8, fontWeight:600, textTransform:"uppercase", letterSpacing:1 }}>
+                  Kupon Kodun Var Mı? (Opsiyonel)
+                </div>
+                <div style={{ display:"flex", gap:8 }}>
+                  <input
+                    value={couponCode}
+                    onChange={function(e) { setCouponCode(e.target.value.toUpperCase()); setCouponResult(null); }}
+                    placeholder="KUPON KODU"
+                    style={{ flex:1, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:13, outline:"none", fontFamily:"monospace", letterSpacing:2 }}
+                  />
+                  <button
+                    onClick={function(e) { e.preventDefault(); applyCoupon(email); }}
+                    disabled={couponLoading || !couponCode.trim()}
+                    style={{ background: couponLoading || !couponCode.trim() ? "rgba(255,255,255,0.05)" : "linear-gradient(135deg,#c9a84c,#f5cc6a)", color: couponLoading || !couponCode.trim() ? "#555577" : "#08080f", border:"none", borderRadius:10, padding:"12px 18px", fontSize:13, fontWeight:700, cursor: couponLoading || !couponCode.trim() ? "not-allowed" : "pointer", whiteSpace:"nowrap" }}>
+                    {couponLoading ? "..." : "Uygula"}
+                  </button>
+                </div>
+                {couponResult && couponResult.ok && (
+                  <div style={{ marginTop:8, background:"rgba(16,163,127,0.1)", border:"1px solid rgba(16,163,127,0.3)", borderRadius:10, padding:"10px 14px", display:"flex", alignItems:"center", gap:8 }}>
+                    <span style={{ fontSize:16 }}>✅</span>
+                    <span style={{ fontSize:13, color:"#10a37f", fontWeight:600 }}>
+                      {couponResult.isFree || couponResult.discount === 100
+                        ? "Bedava erişim kuponu! Kayıt sonrası otomatik uygulanacak."
+                        : "%" + couponResult.discount + " indirim kuponu uygulandı!"}
+                    </span>
+                  </div>
+                )}
+                {couponResult && !couponResult.ok && (
+                  <div style={{ marginTop:8, background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.2)", borderRadius:10, padding:"10px 14px", display:"flex", alignItems:"center", gap:8 }}>
+                    <span style={{ fontSize:16 }}>❌</span>
+                    <span style={{ fontSize:13, color:"#ef4444" }}>
+                      {couponResult.message || "Geçersiz veya kullanılmış kupon kodu"}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
             {info && <div style={{ color:"#10a37f", fontSize:12, marginBottom:12, padding:"10px 12px", background:"rgba(16,163,127,0.08)", border:"1px solid rgba(16,163,127,0.25)", borderRadius:10 }}>{info}</div>}
             {err && <div style={{ color:"#ef4444", fontSize:12, marginBottom:14, padding:"10px 12px", background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:10 }}>{err}</div>}
             <button onClick={submit} disabled={loading}
