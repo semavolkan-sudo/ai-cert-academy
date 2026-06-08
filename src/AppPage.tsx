@@ -1572,19 +1572,27 @@ function Lesson(props) {
 
         {phase === "quiz" && (
           <div>
-            <h2 style={{ fontSize:22, fontWeight:700, marginBottom:6 }}>{lesson.tool + " Sinavi"}</h2>
-            <p style={{ color:"#555577", fontSize:12, marginBottom:28 }}>{"5 soru - Her dogru cevap + " + xpFor(1) + " XP"}</p>
+            <h2 style={{ fontSize:24, fontWeight:800, marginBottom:6, color:TEXT, letterSpacing:"-0.01em" }}>{lesson.tool + " Sinavi"}</h2>
+            <p style={{ color:TEXT2, fontSize:13, marginBottom:28, fontFamily:FONT_MONO }}>{"5 soru · +" + xpFor(1) + " XP / dogru"}</p>
             {quiz.map(function(q, qi) {
               return (
-                <div key={qi} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, padding:20, marginBottom:16 }}>
-                  <p style={{ fontWeight:600, marginBottom:14, lineHeight:1.5, fontSize:14 }}>{(qi+1) + ". " + q.q}</p>
-                  <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                <div key={qi} style={{ background:"linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+CARD_BORDER2, borderRadius:20, padding:24, marginBottom:18, boxShadow:"0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
+                  <div style={{ display:"flex", gap:10, alignItems:"baseline", marginBottom:16 }}>
+                    <span style={{ fontFamily:FONT_MONO, fontSize:12, color:GOLD2, fontWeight:700, padding:"3px 10px", background:"rgba(201,168,76,0.15)", borderRadius:8, border:"1px solid rgba(201,168,76,0.3)" }}>{"Q"+(qi+1).toString().padStart(2,"0")}</span>
+                    <p style={{ fontWeight:600, lineHeight:1.5, fontSize:15, color:TEXT, margin:0, flex:1 }}>{q.q}</p>
+                  </div>
+                  <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
                     {q.opts.map(function(opt, oi) {
                       var selected = ans[qi] === oi;
+                      var letters = ["A","B","C","D"];
+                      var optColors = ["#c9a84c","#7c5cfc","#00c9a7","#ec4899"];
                       return (
                         <div key={oi} onClick={function() { setAnswer(qi, oi); }}
-                          style={{ padding:"11px 14px", borderRadius:9, border:"1px solid "+(selected?GOLD:"rgba(255,255,255,0.09)"), background: selected ? "rgba(212,168,83,0.13)" : "rgba(255,255,255,0.02)", cursor:"pointer", fontSize:13, color: selected ? GOLD : "#ccccdd" }}>
-                          {["A","B","C","D"][oi] + ") " + opt}
+                          onMouseEnter={function(e){ if(!selected){ e.currentTarget.style.transform="scale(1.02)"; e.currentTarget.style.borderColor=CARD_BORDER2; } }}
+                          onMouseLeave={function(e){ if(!selected){ e.currentTarget.style.transform="scale(1)"; e.currentTarget.style.borderColor=CARD_BORDER; } }}
+                          style={{ display:"flex", alignItems:"center", gap:14, padding:"14px 16px", borderRadius:12, border:"1px solid "+(selected?GOLD:CARD_BORDER), background: selected ? "rgba(201,168,76,0.12)" : "rgba(255,255,255,0.03)", cursor:"pointer", fontSize:14, color: selected ? GOLD2 : TEXT, transition:"all 0.2s ease", boxShadow: selected ? "0 0 0 1px "+GOLD+", 0 4px 16px rgba(201,168,76,0.2)" : "none", fontFamily:FONT }}>
+                          <div style={{ width:34, height:34, borderRadius:10, background: selected ? "linear-gradient(135deg,#c9a84c,#f5cc6a)" : "rgba(255,255,255,0.05)", color: selected ? "#08080f" : optColors[oi], display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, fontFamily:FONT_MONO, fontSize:14, flexShrink:0, border: selected ? "none" : "1px solid "+optColors[oi]+"55" }}>{letters[oi]}</div>
+                          <span style={{ flex:1 }}>{opt}</span>
                         </div>
                       );
                     })}
@@ -1593,7 +1601,9 @@ function Lesson(props) {
               );
             })}
             <button onClick={finish} disabled={answeredCount < quiz.length}
-              style={{ width:"100%", background: answeredCount < quiz.length ? "#333" : "linear-gradient(135deg,#d4a853,#f0c060)", color: answeredCount < quiz.length ? "#666" : "#08080f", border:"none", borderRadius:12, padding:"14px 0", fontSize:15, fontWeight:700, cursor: answeredCount < quiz.length ? "not-allowed" : "pointer" }}>
+              onMouseEnter={function(e){ if(answeredCount>=quiz.length){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.4)"; } }}
+              onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow= answeredCount>=quiz.length ? SHADOW_GOLD : "none"; }}
+              style={{ width:"100%", background: answeredCount < quiz.length ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#c9a84c,#f5cc6a)", color: answeredCount < quiz.length ? TEXT2 : "#08080f", border: answeredCount < quiz.length ? "1px solid "+CARD_BORDER2 : "none", borderRadius:14, padding:"16px 0", fontSize:15, fontWeight:700, cursor: answeredCount < quiz.length ? "not-allowed" : "pointer", boxShadow: answeredCount < quiz.length ? "none" : SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
               {answeredCount < quiz.length ? ((quiz.length - answeredCount) + " soru kaldi") : "Sinavi Bitir"}
             </button>
           </div>
@@ -1602,18 +1612,20 @@ function Lesson(props) {
         {phase === "result" && (
           <div style={{ textAlign:"center", paddingTop:32 }}>
             <div style={{ fontSize:68, marginBottom:18 }}>{score >= 4 ? "Mukemmel" : score >= 3 ? "Iyi" : "Tekrar"}</div>
-            <h2 style={{ fontSize:30, fontWeight:800, marginBottom:8 }}>{score >= 4 ? "Mukemmel!" : score >= 3 ? "Iyi Is!" : "Biraz Daha Calis!"}</h2>
-            <div style={{ fontSize:52, fontWeight:800, color:GOLD, fontFamily:"monospace", margin:"18px 0" }}>{score + "/5"}</div>
-            <div style={{ display:"inline-flex", alignItems:"center", gap:7, background:"rgba(212,168,83,0.1)", border:"1px solid rgba(212,168,83,0.3)", borderRadius:11, padding:"11px 22px", marginBottom:28, fontSize:16, fontWeight:700, color:GOLD }}>
+            <h2 style={{ fontSize:30, fontWeight:800, marginBottom:8, color:TEXT, letterSpacing:"-0.02em" }}>{score >= 4 ? "Mukemmel!" : score >= 3 ? "Iyi Is!" : "Biraz Daha Calis!"}</h2>
+            <div style={{ fontSize:64, fontWeight:800, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", fontFamily:FONT_MONO, margin:"18px 0", letterSpacing:"-0.04em" }}>{score + "/5"}</div>
+            <div style={{ display:"inline-flex", alignItems:"center", gap:7, background:"rgba(201,168,76,0.12)", border:"1px solid rgba(201,168,76,0.35)", borderRadius:12, padding:"12px 24px", marginBottom:28, fontSize:16, fontWeight:700, color:GOLD2, boxShadow:SHADOW_GOLD }}>
               {"+" + earnedXP + " XP Kazandin!"}
             </div>
-            <div style={{ display:"flex", gap:7, justifyContent:"center", marginBottom:32 }}>
+            <div style={{ display:"flex", gap:8, justifyContent:"center", marginBottom:32 }}>
               {[0,1,2,3,4].map(function(i) {
-                return <div key={i} style={{ width:36, height:36, borderRadius:7, background: i < score ? GOLD : "rgba(255,255,255,0.07)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, color: i < score ? "#08080f" : "#555577" }}>{i < score ? "v" : "o"}</div>;
+                return <div key={i} style={{ width:40, height:40, borderRadius:10, background: i < score ? "linear-gradient(135deg,#c9a84c,#f5cc6a)" : "rgba(255,255,255,0.05)", border:"1px solid "+(i<score?"rgba(201,168,76,0.5)":CARD_BORDER), display:"flex", alignItems:"center", justifyContent:"center", fontSize:16, fontWeight:800, color: i < score ? "#08080f" : TEXT2, transition:"all 0.3s ease" }}>{i < score ? "✓" : "·"}</div>;
               })}
             </div>
             <button onClick={props.onBack}
-              style={{ background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:12, padding:"13px 40px", fontSize:15, fontWeight:700, cursor:"pointer" }}>
+              onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.4)"; }}
+              onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
+              style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"14px 44px", fontSize:15, fontWeight:700, cursor:"pointer", boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
               Dashboard'a Don
             </button>
           </div>
