@@ -148,11 +148,11 @@ function TurkishCharTest(props) {
 
 var PLANS = [
   { name: "Starter",  price: 29,  color: "#6366f1", popular: false,
-    features: ["14 gün erişim (ilk yari)", "Ders icerikleri", "Günlük quizler", "XP ve Streak sistemi", "Temel sertifika"] },
+    features: ["14 gün erişim (ilk yarı)", "Ders içerikleri", "Günlük quizler", "XP ve Streak sistemi", "Temel sertifika"] },
   { name: "Pro",      price: 79,  color: "#d4a853", popular: true,
-    features: ["28 gün tam erişim", "Tüm dersler", "XP ve Streak sistemi", "AI Mentor (4 seans)", "Bonus icerikler", "Premium sertifika"] },
+    features: ["28 gün tam erişim", "Tüm dersler", "XP ve Streak sistemi", "AI Mentor (4 seans)", "Bonus içerikler", "Premium sertifika"] },
   { name: "Business", price: 199, color: "#10a37f", popular: false,
-    features: ["5 kullanıcı lisansi", "Sınırsız AI Mentor", "Ekip yönetim paneli", "Ekip liderboard", "Kurumsal sertifika", "Oncelikli destek"] },
+    features: ["5 kullanıcı lisansı", "Sınırsız AI Mentor", "Ekip yönetim paneli", "Ekip liderboard", "Kurumsal sertifika", "Öncelikli destek"] },
 ];
 
 var COURSES = [
@@ -197,7 +197,7 @@ var MOCK_LB = [
 var DEFAULT_QUIZ = [
   { q:"Bu AI aracinin temel kullanım amaci nedir?",          opts:["Yalnizca gorsel uretim","Yalnizca kod yazma","Genel amacli uretkenlik","Yalnizca veri analizi"],                          ans:2 },
   { q:"Prompt engineering'de en önemli unsur nedir?",        opts:["Kısa yazmak","Net ve bağlamlı talimatlar","İngilizce kullanmak","Büyük harf kullanmak"],                                  ans:1 },
-  { q:"AI araclarinin iş dünyasındaki en büyük avantajı?",    opts:["Maliyeti sıfırlamak","Çalışanları işten çıkarmak","Tekrarlayan görevleri otomatize etmek","Internetsiz çalışmak"],         ans:2 },
+  { q:"AI araçlarının iş dünyasındaki en büyük avantajı?",    opts:["Maliyeti sıfırlamak","Çalışanları işten çıkarmak","Tekrarlayan görevleri otomatize etmek","İnternetsiz çalışmak"],         ans:2 },
   { q:"AI çıktılarını kullanırken en kritik adım?",           opts:["Hepsini direkt kullanmak","Doğrulamak ve düzenlemek","İngilizce çevirmek","Kaydetmek"],                                    ans:1 },
   { q:"En verimli çalışma yöntemi hangisidir?",               opts:["Tek seferlik uzun soru","Iteratif prompt zinciri","Şablonları kopyalamak","Başkasının promptlarini kullanmak"],            ans:1 },
 ];
@@ -362,7 +362,7 @@ function Onboarding(props) {
     { q:"AI araçları hakkinda deneyim seviyeniz?",       opts:["Hiç kullanmadim","Birkac kez denedim","Duzenli kullaniyorum","Profesyonel duzey"] },
     { q:"Oncelikli hedefiniz nedir?",                    opts:["Kariyerimi gelistirmek","Kendi isimi kurmak","Freelance gelir","Genel merak"] },
     { q:"Günde ne kadar sure ayirabilirsiniz?",          opts:["10-15 dakika","30 dakika","1 saat","1 saatten fazla"] },
-    { q:"Hangi AI kategorisi en çok ilginizi cekiyor?",  opts:["Metin ve Yazarlik","Gorsel ve Video","Otomasyon","Hepsi esit"] },
+    { q:"Hangi AI kategorisi en çok ilginizi çekiyor?",  opts:["Metin ve Yazarlık","Görsel ve Video","Otomasyon","Hepsi eşit"] },
   ];
   function pick(i) {
     var na = Object.assign({}, ans); na[step] = i; setAns(na);
@@ -403,7 +403,7 @@ function MentorChat(props) {
   var user = props.user;
   var p = getPerms(user);
   var lvl = getLvl(user.xp || 0);
-  var [msgs, setMsgs] = useState([{ role:"ai", text:"Merhaba " + user.name + "! Ben AI Mentor'ünüm. Seviye " + lvl.level + " - " + lvl.name + " olarak kayıtlısın. " + (p.mentor ? (p.mentorSessions === 999 ? "Sınırsız seans hakkın var." : p.mentorSessions + " seans hakkın kaldi.") : "") + " Ne ogrenelim?" }]);
+  var [msgs, setMsgs] = useState([{ role:"ai", text:"Merhaba " + user.name + "! Ben AI Mentor'ünüm. Seviye " + lvl.level + " - " + lvl.name + " olarak kayıtlısın. " + (p.mentor ? (p.mentorSessions === 999 ? "Sınırsız seans hakkın var." : p.mentorSessions + " seans hakkın kaldı.") : "") + " Ne öğrenelim?" }]);
   var [inp, setInp] = useState("");
   var [loading, setLoading] = useState(false);
   var [left, setLeft] = useState(p.mentorSessions);
@@ -507,7 +507,7 @@ function Landing(props) {
   var reviews = [
     { name:"Ayşe K.", role:"Pazarlama Müdürü", text:"28 günde tüm AI araçları öğrendim. Ekibimden çok daha hızlıyım.", r:5 },
     { name:"Mehmet T.", role:"Freelancer", text:"AI Mentor özelliği inanılmaz. Sorularımı anında yanıtlıyor.", r:5 },
-    { name:"Zeynep A.", role:"Girişimci", text:"Sertifikamı LinkedIn'e ekledim, 3 yeni musteri geldi!", r:5 },
+    { name:"Zeynep A.", role:"Girişimci", text:"Sertifikamı LinkedIn'e ekledim, 3 yeni müşteri geldi!", r:5 },
   ];
   return (
     <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, backgroundImage:"radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize:"32px 32px" }}>
@@ -576,7 +576,7 @@ function Landing(props) {
       </div>
       <div id="pricing" style={{ background:"linear-gradient(180deg, rgba(124,92,252,0.04), rgba(201,168,76,0.04))", borderTop:"1px solid "+CARD_BORDER, padding:"72px 20px" }}>
         <div style={{ maxWidth:1000, margin:"0 auto" }}>
-          <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planini Seç</h2>
+          <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planını Seç</h2>
           <p style={{ textAlign:"center", color:TEXT2, marginBottom:44, fontSize:14, fontFamily:FONT }}>Hedefine uygun plani seç ve bugün başla</p>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:22 }}>
             {PLANS.map(function(plan) {
@@ -874,7 +874,7 @@ function Login(props) {
       setLoading(false);
       var existing = getUserByEmail(email);
       if (!existing) {
-        setErr("Bu email ile kayıtlı hesap bulunamadi. Lutfen once kayıt ol.");
+        setErr("Bu email ile kayıtlı hesap bulunamadı. Lütfen önce kayıt ol.");
         return;
       }
       // Basit şifre kontrolü - gerçek uygulamada Supabase Auth kullanılır
@@ -1235,7 +1235,7 @@ function Dashboard(props) {
             {[
               { icon:"P", title:"500+ Prompt Şablonu",   desc:"Her araç için hazır kullanışlı promptlar" },
               { icon:"G", title:"AI ile Gelir Rehberi",  desc:"AI araçlarıyla $1000+ kazanma stratejileri" },
-              { icon:"O", title:"Otomasyon Akislari",    desc:"Make + Zapier entegrasyon şablonları" },
+              { icon:"O", title:"Otomasyon Akışları",    desc:"Make + Zapier entegrasyon şablonları" },
               { icon:"D", title:"Discord Topluluğu",     desc:"Pro üyelere özel kanal ve sorular" },
             ].map(function(m) {
               return (
@@ -1391,19 +1391,19 @@ function Lesson(props) {
     return [
       {
         icon: "L", title: "Bu Araç Nedir?", color: "#4285f4",
-        body: lesson.tool + " — " + lesson.desc + "\n\nBu ders boyunca aracı sıfırdan ogrenecek, gerçek is senaryolarinda nasıl kullanacagini kesfedeceksin. Her kart somut bir beceri kazandiriyor."
+        body: lesson.tool + " — " + lesson.desc + "\n\nBu ders boyunca aracı sıfırdan öğrenecek, gerçek iş senaryolarında nasıl kullanacağını keşfedeceksin. Her kart somut bir beceri kazandırıyor."
       },
       {
         icon: "O", title: "Temel Özellikler", color: "#d4a853",
-        body: "- Metin Uretimi: Tek bir aciklama ile profesyonel seviyede içerik, email, rapor ve kod uretir\n- Baglamsal Anlama: Onceki mesajlari hatirlar, uzun konusmalarda tutarli kalir\n- Çok Dilli Destek: Türkçe dahil 50+ dilde akici ve dogal yanit verir\n- Dosya Analizi: PDF, Word, Excel ve gorsel dosyalari yukleyerek analiz ettirebilirsin\n- Kod Yazma: Python, JavaScript, SQL ve daha fazlasinda kod yazar, hata ayiklar"
+        body: "- Metin Üretimi: Tek bir açıklama ile profesyonel seviyede içerik, email, rapor ve kod üretir\n- Bağlamsal Anlama: Önceki mesajları hatırlar, uzun konuşmalarda tutarlı kalır\n- Çok Dilli Destek: Türkçe dahil 50+ dilde akıcı ve doğal yanıt verir\n- Dosya Analizi: PDF, Word, Excel ve görsel dosyaları yükleyerek analiz ettirebilirsin\n- Kod Yazma: Python, JavaScript, SQL ve daha fazlasinda kod yazar, hata ayıklar"
       },
       {
         icon: "B", title: "Baslangic: Ilk 3 Adım", color: "#10a37f",
-        body: "1. Hesap Oluştur: Platforma git, Google hesabinla 30 saniyede kaydol. Ücretsiz plan günlük kullanım için yeterli.\n\n2. Net Prompt Yaz: 'Bir şey yaz' degil, 'Hedef kitle: 30-45 yaş profesyoneller. Ton: samimi. 3 paragraflik LinkedIn gönderisi yaz' gibi spesifik talimatlar ver.\n\n3. Iteratif Gelistir: Ilk yanit mekemmel olmayabilir. 'Daha kısa yap', 'Örnek ekle', 'Daha güvenilir ton kullan' diyerek adım adım iyilestir."
+        body: "1. Hesap Oluştur: Platforma git, Google hesabınla 30 saniyede kaydol. Ücretsiz plan günlük kullanım için yeterli.\n\n2. Net Prompt Yaz: 'Bir şey yaz' değil, 'Hedef kitle: 30-45 yaş profesyoneller. Ton: samimi. 3 paragraflık LinkedIn gönderisi yaz' gibi spesifik talimatlar ver.\n\n3. İteratif Geliştir: İlk yanıt mükemmel olmayabilir. 'Daha kısa yap', 'Örnek ekle', 'Daha güvenilir ton kullan' diyerek adım adım iyileştir."
       },
       {
         icon: "P", title: "Gerçek Hayat Prompt Ornegi", color: "#8b5cf6",
-        body: "SENARYO: Bir e-ticaret sitesi için ürün aciklamasi yazman gerekiyor.\n\nZAYIF PROMPT:\n'Ürün aciklamasi yaz'\n\nGUCLU PROMPT:\n'Sen deneyimli bir e-ticaret metin yazarsın. Hedef kitle: 25-40 yaş kadın müşteriler. Ürün: el yapımı seramik kupa. Ton: sıcak ve hikaye anlatan. Format: başlık + 3 madde özellik + duygusal CTA. Maks 100 kelime.'\n\nFARK: Guclu prompt ile uretilen içerik direkt kullanilabilir, zayif prompt ile defalarca duzenleme gerekir."
+        body: "SENARYO: Bir e-ticaret sitesi için ürün açıklaması yazman gerekiyor.\n\nZAYIF PROMPT:\n'Ürün açıklaması yaz'\n\nGÜÇLÜ PROMPT:\n'Sen deneyimli bir e-ticaret metin yazarsın. Hedef kitle: 25-40 yaş kadın müşteriler. Ürün: el yapımı seramik kupa. Ton: sıcak ve hikaye anlatan. Format: başlık + 3 madde özellik + duygusal CTA. Maks 100 kelime.'\n\nFARK: Güçlü prompt ile üretilen içerik direkt kullanılabilir, zayıf prompt ile defalarca düzenleme gerekir."
       },
       {
         icon: "!", title: "En Çok Yapılan 3 Hata", color: "#ef4444",
@@ -1790,7 +1790,7 @@ function Auth(props) {
   function verifySubmit() {
     setErr("");
     if (!codeInput || codeInput.length !== 6) { setErr("6 haneli kodu gir"); return; }
-    if (codeInput !== verifyCode) { setErr("Kod hatali. Tekrar dene."); return; }
+    if (codeInput !== verifyCode) { setErr("Kod hatalı. Tekrar dene."); return; }
     setLoading(true);
     setTimeout(function() {
       setLoading(false);
@@ -1873,7 +1873,7 @@ function Auth(props) {
               {err && <div style={{ color:"#ef4444", fontSize:12, marginBottom:12, padding:"10px 12px", background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:10 }}>{err}</div>}
               <button onClick={verifySubmit} disabled={loading}
                 style={{ width:"100%", background: loading ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg,#c9a84c,#f5cc6a)", color: loading ? TEXT2 : "#08080f", border:"none", borderRadius:14, padding:"15px 0", fontSize:15, fontWeight:700, cursor: loading ? "not-allowed" : "pointer", boxShadow: loading ? "none" : SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, marginBottom:10 }}>
-                {loading ? "Dogrulaniyor..." : "Dogrula ve Devam Et"}
+                {loading ? "Doğrulanıyor..." : "Doğrula ve Devam Et"}
               </button>
               <div style={{ display:"flex", justifyContent:"space-between", fontSize:12, marginTop:6 }}>
                 <button onClick={cancelVerify} style={{ background:"transparent", border:"none", color:TEXT2, cursor:"pointer", fontFamily:FONT, padding:0 }}>← Geri</button>
@@ -1932,7 +1932,7 @@ function Auth(props) {
               onMouseEnter={function(e){ if(!loading){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.4)"; } }}
               onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
               style={{ width:"100%", background: loading ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg,#c9a84c,#f5cc6a)", color: loading ? TEXT2 : "#08080f", border:"none", borderRadius:14, padding:"15px 0", fontSize:15, fontWeight:700, cursor: loading ? "not-allowed" : "pointer", boxShadow: loading ? "none" : SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>
-              {loading ? "Lutfen bekleyin..." : (tab === "register" ? "Kayıt Ol" : "Giriş Yap")}
+              {loading ? "Lütfen bekleyin..." : (tab === "register" ? "Kayıt Ol" : "Giriş Yap")}
             </button>
           </div>
           </>
@@ -1947,7 +1947,7 @@ function PlanSelect(props) {
   return (
     <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, padding:"60px 20px", backgroundImage:"radial-gradient(ellipse at 50% 0%,rgba(124,92,252,0.15) 0%,rgba(201,168,76,0.08) 35%,transparent 70%), radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize:"auto, 32px 32px" }}>
       <div style={{ maxWidth:1000, margin:"0 auto" }}>
-        <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planini Seç</h2>
+        <h2 style={{ textAlign:"center", fontSize:36, fontWeight:800, marginBottom:12, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.02em" }}>Planını Seç</h2>
         <p style={{ textAlign:"center", color:TEXT2, marginBottom:44, fontSize:14, fontFamily:FONT }}>Hedefine uygun plani seç ve bugün başla</p>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:22 }}>
           {PLANS.map(function(plan) {
