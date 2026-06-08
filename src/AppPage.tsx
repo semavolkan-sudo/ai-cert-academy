@@ -619,174 +619,761 @@ function Register(props) {
 
 // ─── LOGIN ────────────────────────────────────────────────────────────────────
 function AdminPanel(props) {
+
   var [users, setUsers] = useState([]);
-  var [orders, setOrders] = useState([]);
+
   var [loading, setLoading] = useState(true);
-  var [tab, setTab] = useState("users");
+
+  var [activeTab, setActiveTab] = useState("overview");
+
+  var [selectedUser, setSelectedUser] = useState(null);
+
+  var [search, setSearch] = useState("");
+
+  var [planFilter, setPlanFilter] = useState("Tümü");
+
+  var [fullAccess, setFullAccess] = useState(false);
+
+  var [fullAccessPass, setFullAccessPass] = useState("");
+
+  var [fullAccessErr, setFullAccessErr] = useState("");
+
+  var [announcement, setAnnouncement] = useState("");
+
+  var [announcementSent, setAnnouncementSent] = useState(false);
 
   useEffect(function() {
+
     fetch(USERS_API, {
+
       method: "POST",
+
       headers: { "Content-Type": "application/json" },
+
       body: JSON.stringify({ action: "list", adminKey: ADMIN_KEY })
+
     })
+
     .then(function(r) { return r.json(); })
+
     .then(function(data) {
+
       var list = Array.isArray(data) ? data : (data && data.users ? data.users : []);
+
       setUsers(list || []);
+
       setLoading(false);
+
     })
+
     .catch(function() { setLoading(false); });
+
   }, []);
 
   function fmt(ts) {
+
     if (!ts) return "-";
+
     try {
+
       var d = new Date(ts);
+
       if (isNaN(d.getTime())) return "-";
+
       return d.toLocaleDateString("tr-TR") + " " + d.toLocaleTimeString("tr-TR", { hour:"2-digit", minute:"2-digit" });
+
     } catch(e) { return "-"; }
+
   }
 
   function planName(u) {
+
     if (!u || !u.plan) return "Starter";
+
     if (typeof u.plan === "string") return u.plan;
+
     if (u.plan.name) return u.plan.name;
+
     return "Starter";
+
   }
 
   function planColor(name) {
+
     if (name === "Business") return "#10a37f";
+
     if (name === "Pro") return "#d4a853";
+
     return "#6366f1";
+
   }
 
-  var total = users.length;
-  var proCount = users.filter(function(u) { return planName(u) === "Pro"; }).length;
-  var bizCount = users.filter(function(u) { return planName(u) === "Business"; }).length;
+  function planRevenue(name) {
+
+    if (name === "Business") return 199;
+
+    if (name === "Pro") return 79;
+
+    return 29;
+
+  }
+
   var todayStart = new Date(); todayStart.setHours(0,0,0,0);
+
+  var weekStart = new Date(); weekStart.setDate(weekStart.getDate() - 7);
+
+  var totalUsers = users.length;
+
+  var starterCount = users.filter(function(u) { return planName(u) === "Starter"; }).length;
+
+  var proCount = users.filter(function(u) { return planName(u) === "Pro"; }).length;
+
+  var bizCount = users.filter(function(u) { return planName(u) === "Business"; }).length;
+
   var todayCount = users.filter(function(u) {
-    var t = u.created_at || u.createdAt || u.registeredAt;
-    if (!t) return false;
-    return new Date(t).getTime() >= todayStart.getTime();
+
+    var t = u.created_at || u.createdAt;
+
+    return t && new Date(t).getTime() >= todayStart.getTime();
+
   }).length;
 
-  var totalXP = users.reduce(function(acc, u) { return acc + (u.xp || 0); }, 0);
+  var weekCount = users.filter(function(u) {
 
-  var summary = [
-    { label:"Toplam Üye", val: total, color: GOLD },
-    { label:"Pro", val: proCount, color: "#d4a853" },
-    { label:"Business", val: bizCount, color: "#10a37f" },
-    { label:"Bugün Kayıt", val: todayCount, color: "#6366f1" },
-    { label:"Toplam XP", val: totalXP, color: "#ec4899" },
+    var t = u.created_at || u.createdAt;
+
+    return t && new Date(t).getTime() >= weekStart.getTime();
+
+  }).length;
+
+  var totalRevenue = users.reduce(function(acc, u) { return acc + planRevenue(planName(u)); }, 0);
+
+  var avgXP = totalUsers > 0 ? Math.round(users.reduce(function(acc, u) { return acc + (u.xp || 0); }, 0) / totalUsers) : 0;
+
+  var filteredUsers = users.filter(function(u) {
+
+    var matchPlan = planFilter === "Tümü" || planName(u) === planFilter;
+
+    var matchSearch = !search || (u.name || "").toLowerCase().includes(search.toLowerCase()) || (u.email || "").toLowerCase().includes(search.toLowerCase());
+
+    return matchPlan && matchSearch;
+
+  });
+
+  var tabs = [
+
+    { id:"overview", label:"📊 Genel Bakış" },
+
+    { id:"users", label:"👥 Kullanıcılar" },
+
+    { id:"revenue", label:"💰 Gelir" },
+
+    { id:"platform", label:"⚙️ Platform Yönetimi" },
+
   ];
 
+  function unlockFullAccess() {
+
+    if (fullAccessPass === "superadmin2024") {
+
+      setFullAccess(true);
+
+      setFullAccessErr("");
+
+    } else {
+
+      setFullAccessErr("Hatalı şifre");
+
+    }
+
+  }
+
+  function enterAsUser(u) {
+
+    if (!fullAccess) return;
+
+    var fakeUser = { ...u, plan: { name: planName(u), price: planRevenue(planName(u)), color: planColor(planName(u)), popular: planName(u)==="Pro", features: [] } };
+
+    props.onEnterAsUser && props.onEnterAsUser(fakeUser);
+
+  }
+
   return (
-    <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:FONT, padding:24 }}>
-      <div style={{ maxWidth:1200, margin:"0 auto" }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24 }}>
-          <div>
-            <div style={{ fontSize:13, color:"#888899" }}>Yönetim Paneli</div>
-            <div style={{ fontSize:28, fontWeight:800, color:GOLD }}>Admin Dashboard</div>
-          </div>
-          <button onClick={props.onLogout} style={{ background:"rgba(239,68,68,0.1)", color:"#ef4444", border:"1px solid rgba(239,68,68,0.3)", borderRadius:10, padding:"10px 20px", fontSize:13, cursor:"pointer", fontWeight:600 }}>Çıkış Yap</button>
+
+    <div style={{ minHeight:"100vh", background:"#070711", color:"#fff", fontFamily:"'Inter',sans-serif" }}>
+
+      <div style={{ background:"rgba(7,7,17,0.98)", borderBottom:"1px solid rgba(255,255,255,0.08)", padding:"0 24px", display:"flex", alignItems:"center", justifyContent:"space-between", height:60, position:"sticky", top:0, zIndex:100 }}>
+
+        <div style={{ display:"flex", alignItems:"center", gap:16 }}>
+
+          <div style={{ fontSize:20, fontWeight:800, color:"#d4a853" }}>⚡ Admin</div>
+
+          <div style={{ width:1, height:24, background:"rgba(255,255,255,0.1)" }} />
+
+          <div style={{ fontSize:13, color:"#888899" }}>AI Certification Academy</div>
+
+          {fullAccess && <span style={{ background:"rgba(239,68,68,0.15)", border:"1px solid rgba(239,68,68,0.4)", borderRadius:6, padding:"2px 10px", fontSize:11, color:"#ef4444", fontWeight:700 }}>TAM YETKİ</span>}
+
         </div>
 
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))", gap:12, marginBottom:24 }}>
-          {summary.map(function(s) {
-            return (
-              <div key={s.label} style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, padding:"16px 20px" }}>
-                <div style={{ fontSize:11, color:"#888899", marginBottom:8, textTransform:"uppercase", letterSpacing:1 }}>{s.label}</div>
-                <div style={{ fontSize:30, fontWeight:800, color:s.color }}>{s.val}</div>
-              </div>
-            );
-          })}
-        </div>
+        <button onClick={props.onLogout} style={{ background:"rgba(239,68,68,0.1)", color:"#ef4444", border:"1px solid rgba(239,68,68,0.25)", borderRadius:8, padding:"8px 16px", fontSize:13, cursor:"pointer", fontWeight:600 }}>Çıkış</button>
 
-        <div style={{ display:"flex", gap:8, marginBottom:16 }}>
-          {["users","plans"].map(function(t) {
-            return (
-              <button key={t} onClick={function() { setTab(t); }}
-                style={{ background: tab===t ? GOLD : "transparent", color: tab===t ? "#08080f" : "#888899", border:"1px solid "+(tab===t ? GOLD : CARD_BORDER), borderRadius:8, padding:"8px 18px", fontSize:13, fontWeight:600, cursor:"pointer" }}>
-                {t === "users" ? "Kullanıcılar" : "Plan Dağılımı"}
-              </button>
-            );
-          })}
-        </div>
-
-        <div style={{ background:CARD_BG, border:"1px solid "+CARD_BORDER, borderRadius:14, overflow:"hidden" }}>
-          {loading ? (
-            <div style={{ padding:60, textAlign:"center", color:"#888899" }}>Yükleniyor...</div>
-          ) : users.length === 0 ? (
-            <div style={{ padding:60, textAlign:"center", color:"#888899" }}>Henüz kayıtlı kullanıcı yok</div>
-          ) : tab === "users" ? (
-            <div style={{ overflowX:"auto" }}>
-              <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
-                <thead>
-                  <tr style={{ background:"rgba(255,255,255,0.03)" }}>
-                    {["#","Ad Soyad","Email","Plan","XP","İlerleme","Kayıt Tarihi","Son Giriş"].map(function(h) {
-                      return <th key={h} style={{ padding:"12px 14px", color:"#888899", fontWeight:600, textAlign:"left", whiteSpace:"nowrap" }}>{h}</th>;
-                    })}
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map(function(u, i) {
-                    var pn = planName(u);
-                    var pc = planColor(pn);
-                    var prog = u.progress || {};
-                    var doneCount = Object.keys(prog).filter(function(k) { return prog[k] === true || prog[k] === "done"; }).length;
-                    return (
-                      <tr key={(u.email||"")+i} style={{ borderTop:"1px solid "+CARD_BORDER }}>
-                        <td style={{ padding:"12px 14px", color:"#555577", fontSize:11 }}>{i+1}</td>
-                        <td style={{ padding:"12px 14px", color:"#fff", fontWeight:600 }}>{u.name || "-"}</td>
-                        <td style={{ padding:"12px 14px", color:"#bbbbcc" }}>{u.email || "-"}</td>
-                        <td style={{ padding:"12px 14px" }}>
-                          <span style={{ background:pc+"22", color:pc, border:"1px solid "+pc+"55", borderRadius:20, padding:"4px 12px", fontSize:11, fontWeight:700 }}>{pn}</span>
-                        </td>
-                        <td style={{ padding:"12px 14px", color:GOLD, fontWeight:700 }}>{u.xp || 0}</td>
-                        <td style={{ padding:"12px 14px" }}>
-                          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                            <div style={{ width:60, height:5, background:"rgba(255,255,255,0.1)", borderRadius:3, overflow:"hidden" }}>
-                              <div style={{ width:Math.min(100,(doneCount/28)*100)+"%", height:"100%", background:GOLD, borderRadius:3 }} />
-                            </div>
-                            <span style={{ fontSize:11, color:"#888899" }}>{doneCount}/28</span>
-                          </div>
-                        </td>
-                        <td style={{ padding:"12px 14px", color:"#888899", whiteSpace:"nowrap" }}>{fmt(u.created_at || u.createdAt || u.registeredAt)}</td>
-                        <td style={{ padding:"12px 14px", color:"#888899", whiteSpace:"nowrap" }}>{fmt(u.last_seen || u.lastSeen || u.updatedAt)}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div style={{ padding:24 }}>
-              {["Starter","Pro","Business"].map(function(pn) {
-                var count = users.filter(function(u) { return planName(u) === pn; }).length;
-                var pct = total > 0 ? Math.round((count/total)*100) : 0;
-                var pc = planColor(pn);
-                return (
-                  <div key={pn} style={{ marginBottom:20 }}>
-                    <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                      <span style={{ fontWeight:600, color:pc }}>{pn}</span>
-                      <span style={{ color:"#888899" }}>{count} kullanıcı ({pct}%)</span>
-                    </div>
-                    <div style={{ height:10, background:"rgba(255,255,255,0.06)", borderRadius:5, overflow:"hidden" }}>
-                      <div style={{ width:pct+"%", height:"100%", background:pc, borderRadius:5, transition:"width 0.6s" }} />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-        <div style={{ marginTop:12, textAlign:"right", fontSize:11, color:"#555577" }}>
-          Son güncelleme: {fmt(Date.now())} · {total} kullanıcı
-        </div>
       </div>
+
+      <div style={{ display:"flex", borderBottom:"1px solid rgba(255,255,255,0.07)", padding:"0 24px", overflowX:"auto" }}>
+
+        {tabs.map(function(t) {
+
+          return (
+
+            <button key={t.id} onClick={function() { setActiveTab(t.id); }}
+
+              style={{ background:"transparent", border:"none", borderBottom: activeTab===t.id ? "2px solid #d4a853" : "2px solid transparent", color: activeTab===t.id ? "#d4a853" : "#666677", padding:"16px 20px", fontSize:13, fontWeight:600, cursor:"pointer", whiteSpace:"nowrap", transition:"all 0.2s" }}>
+
+              {t.label}
+
+            </button>
+
+          );
+
+        })}
+
+      </div>
+
+      <div style={{ padding:24, maxWidth:1300, margin:"0 auto" }}>
+
+        {activeTab === "overview" && (
+
+          <div>
+
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))", gap:14, marginBottom:28 }}>
+
+              {[
+
+                { label:"Toplam Üye", val:totalUsers, color:"#d4a853", icon:"👥" },
+
+                { label:"Bugün Kayıt", val:todayCount, color:"#10a37f", icon:"🆕" },
+
+                { label:"Bu Hafta", val:weekCount, color:"#6366f1", icon:"📅" },
+
+                { label:"Pro Üye", val:proCount, color:"#d4a853", icon:"⭐" },
+
+                { label:"Business Üye", val:bizCount, color:"#10a37f", icon:"💼" },
+
+                { label:"Tahmini Gelir", val:"$"+totalRevenue, color:"#10a37f", icon:"💰" },
+
+                { label:"Ortalama XP", val:avgXP, color:"#6366f1", icon:"⚡" },
+
+              ].map(function(s) {
+
+                return (
+
+                  <div key={s.label} style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:16, padding:"20px 18px" }}>
+
+                    <div style={{ fontSize:20, marginBottom:8 }}>{s.icon}</div>
+
+                    <div style={{ fontSize:11, color:"#666677", marginBottom:6, textTransform:"uppercase", letterSpacing:1 }}>{s.label}</div>
+
+                    <div style={{ fontSize:28, fontWeight:800, color:s.color }}>{s.val}</div>
+
+                  </div>
+
+                );
+
+              })}
+
+            </div>
+
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
+
+              <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:16, padding:24 }}>
+
+                <div style={{ fontSize:14, fontWeight:700, marginBottom:20, color:"#fff" }}>Plan Dağılımı</div>
+
+                {[["Starter", starterCount, "#6366f1"], ["Pro", proCount, "#d4a853"], ["Business", bizCount, "#10a37f"]].map(function(item) {
+
+                  var pct = totalUsers > 0 ? Math.round((item[1]/totalUsers)*100) : 0;
+
+                  return (
+
+                    <div key={item[0]} style={{ marginBottom:16 }}>
+
+                      <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
+
+                        <span style={{ fontSize:13, color:item[2], fontWeight:600 }}>{item[0]}</span>
+
+                        <span style={{ fontSize:13, color:"#888899" }}>{item[1]} kişi ({pct}%)</span>
+
+                      </div>
+
+                      <div style={{ height:8, background:"rgba(255,255,255,0.06)", borderRadius:4, overflow:"hidden" }}>
+
+                        <div style={{ width:pct+"%", height:"100%", background:item[2], borderRadius:4, transition:"width 0.8s ease" }} />
+
+                      </div>
+
+                    </div>
+
+                  );
+
+                })}
+
+              </div>
+
+              <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:16, padding:24 }}>
+
+                <div style={{ fontSize:14, fontWeight:700, marginBottom:20, color:"#fff" }}>Son Kayıt Olanlar</div>
+
+                {users.slice(0,5).map(function(u, i) {
+
+                  var pn = planName(u);
+
+                  var pc = planColor(pn);
+
+                  return (
+
+                    <div key={i} style={{ display:"flex", alignItems:"center", gap:12, marginBottom:14 }}>
+
+                      <div style={{ width:36, height:36, borderRadius:"50%", background:"rgba(212,168,83,0.15)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, color:"#d4a853", fontSize:14, flexShrink:0 }}>
+
+                        {(u.name || "?")[0].toUpperCase()}
+
+                      </div>
+
+                      <div style={{ flex:1, minWidth:0 }}>
+
+                        <div style={{ fontSize:13, fontWeight:600, color:"#fff", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{u.name || "-"}</div>
+
+                        <div style={{ fontSize:11, color:"#666677", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{u.email}</div>
+
+                      </div>
+
+                      <span style={{ background:pc+"22", color:pc, border:"1px solid "+pc+"44", borderRadius:20, padding:"3px 10px", fontSize:10, fontWeight:700, flexShrink:0 }}>{pn}</span>
+
+                    </div>
+
+                  );
+
+                })}
+
+              </div>
+
+            </div>
+
+          </div>
+
+        )}
+
+        {activeTab === "users" && (
+
+          <div>
+
+            <div style={{ display:"flex", gap:12, marginBottom:20, flexWrap:"wrap" }}>
+
+              <input value={search} onChange={function(e) { setSearch(e.target.value); }} placeholder="İsim veya email ara..." style={{ flex:1, minWidth:200, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"10px 14px", color:"#fff", fontSize:13, outline:"none" }} />
+
+              {["Tümü","Starter","Pro","Business"].map(function(p) {
+
+                return (
+
+                  <button key={p} onClick={function() { setPlanFilter(p); }}
+
+                    style={{ background: planFilter===p ? "rgba(212,168,83,0.15)" : "rgba(255,255,255,0.04)", border:"1px solid "+(planFilter===p ? "rgba(212,168,83,0.4)" : "rgba(255,255,255,0.08)"), borderRadius:10, padding:"10px 16px", color: planFilter===p ? "#d4a853" : "#888899", fontSize:13, cursor:"pointer", fontWeight: planFilter===p ? 700 : 400 }}>
+
+                    {p}
+
+                  </button>
+
+                );
+
+              })}
+
+              <div style={{ fontSize:13, color:"#666677", display:"flex", alignItems:"center" }}>{filteredUsers.length} kullanıcı</div>
+
+            </div>
+
+            <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:16, overflow:"hidden" }}>
+
+              <div style={{ overflowX:"auto" }}>
+
+                <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
+
+                  <thead>
+
+                    <tr style={{ background:"rgba(255,255,255,0.03)" }}>
+
+                      {["#","Ad Soyad","Email","Plan","XP","İlerleme","Kayıt","Son Giriş","İşlem"].map(function(h) {
+
+                        return <th key={h} style={{ padding:"13px 14px", color:"#555577", fontWeight:600, textAlign:"left", whiteSpace:"nowrap", fontSize:11, textTransform:"uppercase", letterSpacing:1 }}>{h}</th>;
+
+                      })}
+
+                    </tr>
+
+                  </thead>
+
+                  <tbody>
+
+                    {filteredUsers.map(function(u, i) {
+
+                      var pn = planName(u);
+
+                      var pc = planColor(pn);
+
+                      var prog = u.progress || {};
+
+                      var done = Object.keys(prog).filter(function(k) { return prog[k] === true || prog[k] === "done"; }).length;
+
+                      return (
+
+                        <tr key={(u.email||"")+i} style={{ borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+
+                          <td style={{ padding:"12px 14px", color:"#444466" }}>{i+1}</td>
+
+                          <td style={{ padding:"12px 14px" }}>
+
+                            <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+
+                              <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(212,168,83,0.12)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, color:"#d4a853", fontSize:13, flexShrink:0 }}>
+
+                                {(u.name||"?")[0].toUpperCase()}
+
+                              </div>
+
+                              <span style={{ color:"#fff", fontWeight:600 }}>{u.name||"-"}</span>
+
+                            </div>
+
+                          </td>
+
+                          <td style={{ padding:"12px 14px", color:"#9999b8" }}>{u.email||"-"}</td>
+
+                          <td style={{ padding:"12px 14px" }}>
+
+                            <span style={{ background:pc+"22", color:pc, border:"1px solid "+pc+"44", borderRadius:20, padding:"4px 12px", fontSize:11, fontWeight:700 }}>{pn}</span>
+
+                          </td>
+
+                          <td style={{ padding:"12px 14px", color:"#d4a853", fontWeight:700 }}>{u.xp||0}</td>
+
+                          <td style={{ padding:"12px 14px" }}>
+
+                            <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+
+                              <div style={{ width:64, height:5, background:"rgba(255,255,255,0.08)", borderRadius:3, overflow:"hidden" }}>
+
+                                <div style={{ width:Math.min(100,(done/28)*100)+"%", height:"100%", background:"linear-gradient(90deg,#d4a853,#f0c060)", borderRadius:3 }} />
+
+                              </div>
+
+                              <span style={{ fontSize:11, color:"#666677" }}>{done}/28</span>
+
+                            </div>
+
+                          </td>
+
+                          <td style={{ padding:"12px 14px", color:"#666677", whiteSpace:"nowrap" }}>{fmt(u.created_at||u.createdAt)}</td>
+
+                          <td style={{ padding:"12px 14px", color:"#666677", whiteSpace:"nowrap" }}>{fmt(u.last_seen||u.lastSeen)}</td>
+
+                          <td style={{ padding:"12px 14px" }}>
+
+                            <button onClick={function() { setSelectedUser(u); }} style={{ background:"rgba(99,102,241,0.1)", border:"1px solid rgba(99,102,241,0.3)", borderRadius:7, padding:"5px 12px", color:"#a5b4fc", fontSize:11, cursor:"pointer", marginRight:6 }}>Detay</button>
+
+                            {fullAccess && <button onClick={function() { enterAsUser(u); }} style={{ background:"rgba(239,68,68,0.1)", border:"1px solid rgba(239,68,68,0.3)", borderRadius:7, padding:"5px 12px", color:"#fca5a5", fontSize:11, cursor:"pointer" }}>Giriş Yap</button>}
+
+                          </td>
+
+                        </tr>
+
+                      );
+
+                    })}
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        )}
+
+        {activeTab === "revenue" && (
+
+          <div>
+
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:14, marginBottom:28 }}>
+
+              {[
+
+                { label:"Aylık Tahmini Gelir", val:"$"+totalRevenue, sub:"Tüm aktif üyeler", color:"#10a37f" },
+
+                { label:"Yıllık Projeksiyon", val:"$"+(totalRevenue*12), sub:"Mevcut üye bazında", color:"#d4a853" },
+
+                { label:"Starter Geliri", val:"$"+(starterCount*29), sub:starterCount+" üye × $29", color:"#6366f1" },
+
+                { label:"Pro Geliri", val:"$"+(proCount*79), sub:proCount+" üye × $79", color:"#d4a853" },
+
+                { label:"Business Geliri", val:"$"+(bizCount*199), sub:bizCount+" üye × $199", color:"#10a37f" },
+
+              ].map(function(s) {
+
+                return (
+
+                  <div key={s.label} style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:16, padding:"22px 20px" }}>
+
+                    <div style={{ fontSize:11, color:"#555577", marginBottom:8, textTransform:"uppercase", letterSpacing:1 }}>{s.label}</div>
+
+                    <div style={{ fontSize:30, fontWeight:800, color:s.color, marginBottom:4 }}>{s.val}</div>
+
+                    <div style={{ fontSize:12, color:"#444466" }}>{s.sub}</div>
+
+                  </div>
+
+                );
+
+              })}
+
+            </div>
+
+            <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:16, padding:24 }}>
+
+              <div style={{ fontSize:14, fontWeight:700, color:"#fff", marginBottom:6 }}>💡 Büyüme Hedefi</div>
+
+              <div style={{ fontSize:13, color:"#888899", lineHeight:1.7 }}>
+
+                10 Business üye → <span style={{ color:"#10a37f", fontWeight:700 }}>$1,990/ay</span> · 
+
+                50 Pro üye → <span style={{ color:"#d4a853", fontWeight:700 }}>$3,950/ay</span> · 
+
+                100 Starter üye → <span style={{ color:"#6366f1", fontWeight:700 }}>$2,900/ay</span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        )}
+
+        {activeTab === "platform" && (
+
+          <div>
+
+            {!fullAccess ? (
+
+              <div style={{ maxWidth:420, margin:"60px auto", textAlign:"center" }}>
+
+                <div style={{ fontSize:48, marginBottom:16 }}>🔐</div>
+
+                <div style={{ fontSize:20, fontWeight:700, color:"#fff", marginBottom:8 }}>Tam Yetki Gerekli</div>
+
+                <div style={{ fontSize:14, color:"#888899", marginBottom:28, lineHeight:1.6 }}>Platform yönetimi için ek güvenlik doğrulaması gerekiyor. Bu alan kullanıcı verilerine tam erişim sağlar.</div>
+
+                <input type="password" value={fullAccessPass} onChange={function(e) { setFullAccessPass(e.target.value); }} onKeyDown={function(e) { if(e.key==="Enter") unlockFullAccess(); }} placeholder="Süper admin şifresi" style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid "+(fullAccessErr?"#ef4444":"rgba(255,255,255,0.12)"), borderRadius:12, padding:"14px 16px", color:"#fff", fontSize:14, outline:"none", marginBottom:8, boxSizing:"border-box" }} />
+
+                {fullAccessErr && <div style={{ color:"#ef4444", fontSize:12, marginBottom:12 }}>{fullAccessErr}</div>}
+
+                <button onClick={unlockFullAccess} style={{ width:"100%", background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:12, padding:"14px", fontSize:15, fontWeight:700, cursor:"pointer" }}>Doğrula ve Giriş</button>
+
+                <div style={{ fontSize:11, color:"#333344", marginTop:12 }}>Süper admin şifresi: superadmin2024</div>
+
+              </div>
+
+            ) : (
+
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
+
+                <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:16, padding:24 }}>
+
+                  <div style={{ fontSize:15, fontWeight:700, color:"#fff", marginBottom:6 }}>📢 Duyuru Gönder</div>
+
+                  <div style={{ fontSize:12, color:"#666677", marginBottom:16 }}>Tüm kullanıcılara bildirim mesajı gönder</div>
+
+                  <textarea value={announcement} onChange={function(e) { setAnnouncement(e.target.value); }} placeholder="Duyuru metni..." rows={4} style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:13, outline:"none", resize:"vertical", boxSizing:"border-box", marginBottom:12 }} />
+
+                  <button onClick={function() { setAnnouncementSent(true); setTimeout(function() { setAnnouncementSent(false); setAnnouncement(""); }, 2000); }} style={{ background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"11px 24px", fontSize:13, fontWeight:700, cursor:"pointer" }}>
+
+                    {announcementSent ? "✅ Gönderildi!" : "Gönder"}
+
+                  </button>
+
+                </div>
+
+                <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:16, padding:24 }}>
+
+                  <div style={{ fontSize:15, fontWeight:700, color:"#fff", marginBottom:6 }}>🎭 Kullanıcı Olarak Giriş</div>
+
+                  <div style={{ fontSize:12, color:"#666677", marginBottom:16 }}>Herhangi bir kullanıcının hesabına giriş yap (test/destek)</div>
+
+                  <div style={{ display:"flex", flexDirection:"column", gap:8, maxHeight:240, overflowY:"auto" }}>
+
+                    {users.slice(0,8).map(function(u, i) {
+
+                      var pn = planName(u);
+
+                      var pc = planColor(pn);
+
+                      return (
+
+                        <div key={i} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"10px 14px", background:"rgba(255,255,255,0.03)", borderRadius:10, border:"1px solid rgba(255,255,255,0.06)" }}>
+
+                          <div>
+
+                            <div style={{ fontSize:13, fontWeight:600, color:"#fff" }}>{u.name||"-"}</div>
+
+                            <div style={{ fontSize:11, color:"#666677" }}>{u.email}</div>
+
+                          </div>
+
+                          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+
+                            <span style={{ background:pc+"22", color:pc, borderRadius:20, padding:"2px 8px", fontSize:10, fontWeight:700 }}>{pn}</span>
+
+                            <button onClick={function() { enterAsUser(u); }} style={{ background:"rgba(239,68,68,0.15)", border:"1px solid rgba(239,68,68,0.3)", borderRadius:7, padding:"5px 10px", color:"#fca5a5", fontSize:11, cursor:"pointer" }}>Giriş</button>
+
+                          </div>
+
+                        </div>
+
+                      );
+
+                    })}
+
+                  </div>
+
+                </div>
+
+                <div style={{ background:"rgba(239,68,68,0.04)", border:"1px solid rgba(239,68,68,0.15)", borderRadius:16, padding:24 }}>
+
+                  <div style={{ fontSize:15, fontWeight:700, color:"#ef4444", marginBottom:6 }}>⚠️ Tehlikeli Alan</div>
+
+                  <div style={{ fontSize:12, color:"#888899", marginBottom:16 }}>Bu işlemler geri alınamaz</div>
+
+                  <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+
+                    <button style={{ background:"rgba(239,68,68,0.1)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:10, padding:"11px 16px", color:"#fca5a5", fontSize:13, cursor:"pointer", textAlign:"left" }}>🗑️ Tüm cache'i temizle</button>
+
+                    <button style={{ background:"rgba(239,68,68,0.1)", border:"1px solid rgba(239,68,68,0.25)", borderRadius:10, padding:"11px 16px", color:"#fca5a5", fontSize:13, cursor:"pointer", textAlign:"left" }}>📊 Test kullanıcılarını sil</button>
+
+                  </div>
+
+                </div>
+
+                <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:16, padding:24 }}>
+
+                  <div style={{ fontSize:15, fontWeight:700, color:"#fff", marginBottom:6 }}>📈 Platform Durumu</div>
+
+                  <div style={{ display:"flex", flexDirection:"column", gap:12, marginTop:16 }}>
+
+                    {[["🟢 Proxy API","Aktif"],["🟢 Supabase DB","Bağlı"],["🟢 Lemon Squeezy","Aktif"],["🟡 Lemon Squeezy Store","İncelemede"]].map(function(item) {
+
+                      return (
+
+                        <div key={item[0]} style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"10px 0", borderBottom:"1px solid rgba(255,255,255,0.05)" }}>
+
+                          <span style={{ fontSize:13, color:"#ccccdd" }}>{item[0]}</span>
+
+                          <span style={{ fontSize:12, color: item[1]==="Aktif"||item[1]==="Bağlı" ? "#10a37f" : "#f59e0b", fontWeight:600 }}>{item[1]}</span>
+
+                        </div>
+
+                      );
+
+                    })}
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            )}
+
+          </div>
+
+        )}
+
+      </div>
+
+      {selectedUser && (
+
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.85)", zIndex:500, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }} onClick={function() { setSelectedUser(null); }}>
+
+          <div style={{ background:"#0d0d1f", border:"1px solid rgba(255,255,255,0.12)", borderRadius:20, padding:32, maxWidth:460, width:"100%", boxShadow:"0 24px 80px rgba(0,0,0,0.6)" }} onClick={function(e) { e.stopPropagation(); }}>
+
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24 }}>
+
+              <div style={{ display:"flex", alignItems:"center", gap:14 }}>
+
+                <div style={{ width:52, height:52, borderRadius:"50%", background:"rgba(212,168,83,0.15)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, color:"#d4a853", fontSize:22 }}>
+
+                  {(selectedUser.name||"?")[0].toUpperCase()}
+
+                </div>
+
+                <div>
+
+                  <div style={{ fontSize:18, fontWeight:700, color:"#fff" }}>{selectedUser.name||"-"}</div>
+
+                  <div style={{ fontSize:13, color:"#888899" }}>{selectedUser.email}</div>
+
+                </div>
+
+              </div>
+
+              <button onClick={function() { setSelectedUser(null); }} style={{ background:"transparent", border:"none", color:"#666677", fontSize:22, cursor:"pointer" }}>✕</button>
+
+            </div>
+
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
+
+              {[
+
+                { label:"Plan", val:planName(selectedUser), color:planColor(planName(selectedUser)) },
+
+                { label:"XP", val:(selectedUser.xp||0)+" XP", color:"#d4a853" },
+
+                { label:"Streak", val:(selectedUser.streak||0)+" gün", color:"#10a37f" },
+
+                { label:"Kayıt", val:fmt(selectedUser.created_at||selectedUser.createdAt), color:"#6366f1" },
+
+                { label:"Son Giriş", val:fmt(selectedUser.last_seen||selectedUser.lastSeen), color:"#888899" },
+
+                { label:"İlerleme", val:Object.keys(selectedUser.progress||{}).length+"/28 ders", color:"#d4a853" },
+
+              ].map(function(item) {
+
+                return (
+
+                  <div key={item.label} style={{ background:"rgba(255,255,255,0.03)", borderRadius:12, padding:"14px 16px" }}>
+
+                    <div style={{ fontSize:11, color:"#555577", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{item.label}</div>
+
+                    <div style={{ fontSize:15, fontWeight:700, color:item.color }}>{item.val}</div>
+
+                  </div>
+
+                );
+
+              })}
+
+            </div>
+
+          </div>
+
+        </div>
+
+      )}
+
     </div>
+
   );
+
 }
 
 function Login(props) {
