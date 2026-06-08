@@ -2431,7 +2431,7 @@ function Lesson(props) {
     } catch(e) {}
 
     var allCards = [];
-    var totalBatches = 10;
+    var totalBatches = 9;
     var CONCURRENT = 1;
     var completed = 0;
 
@@ -2445,7 +2445,8 @@ function Lesson(props) {
       "Yaygın hatalar ve çözümleri — kullanıcıların en sık yaptığı 5 hata. Her hata için: Hata nedir, neden olur, nasıl düzeltilir, nasıl önlenir. Öncesi/sonrası örneklerle karşılaştırmalı anlat.",
       "Verimlilik ve otomasyon — tekrar eden işleri nasıl otomatikleştirirsin, şablonlar nasıl oluşturursun, diğer araçlarla nasıl entegre edersin, günde kaç saat kazanabilirsin.",
       "Ücretsiz vs ücretli plan derinlemesine karşılaştırma — hangi özellikler ücretsiz, hangisi ücretli, para vermeye değer mi, alternatifler var mı, hangi kullanıcı tipi için hangi plan uygundur.",
-      "Uzman seviyesi ipuçları — bu aracı profesyonel düzeyde kullanan kişilerin stratejileri, sektöre özel kullanım örnekleri ve gerçek başarı hikayeleri."
+      "Uzman seviyesi ipuçları — bu aracı profesyonel düzeyde kullanan kişilerin stratejileri, sektöre özel kullanım örnekleri ve gerçek başarı hikayeleri.",
+      "Sen hem " + lesson.tool + " aracının uzman eğitmenisin hem de deneyimli bir AI pedagogusun. Öğrencinin bu aracı gerçekten içselleştirmesini ve ustalaşmasını sağlamak için interaktif bir ders tasarlıyorsun.\n\nAşağıdaki 5 farklı konuda birer EĞİTİM ODAKLI ders kartı üret:\n1. Öğrenme yol haritası — bu aracı sıfırdan ustaya giden 30 günlük öğrenme planı\n2. Pratik egzersizler — hemen yapılabilecek 5 alıştırma ve uygulama görevi\n3. Sık sorulan sorular — yeni başlayanların en çok kafasını karıştıran 5 soru ve net cevapları\n4. Öz değerlendirme — 'Bu aracı ne kadar iyi kullanıyorum?' sorusuna cevap verecek 5 kriter\n5. Bir sonraki seviyeye geçiş — bu aracı öğrendikten sonra hangi araçları ve becerileri öğrenmelisin\n\nHer kart EĞİTİM ODAKLI ve MOTİVE EDİCİ olmalı:\n- Öğrenciye doğrudan seslenen, sen dili\n- Somut alıştırma ve görev içeren\n- Başarı kriteri ve ölçüm yöntemi olan\n- Motivasyon artırıcı, cesaret verici ton\n- Gerçek öğrenci başarı hikayesi\n\nSADECE JSON döndür:\n[{\"title\":\"başlık\",\"content\":\"açıklama\\n\\n💡 Gerçek Örnek: örnek\\n\\n📊 Adımlar:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ Pro İpucu: ipucu\",\"icon\":\"emoji\"}]"
     ];
 
     function fetchBatch(batchIndex, onDone) {
