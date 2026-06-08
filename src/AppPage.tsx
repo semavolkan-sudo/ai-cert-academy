@@ -196,10 +196,10 @@ var MOCK_LB = [
 
 var DEFAULT_QUIZ = [
   { q:"Bu AI aracinin temel kullanım amaci nedir?",          opts:["Yalnizca gorsel uretim","Yalnizca kod yazma","Genel amacli uretkenlik","Yalnizca veri analizi"],                          ans:2 },
-  { q:"Prompt engineering'de en onemli unsur nedir?",        opts:["Kısa yazmak","Net ve baglamli talimatlar","Ingilizce kullanmak","Büyük harf kullanmak"],                                  ans:1 },
-  { q:"AI araclarinin is dunyasindaki en büyük avantaji?",    opts:["Maliyeti sifirlamak","Calisanlari isten cikarmak","Tekrarlayan gorevleri otomatize etmek","Internetsiz çalışmak"],         ans:2 },
-  { q:"AI ciktilarini kullanirken en kritik adım?",           opts:["Hepsini direkt kullanmak","Dogrulamak ve duzenlemek","Ingilizce cevirmek","Kaydetmek"],                                    ans:1 },
-  { q:"En verimli calisma yontemi hangisidir?",               opts:["Tek seferlik uzun soru","Iteratif prompt zinciri","Şablonları kopyalamak","Baskasinin promptlarini kullanmak"],            ans:1 },
+  { q:"Prompt engineering'de en önemli unsur nedir?",        opts:["Kısa yazmak","Net ve bağlamlı talimatlar","İngilizce kullanmak","Büyük harf kullanmak"],                                  ans:1 },
+  { q:"AI araclarinin iş dünyasındaki en büyük avantajı?",    opts:["Maliyeti sıfırlamak","Çalışanları işten çıkarmak","Tekrarlayan görevleri otomatize etmek","Internetsiz çalışmak"],         ans:2 },
+  { q:"AI çıktılarını kullanırken en kritik adım?",           opts:["Hepsini direkt kullanmak","Doğrulamak ve düzenlemek","İngilizce çevirmek","Kaydetmek"],                                    ans:1 },
+  { q:"En verimli çalışma yöntemi hangisidir?",               opts:["Tek seferlik uzun soru","Iteratif prompt zinciri","Şablonları kopyalamak","Başkasının promptlarini kullanmak"],            ans:1 },
 ];
 
 // ─── PAYMENT LINKS ───────────────────────────────────────────────────────────
@@ -306,12 +306,12 @@ function generateCertificate(userName, tier, totalXP) {
   ctx.fillStyle = "#d4a853"; ctx.font = "bold 88px Georgia"; ctx.textAlign = "center"; ctx.fillText("AI", 700, 200);
   ctx.fillStyle = "#ffffff"; ctx.font = "bold 52px Georgia"; ctx.fillText("Certification Academy", 700, 270);
   ctx.fillStyle = "rgba(212,168,83,0.35)"; ctx.fillRect(250, 295, 900, 3);
-  ctx.fillStyle = "#9999bb"; ctx.font = "italic 26px Georgia"; ctx.fillText("Bu belge, asagidaki kisinin", 700, 345);
-  ctx.fillStyle = "#d4a853"; ctx.font = "bold 60px Georgia"; ctx.fillText(userName || "Katilimci", 700, 430);
+  ctx.fillStyle = "#9999bb"; ctx.font = "italic 26px Georgia"; ctx.fillText("Bu belge, aşağıdaki kişinin", 700, 345);
+  ctx.fillStyle = "#d4a853"; ctx.font = "bold 60px Georgia"; ctx.fillText(userName || "Katılımcı", 700, 430);
   ctx.fillStyle = "rgba(212,168,83,0.35)"; ctx.fillRect(350, 455, 700, 2);
   ctx.fillStyle = "#ffffff"; ctx.font = "24px Georgia";
   ctx.fillText("28 Günlük AI Sertifika Programını başarıyla tamamladığını", 700, 505);
-  ctx.fillText("ve tüm sınav ve degerlendirmelerden gectigini onaylar.", 700, 540);
+  ctx.fillText("ve tüm sınav ve değerlendirmelerden geçtiğini onaylar.", 700, 540);
   var tierColors = { Temel:"#6366f1", Premium:"#d4a853", Kurumsal:"#10a37f" };
   ctx.fillStyle = tierColors[tier] || "#d4a853"; ctx.font = "bold 22px Georgia";
   ctx.fillText(tier + " Sertifika | Toplam XP: " + totalXP, 700, 590);
@@ -347,7 +347,7 @@ function UpgradeModal(props) {
           <button onClick={props.onClose}
             onMouseEnter={function(e){ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(201,168,76,0.45)"; }}
             onMouseLeave={function(e){ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=SHADOW_GOLD; }}
-            style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:12, padding:"12px 26px", fontWeight:700, cursor:"pointer", fontSize:13, boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>Plani Yükselt</button>
+            style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:12, padding:"12px 26px", fontWeight:700, cursor:"pointer", fontSize:13, boxShadow:SHADOW_GOLD, transition:"all 0.2s ease", fontFamily:FONT, letterSpacing:"0.3px" }}>Planı Yükselt</button>
         </div>
       </div>
     </div>
@@ -374,7 +374,7 @@ function Onboarding(props) {
       <div style={{ width:"100%", maxWidth:500 }}>
         <div style={{ textAlign:"center", marginBottom:36 }}>
           <div style={{ fontSize:36, fontWeight:800, color:GOLD }}>AI</div>
-          <div style={{ color:"#888899", fontSize:13, marginTop:4 }}>Kisisellestirilmis öğrenme yolu oluşturuluyor</div>
+          <div style={{ color:"#888899", fontSize:13, marginTop:4 }}>Kişiselleştirilmiş öğrenme yolu oluşturuluyor</div>
         </div>
         <div style={{ background:"rgba(255,255,255,0.06)", borderRadius:100, height:4, marginBottom:28, overflow:"hidden" }}>
           <div style={{ width:(((step+1)/qs.length)*100)+"%", height:"100%", background:GOLD, borderRadius:100 }} />
@@ -512,7 +512,7 @@ function Landing(props) {
   return (
     <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, backgroundImage:"radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize:"32px 32px" }}>
       <div style={{ position:"relative", textAlign:"center", padding:"72px 20px 80px", background:"radial-gradient(ellipse at 50% 0%,rgba(124,92,252,0.18) 0%,rgba(201,168,76,0.10) 30%,transparent 70%)" }}>
-        <div style={{ display:"inline-block", background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.4)", borderRadius:100, padding:"7px 18px", fontSize:12, color:GOLD2, marginBottom:28, fontFamily:FONT_MONO }}>{"Bu ay " + count + " kisi kayit oldu"}</div>
+        <div style={{ display:"inline-block", background:"rgba(201,168,76,0.10)", border:"1px solid rgba(201,168,76,0.4)", borderRadius:100, padding:"7px 18px", fontSize:12, color:GOLD2, marginBottom:28, fontFamily:FONT_MONO }}>{"Bu ay " + count + " kişi kayıt oldu"}</div>
         <div style={{ fontSize:80, fontWeight:800, lineHeight:1, background:"linear-gradient(135deg,#f5cc6a,#7c5cfc)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>AI</div>
         <div style={{ fontSize:36, fontWeight:700, marginBottom:20, color:TEXT }}>Certification Academy</div>
         <p style={{ fontSize:16, color:TEXT2, maxWidth:460, margin:"0 auto 40px", lineHeight:1.65 }}>28 araç - 28 gün - Günde 15 dakika<br/><span style={{ color:GOLD2 }}>AI sertifikanı kazan, kariyerini dönüştür.</span></p>
@@ -835,7 +835,7 @@ function AdminPanel(props) {
                   <div key={pn} style={{ marginBottom:20 }}>
                     <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
                       <span style={{ fontWeight:600, color:pc }}>{pn}</span>
-                      <span style={{ color:"#888899" }}>{count} kullanici ({pct}%)</span>
+                      <span style={{ color:"#888899" }}>{count} kullanıcı ({pct}%)</span>
                     </div>
                     <div style={{ height:10, background:"rgba(255,255,255,0.06)", borderRadius:5, overflow:"hidden" }}>
                       <div style={{ width:pct+"%", height:"100%", background:pc, borderRadius:5, transition:"width 0.6s" }} />
@@ -847,7 +847,7 @@ function AdminPanel(props) {
           )}
         </div>
         <div style={{ marginTop:12, textAlign:"right", fontSize:11, color:"#555577" }}>
-          Son guncelleme: {fmt(Date.now())} · {total} kullanici
+          Son güncelleme: {fmt(Date.now())} · {total} kullanıcı
         </div>
       </div>
     </div>
@@ -1366,7 +1366,7 @@ function Lesson(props) {
       { key:"SEKTOR_KULLANIM_2",icon:"N",title:"Saglik Sektorunde Kullanım",   color:"#10b981" },
       { key:"SEKTOR_KULLANIM_3",icon:"N",title:"Egitim Sektorunde Kullanım",   color:"#10b981" },
       { key:"SEKTOR_KULLANIM_4",icon:"N",title:"Yaratici Endustriler",         color:"#10b981" },
-      { key:"OTOMASYON_AKISI", icon:"O", title:"Otomasyon Akisi Kur",          color:"#8b5cf6" },
+      { key:"OTOMASYON_AKISI", icon:"O", title:"Otomasyon Akışı Kur",          color:"#8b5cf6" },
       { key:"VAKA_CALISMASI",  icon:"Q", title:"Gerçek Vaka Calismasi",        color:"#f59e0b" },
       { key:"SERTIFIKA_HAZIRLIK",icon:"J",title:"Sertifika Hazirlik",          color:"#d4a853" },
     ];
@@ -1407,7 +1407,7 @@ function Lesson(props) {
       },
       {
         icon: "!", title: "En Çok Yapılan 3 Hata", color: "#ef4444",
-        body: "HATA 1 - Belirsiz Sormak:\n'Bana bir şey anlat' yerine net hedef, format ve ton belirt. Belirsizlik = ortalama sonuc.\n\nHATA 2 - Tek Seferlik Kullanım:\nGercek gu cu iterasyonda. 'Su satirlari düzenle', 'Daha kısa yap', 'B2B tona çevir' diyerek gelistir.\n\nHATA 3 - Dogrulamadan Kullanmak:\nYapay zeka yanilabilir. Ozellikle tarih, istatistik ve hukuki bilgileri mutlaka dogrula."
+        body: "HATA 1 - Belirsiz Sormak:\n'Bana bir şey anlat' yerine net hedef, format ve ton belirt. Belirsizlik = ortalama sonuç.\n\nHATA 2 - Tek Seferlik Kullanım:\nGerçek güç iterasyonda. 'Şu satırları düzenle', 'Daha kısa yap', 'B2B tona çevir' diyerek geliştir.\n\nHATA 3 - Doğrulamadan Kullanmak:\nYapay zeka yanılabilir. Özellikle tarih, istatistik ve hukuki bilgileri mutlaka doğrula."
       },
     ];
   }
@@ -1757,7 +1757,7 @@ function Auth(props) {
     if (tab === "register") {
       if (!name) { setErr("Ad Soyad gerekli"); return; }
       if (email.indexOf("@") < 0) { setErr("Geçerli email girin"); return; }
-      if (pass !== pass2) { setErr("Sifreler eslesmiyor"); return; }
+      if (pass !== pass2) { setErr("Şifreler eşleşmiyor"); return; }
       if (!terms) { setErr("Devam etmek için koşulları kabul et"); return; }
       if (emailExists(email)) { setErr("Bu email zaten kayıtlı. Giriş Yap'a geç."); return; }
       setLoading(true);
@@ -1806,7 +1806,7 @@ function Auth(props) {
       setTerms(false);
       setTab("login");
       setEmail(savedEmail);
-      setInfo("Hesabın dogrulandi! Sifrenle giriş yap.");
+      setInfo("Hesabın doğrulandı! Şifrenle giriş yap.");
     }, 500);
   }
 
@@ -1854,7 +1854,7 @@ function Auth(props) {
                 <div style={{ fontSize:40, marginBottom:10 }}>✉️</div>
                 <div style={{ fontSize:20, fontWeight:800, color:TEXT, marginBottom:6 }}>Email Doğrulama</div>
                 <div style={{ fontSize:13, color:TEXT2, lineHeight:1.5 }}>
-                  <span style={{ color:GOLD2, fontWeight:600 }}>{pendingUser ? pendingUser.email : email}</span> adresine gonderdigimiz 6 haneli kodu gir.
+                  <span style={{ color:GOLD2, fontWeight:600 }}>{pendingUser ? pendingUser.email : email}</span> adresine gönderdiğimiz 6 haneli kodu gir.
                 </div>
               </div>
               <div style={{ marginBottom:14 }}>
