@@ -932,6 +932,22 @@ function AdminPanel(props) {
 
   }
 
+  function getUserStatus(u) {
+    if (u && u._status) return u._status;
+    return lsGet("user-status-" + (u && u.email ? u.email : "")) === "pasif" ? "pasif" : "aktif";
+  }
+
+  function toggleStatus(u) {
+    var key = "user-status-" + u.email;
+    var current = lsGet(key);
+    if (current === "pasif") {
+      lsRemove(key);
+    } else {
+      lsSet(key, "pasif");
+    }
+    setUsers(function(prev) { return prev.map(function(x) { return x.email === u.email ? Object.assign({}, x, { _status: current === "pasif" ? "aktif" : "pasif" }) : x; }); });
+  }
+
   return (
 
     <div style={{ minHeight:"100vh", background:"#070711", color:"#fff", fontFamily:"'Inter',sans-serif" }}>
