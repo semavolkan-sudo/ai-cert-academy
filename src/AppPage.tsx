@@ -3023,6 +3023,9 @@ function PlanSelectInner(props) {
   var [couponResult, setCouponResult] = useState(null);
   var [couponLoading, setCouponLoading] = useState(false);
 
+  var userCoupon = null;
+  try { var suPC = lsGet("aica-user"); if (suPC) { var puPC = JSON.parse(suPC); userCoupon = puPC.coupon || null; } } catch(e) {}
+
   function applyCoupon() {
     if (!couponCode.trim()) return;
     setCouponLoading(true);
@@ -3052,10 +3055,20 @@ function PlanSelectInner(props) {
                 style={{ background: plan.popular ? "linear-gradient(145deg, rgba(201,168,76,0.12), rgba(124,92,252,0.06))" : "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border:"1px solid "+(plan.popular?"rgba(201,168,76,0.45)":CARD_BORDER2), borderRadius:24, padding:32, position:"relative", boxShadow: plan.popular ? "0 8px 32px rgba(201,168,76,0.20), inset 0 1px 0 rgba(255,255,255,0.1)" : "0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)", transition:"all 0.2s ease" }}>
                 {plan.popular && <div style={{ position:"absolute", top:-12, left:"50%", transform:"translateX(-50%)", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", fontSize:11, fontWeight:800, padding:"5px 18px", borderRadius:100, letterSpacing:"1px", boxShadow:SHADOW_GOLD, textTransform:"uppercase" }}>En Popüler</div>}
                 <div style={{ fontSize:14, fontWeight:700, marginBottom:8, color:TEXT2, textTransform:"uppercase", letterSpacing:"1.5px" }}>{plan.name}</div>
-                <div style={{ display:"flex", alignItems:"baseline", gap:6, marginBottom:24 }}>
-                  <span style={{ fontSize:48, fontWeight:800, color: plan.popular ? GOLD2 : plan.color, fontFamily:FONT_MONO, letterSpacing:"-0.03em" }}>{"$"+plan.price}</span>
-                  <span style={{ color:TEXT2, fontSize:13, fontFamily:FONT_MONO }}>/ay</span>
-                </div>
+                {userCoupon && !userCoupon.isFree && userCoupon.discount ? (
+                  <div style={{ marginBottom:24 }}>
+                    <div style={{ fontSize:14, color:"#888899", textDecoration:"line-through" }}>${plan.price}/ay</div>
+                    <div style={{ fontSize:36, fontWeight:800, color: plan.popular ? GOLD2 : plan.color, fontFamily:FONT_MONO }}>
+                      ${Math.round(plan.price * (1 - userCoupon.discount/100))}<span style={{ fontSize:14, color:"#888899" }}>/ay</span>
+                    </div>
+                    <div style={{ fontSize:11, color:"#10a37f", fontWeight:600 }}>%{userCoupon.discount} indirim uygulandı</div>
+                  </div>
+                ) : (
+                  <div style={{ display:"flex", alignItems:"baseline", gap:6, marginBottom:24 }}>
+                    <span style={{ fontSize:48, fontWeight:800, color: plan.popular ? GOLD2 : plan.color, fontFamily:FONT_MONO, letterSpacing:"-0.03em" }}>{"$"+plan.price}</span>
+                    <span style={{ color:TEXT2, fontSize:13, fontFamily:FONT_MONO }}>/ay</span>
+                  </div>
+                )}
                 <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:26 }}>
                   {plan.features.map(function(f) {
                     return <div key={f} style={{ display:"flex", gap:10, alignItems:"flex-start", fontSize:13, color:TEXT, lineHeight:1.5 }}><span style={{ color: plan.popular ? GOLD2 : plan.color, fontWeight:800, flexShrink:0 }}>✓</span>{f}</div>;
