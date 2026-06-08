@@ -195,7 +195,7 @@ var MOCK_LB = [
 ];
 
 var DEFAULT_QUIZ = [
-  { q:"Bu AI aracinin temel kullanım amaci nedir?",          opts:["Yalnizca gorsel uretim","Yalnizca kod yazma","Genel amacli uretkenlik","Yalnizca veri analizi"],                          ans:2 },
+  { q:"Bu AI aracının temel kullanım amacı nedir?",          opts:["Yalnızca görsel üretim","Yalnızca kod yazma","Genel amaçlı üretkenlik","Yalnızca veri analizi"],                          ans:2 },
   { q:"Prompt engineering'de en önemli unsur nedir?",        opts:["Kısa yazmak","Net ve bağlamlı talimatlar","İngilizce kullanmak","Büyük harf kullanmak"],                                  ans:1 },
   { q:"AI araçlarının iş dünyasındaki en büyük avantajı?",    opts:["Maliyeti sıfırlamak","Çalışanları işten çıkarmak","Tekrarlayan görevleri otomatize etmek","İnternetsiz çalışmak"],         ans:2 },
   { q:"AI çıktılarını kullanırken en kritik adım?",           opts:["Hepsini direkt kullanmak","Doğrulamak ve düzenlemek","İngilizce çevirmek","Kaydetmek"],                                    ans:1 },
@@ -360,7 +360,7 @@ function Onboarding(props) {
   var [ans, setAns] = useState({});
   var qs = [
     { q:"AI araçları hakkinda deneyim seviyeniz?",       opts:["Hiç kullanmadim","Birkac kez denedim","Duzenli kullaniyorum","Profesyonel duzey"] },
-    { q:"Oncelikli hedefiniz nedir?",                    opts:["Kariyerimi gelistirmek","Kendi isimi kurmak","Freelance gelir","Genel merak"] },
+    { q:"Öncelikli hedefiniz nedir?",                    opts:["Kariyerimi geliştirmek","Kendi işimi kurmak","Freelance gelir","Genel merak"] },
     { q:"Günde ne kadar sure ayirabilirsiniz?",          opts:["10-15 dakika","30 dakika","1 saat","1 saatten fazla"] },
     { q:"Hangi AI kategorisi en çok ilginizi çekiyor?",  opts:["Metin ve Yazarlık","Görsel ve Video","Otomasyon","Hepsi eşit"] },
   ];
@@ -1395,7 +1395,7 @@ function Lesson(props) {
       },
       {
         icon: "O", title: "Temel Özellikler", color: "#d4a853",
-        body: "- Metin Üretimi: Tek bir açıklama ile profesyonel seviyede içerik, email, rapor ve kod üretir\n- Bağlamsal Anlama: Önceki mesajları hatırlar, uzun konuşmalarda tutarlı kalır\n- Çok Dilli Destek: Türkçe dahil 50+ dilde akıcı ve doğal yanıt verir\n- Dosya Analizi: PDF, Word, Excel ve görsel dosyaları yükleyerek analiz ettirebilirsin\n- Kod Yazma: Python, JavaScript, SQL ve daha fazlasinda kod yazar, hata ayıklar"
+        body: "- Metin Üretimi: Tek bir açıklama ile profesyonel seviyede içerik, email, rapor ve kod üretir\n- Bağlamsal Anlama: Önceki mesajları hatırlar, uzun konuşmalarda tutarlı kalır\n- Çok Dilli Destek: Türkçe dahil 50+ dilde akıcı ve doğal yanıt verir\n- Dosya Analizi: PDF, Word, Excel ve görsel dosyaları yükleyerek analiz ettirebilirsin\n- Kod Yazma: Python, JavaScript, SQL ve daha fazlasında kod yazar, hata ayıklar"
       },
       {
         icon: "B", title: "Baslangic: Ilk 3 Adım", color: "#10a37f",
