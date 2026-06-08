@@ -151,6 +151,94 @@ var TEST_USERS = {
   "testbiz@aicert.com":  { name:"TestBusiness", plan:"Business", pass:"TestSema1605", paid:true  },
 };
 
+var TERMS_TEXT = `
+KULLANIM KOŞULLARI
+Son güncelleme: Haziran 2026
+
+1. TARAFLAR
+Bu Kullanım Koşulları, AI Certification Academy ("Platform") ile platformu kullanan kişi ("Kullanıcı") arasındaki ilişkiyi düzenler.
+
+2. HİZMET KAPSAMI
+Platform; yapay zeka araçlarına yönelik online eğitim içerikleri, interaktif dersler, sınavlar ve sertifika programları sunmaktadır. İçerikler yalnızca abonelik planı satın alınmış kullanıcılara açıktır.
+
+3. ÜYELİK VE GÜVENLİK
+- Kayıt sırasında doğru bilgi vermek zorunludur.
+- Hesap bilgilerinizin güvenliğinden siz sorumlusunuz.
+- Hesabınızı başkasıyla paylaşmak yasaktır.
+- Şüpheli aktivite tespit edilirse hesap askıya alınabilir.
+
+4. ÖDEME VE İADE
+- Abonelik ücretleri Lemon Squeezy altyapısı üzerinden tahsil edilir.
+- Aylık abonelikler, iptal edilmediği sürece otomatik yenilenir.
+- Satın alma tarihinden itibaren 7 gün içinde iade talep edilebilir.
+- Sertifika alındıktan sonra iade yapılmaz.
+
+5. İÇERİK KULLANIMI
+- Platform içerikleri yalnızca kişisel eğitim amaçlıdır.
+- İçeriklerin kopyalanması, dağıtılması veya satılması yasaktır.
+- AI Mentor ile yapılan konuşmalar eğitim amaçlıdır; profesyonel tavsiye niteliği taşımaz.
+
+6. HİZMET DEĞİŞİKLİKLERİ
+Platform, önceden bildirim yapmaksızın içerik ve özellikleri güncelleyebilir. Abonelik fiyatları değiştiğinde kullanıcılara e-posta ile bildirim yapılır.
+
+7. SORUMLULUK SINIRI
+Platform, kullanıcının öğrendiklerini uygulayarak elde ettiği sonuçlardan sorumlu tutulamaz. Hizmet kesintilerinden doğan zararlar için tazminat ödenmez.
+
+8. UYGULANACAK HUKUK
+Bu sözleşme Türkiye Cumhuriyeti hukukuna tabidir. Uyuşmazlıklarda İstanbul mahkemeleri yetkilidir.
+
+İletişim: info@aicert.com
+`;
+
+var PRIVACY_TEXT = `
+GİZLİLİK POLİTİKASI
+Son güncelleme: Haziran 2026
+
+1. VERİ SORUMLUSU
+AI Certification Academy, 6698 sayılı KVKK kapsamında veri sorumlusudur.
+
+2. TOPLANAN VERİLER
+- Kimlik: Ad, soyad, e-posta adresi
+- Kullanım: Ders ilerlemesi, sınav sonuçları, XP puanı, giriş zamanları
+- Teknik: IP adresi, tarayıcı türü, cihaz bilgisi
+- Ödeme: Ödeme işlemleri Lemon Squeezy tarafından yönetilir; kart bilgisi platformda saklanmaz.
+
+3. VERİLERİN KULLANIMI
+Toplanan veriler şu amaçlarla kullanılır:
+- Eğitim içeriklerinin kişiselleştirilmesi
+- Abonelik ve fatura yönetimi
+- Platform güvenliğinin sağlanması
+- Kullanıcı desteği
+- Yasal yükümlülüklerin yerine getirilmesi
+
+4. VERİ SAKLAMA
+Veriler, üyelik süresince ve sonrasında 3 yıl boyunca saklanır. Hesap silme talebinde veriler 30 gün içinde imha edilir.
+
+5. VERİLERİN PAYLAŞIMI
+Verileriniz üçüncü taraflarla satılmaz. Yalnızca şu durumlarda paylaşılır:
+- Lemon Squeezy (ödeme altyapısı)
+- Supabase (veri tabanı altyapısı)
+- Yasal zorunluluk halleri
+
+6. KVKK HAKLARI
+KVKK madde 11 kapsamında şu haklarınız bulunmaktadır:
+- Verilerinizin işlenip işlenmediğini öğrenme
+- İşlenen verilere erişim
+- Hatalı verilerin düzeltilmesini isteme
+- Verilerin silinmesini talep etme
+- İşlemeye itiraz etme
+
+Talepleriniz için: info@aicert.com
+
+7. ÇEREZLER
+Platform, oturum yönetimi için localStorage kullanır. Üçüncü taraf reklam çerezi kullanılmaz.
+
+8. DEĞİŞİKLİKLER
+Politika değişikliklerinde kullanıcılara e-posta ile bildirim yapılır.
+
+İletişim: info@aicert.com
+`;
+
 function buildPaymentUrl(planName, email) {
   var base = PAYMENT_LINKS[planName];
   if (!base) return "";
@@ -211,6 +299,27 @@ function loadTeam(ownerId) {
 function saveTeam(ownerId, team) {
   try { lsSet(getTeamKey(ownerId), JSON.stringify(team)); } catch(e) {}
 }
+
+// ─── LEGAL MODAL ─────────────────────────────────────────────────────────────
+function LegalModal(props) {
+  return (
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.80)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:800, display:"flex", alignItems:"center", justifyContent:"center", padding:24, fontFamily:FONT }}>
+      <div style={{ background:"linear-gradient(145deg, rgba(13,13,31,0.95), rgba(7,7,17,0.95))", backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)", border:"1px solid "+CARD_BORDER2, borderRadius:24, padding:0, maxWidth:600, width:"100%", maxHeight:"80vh", display:"flex", flexDirection:"column", boxShadow:"0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"20px 28px", borderBottom:"1px solid "+CARD_BORDER }}>
+          <h2 style={{ color:"#fff", fontWeight:700, fontSize:18, margin:0 }}>{props.title}</h2>
+          <button onClick={props.onClose} style={{ background:"rgba(255,255,255,0.05)", border:"1px solid "+CARD_BORDER, color:TEXT2, cursor:"pointer", fontSize:18, width:32, height:32, borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center" }}>✕</button>
+        </div>
+        <div style={{ padding:"20px 28px", overflowY:"auto", flex:1, color:TEXT, fontSize:13, lineHeight:1.8, whiteSpace:"pre-wrap" }}>
+          {props.text}
+        </div>
+        <div style={{ padding:"16px 28px", borderTop:"1px solid "+CARD_BORDER, display:"flex", justifyContent:"flex-end" }}>
+          <button onClick={props.onClose} style={{ background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:10, padding:"10px 22px", fontWeight:700, cursor:"pointer", fontSize:13, fontFamily:FONT }}>Anladım, Kapat</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 function createTeam(owner) {
   var team = {
@@ -572,6 +681,8 @@ function Register(props) {
   var [pass, setPass] = useState("");
   var [err, setErr] = useState("");
   var [loading, setLoading] = useState(false);
+  var [showTerms, setShowTerms] = useState(false);
+  var [showPrivacy, setShowPrivacy] = useState(false);
   var inviteData = props.inviteData;
 
   function submit() {
@@ -625,12 +736,17 @@ function Register(props) {
             style={{ width:"100%", background: loading ? "#444" : "linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"13px 0", fontSize:15, fontWeight:700, cursor: loading ? "not-allowed" : "pointer", marginTop:6 }}>
             {loading ? "Kayıt oluşturuluyor..." : "Kayıt Ol"}
           </button>
-          <p style={{ textAlign:"center", marginTop:16, fontSize:12, color:"#555577" }}>
+          <p style={{ textAlign:"center", marginTop:12, fontSize:11, color:"#555577" }}>
+            Kayıt olarak <button onClick={function() { setShowTerms(true); }} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:11, textDecoration:"underline" }}>Kullanım Koşulları</button> ve <button onClick={function() { setShowPrivacy(true); }} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:11, textDecoration:"underline" }}>Gizlilik Politikası</button>'nı kabul etmiş olursun.
+          </p>
+          <p style={{ textAlign:"center", marginTop:10, fontSize:12, color:"#555577" }}>
             Zaten hesabın var mi?
             <button onClick={props.onLogin} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:12, marginLeft:4 }}>Giriş Yap</button>
           </p>
         </div>
       </div>
+      {showTerms && <LegalModal title="Kullanım Koşulları" text={TERMS_TEXT} onClose={function() { setShowTerms(false); }} />}
+      {showPrivacy && <LegalModal title="Gizlilik Politikası" text={PRIVACY_TEXT} onClose={function() { setShowPrivacy(false); }} />}
     </div>
   );
 }
