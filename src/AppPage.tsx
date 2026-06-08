@@ -690,19 +690,55 @@ function Register(props) {
     if (email.indexOf("@") < 0) { setErr("Geçerli email girin"); return; }
     if (pass.length < 6) { setErr("Şifre en az 6 karakter"); return; }
     if (emailExists(email)) { setErr("Bu email zaten kayıtlı. Giriş Yap butonunu kullan."); return; }
+    try {
+      var existing = lsGet("aica_users_registry");
+      if (existing) {
+        var registry = JSON.parse(existing);
+        if (registry[email.toLowerCase().trim()]) {
+          setErr("Bu email adresi zaten kayıtlı. Giriş yapmayı deneyin.");
+          return;
+        }
+      }
+    } catch(e) {}
     setLoading(true);
-    setTimeout(function() {
-      setLoading(false);
-      var userData = {
-        name: name, email: email,
-        plan: props.plan || PLANS[1],
-        progress: {}, scores: {}, xp: 0, streak: 0,
-        teamId: inviteData ? inviteData.teamId : null,
-        isTeamMember: inviteData ? true : false,
-      };
-      addToRegistry(email, userData);
-      props.onDone(userData);
-    }, 1200);
+    fetch(USERS_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "check-email", email: email.toLowerCase().trim() })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.exists) {
+        setErr("Bu email adresi zaten kayıtlı. Giriş yapmayı deneyin.");
+        setLoading(false);
+        return;
+      }
+      devamEt();
+    })
+    .catch(function() {
+      devamEt();
+    });
+    function devamEt() {
+      setTimeout(function() {
+        setLoading(false);
+        var userData = {
+          name: name, email: email,
+          plan: props.plan || PLANS[1],
+          progress: {}, scores: {}, xp: 0, streak: 0,
+          teamId: inviteData ? inviteData.teamId : null,
+          isTeamMember: inviteData ? true : false,
+        };
+        addToRegistry(email, userData);
+        try {
+          var reg = {};
+          var existing2 = lsGet("aica_users_registry");
+          if (existing2) reg = JSON.parse(existing2);
+          reg[email.toLowerCase().trim()] = Date.now();
+          lsSet("aica_users_registry", JSON.stringify(reg));
+        } catch(e) {}
+        props.onDone(userData);
+      }, 1200);
+    }
   }
 
   return (
