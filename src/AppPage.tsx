@@ -2795,7 +2795,19 @@ export default function App() {
     // Kayıtlı kullanıcı kontrolü
     try {
       var su = lsGet("aica-user");
-      if (su) { var u = JSON.parse(su); setUser(u); setPage("dashboard"); }
+      if (su) {
+        var u = JSON.parse(su);
+        setUser(u);
+        var pn = u && u.plan ? (typeof u.plan === "string" ? u.plan : (u.plan.name || "")) : "";
+        var isPaid = pn === "Pro" || pn === "Business" || pn === "Starter";
+        var isAdmin = u && u.email === ADMIN_EMAIL;
+        var isTest = u && (u.email === "test@aicert.com" || u.email === "testpro@aicert.com" || u.email === "testbiz@aicert.com");
+        if (isAdmin || isTest || isPaid) {
+          setPage("dashboard");
+        } else {
+          setPage("planselect");
+        }
+      }
     } catch(e) {}
     setBooting(false);
   }, []);
