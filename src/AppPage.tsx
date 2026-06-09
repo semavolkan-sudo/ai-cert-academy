@@ -1645,8 +1645,23 @@ function AdminPanel(props) {
 
                   </div>
 
-                  {batchProgress && (
-                    <div style={{ fontSize:12, color:"#ccccdd", padding:"10px 14px", background:"rgba(255,255,255,0.04)", borderRadius:8, marginBottom:12 }}>{batchProgress}</div>
+                  {batchRunning && (
+                    <div style={{ marginTop:16 }}>
+                      <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
+                        <span style={{ fontSize:13, color:"#ccccdd" }}>{batchProgress}</span>
+                        <span style={{ fontSize:13, color:"#d4a853", fontFamily:"monospace", fontWeight:700 }}>{batchProgressPct}%</span>
+                      </div>
+                      <div style={{ height:8, background:"rgba(255,255,255,0.07)", borderRadius:100, overflow:"hidden" }}>
+                        <div style={{ width:batchProgressPct+"%", height:"100%", background:"linear-gradient(90deg,#d4a853,#f0c060)", borderRadius:100, transition:"width 0.4s ease" }} />
+                      </div>
+                      <div style={{ fontSize:11, color:"#555577", marginTop:6 }}>Her araç/profil için 15 API çağrısı yapılıyor — lütfen bekleyin</div>
+                    </div>
+                  )}
+
+                  {!batchRunning && batchProgress && (
+                    <div style={{ marginTop:12, background:"rgba(16,163,127,0.08)", border:"1px solid rgba(16,163,127,0.2)", borderRadius:10, padding:"10px 16px", fontSize:13, color:"#6ee7b7" }}>
+                      {batchProgress}
+                    </div>
                   )}
 
                   {batchLogs.length > 0 && (
