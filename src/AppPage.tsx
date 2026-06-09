@@ -825,6 +825,98 @@ function AdminPanel(props) {
 
   var [announcementSent, setAnnouncementSent] = useState(false);
 
+  var [batchRunning, setBatchRunning] = useState(false);
+
+  var [batchProgress, setBatchProgress] = useState("");
+
+  var [batchLogs, setBatchLogs] = useState([]);
+
+  var [selectedTool, setSelectedTool] = useState("Tümü");
+
+  var [selectedProfile, setSelectedProfile] = useState("Tümü");
+
+  var TOOLS_LIST = ["ChatGPT","Claude","Gemini","Perplexity","Deepseek","Copilot","Grok","Midjourney","Leonardo AI","Stable Diffusion","Canva AI","ElevenLabs","Runway ML","Make.com","Zapier AI","Notion AI","Lovable","Manus","Meta AI","Assembly AI","Prompt Engineering","AI İş Stratejisi"];
+
+  var PROFILES_MAP = {
+    "default": "Genel kullanıcı, AI araçlarını öğrenmek isteyen kişi",
+    "baslangic_kariyer": "Yeni başlayan, kariyerini geliştirmek isteyen profesyonel",
+    "baslangic_is": "Yeni başlayan, kendi işini kurmak isteyen girişimci",
+    "baslangic_freelance": "Yeni başlayan, freelance gelir elde etmek isteyen",
+    "orta_kariyer": "Orta seviye, kariyerinde ilerlemek isteyen profesyonel",
+    "orta_is": "Orta seviye, işini büyütmek isteyen girişimci",
+    "ileri_kariyer": "İleri seviye, sektöründe AI lideri olmak isteyen uzman"
+  };
+
+  function runBatch() {
+    if (batchRunning) return;
+    setBatchRunning(true);
+    setBatchProgress("Başlatılıyor...");
+    var toolsToRun = selectedTool === "Tümü" ? TOOLS_LIST : [selectedTool];
+    var profilesToRun = selectedProfile === "Tümü" ? Object.keys(PROFILES_MAP) : [selectedProfile];
+    var total = toolsToRun.length * profilesToRun.length;
+    var completed = 0;
+    var success = 0;
+    var failed = 0;
+    function processNext(toolIdx, profileIdx) {
+      if (toolIdx >= toolsToRun.length) {
+        setBatchProgress("✅ Tamamlandı! " + success + " başarılı, " + failed + " başarısız. Toplam: " + total);
+        setBatchRunning(false);
+        fetch("https://ai-proxy-two-pi.vercel.app/api/batch-logs?adminKey=" + ADMIN_KEY)
+          .then(function(r) { return r.json(); })
+          .then(function(d) { setBatchLogs(d.logs || []); });
+        return;
+      }
+      if (profileIdx >= profilesToRun.length) { processNext(toolIdx + 1, 0); return; }
+      var tool = toolsToRun[toolIdx];
+      var profile = profilesToRun[profileIdx];
+      var profileCtx = PROFILES_MAP[profile] || "Genel kullanıcı";
+      setBatchProgress("⚙️ " + tool + " / " + profile + " (" + (completed+1) + "/" + total + ")");
+      var prompt = "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 ders kartı üret. Her kart somut, uygulanabilir, profile özel olmalı.\n\nSADECE JSON döndür:\n[{\"title\":\"başlık\",\"content\":\"açıklama\\n\\n💡 Örnek: somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ İpucu: somut ipucu\",\"icon\":\"emoji\"}]";
+      fetch(PROXY_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 3000,
+          messages: [{ role: "user", content: prompt }]
+        })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        var text = "";
+        if (d && d.content) { for (var i = 0; i < d.content.length; i++) text += d.content[i].text || ""; }
+        var clean = text.replace(/```json|```/g, "").trim();
+        var start = clean.indexOf("[");
+        var end = clean.lastIndexOf("]");
+        var cards = [];
+        if (start !== -1 && end !== -1) {
+          try { cards = JSON.parse(clean.slice(start, end + 1)); } catch(e) {}
+        }
+        if (cards.length > 0) {
+          fetch("https://ai-proxy-two-pi.vercel.app/api/generate-lessons?key=aicert-cron-2024", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tool: tool, profileKey: profile, cards: cards, triggeredBy: "manual" })
+          }).then(function() {
+            success++;
+            completed++;
+            processNext(toolIdx, profileIdx + 1);
+          }).catch(function() { failed++; completed++; processNext(toolIdx, profileIdx + 1); });
+        } else {
+          failed++;
+          completed++;
+          processNext(toolIdx, profileIdx + 1);
+        }
+      })
+      .catch(function() {
+        failed++;
+        completed++;
+        processNext(toolIdx, profileIdx + 1);
+      });
+    }
+    processNext(0, 0);
+  }
+
   useEffect(function() {
 
     fetch(USERS_API, {
