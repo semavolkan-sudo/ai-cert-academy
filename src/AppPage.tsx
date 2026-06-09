@@ -853,6 +853,7 @@ function AdminPanel(props) {
     if (batchRunning) return;
     setBatchRunning(true);
     setBatchProgress("Başlatılıyor...");
+    setBatchProgressPct(0);
     var toolsToRun = selectedTool === "Tümü" ? TOOLS_LIST : [selectedTool];
     var profilesToRun = selectedProfile === "Tümü" ? Object.keys(PROFILES_MAP) : [selectedProfile];
     var total = toolsToRun.length * profilesToRun.length;
