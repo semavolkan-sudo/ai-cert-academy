@@ -871,48 +871,69 @@ function AdminPanel(props) {
       var profile = profilesToRun[profileIdx];
       var profileCtx = PROFILES_MAP[profile] || "Genel kullanıcı";
       setBatchProgress("⚙️ " + tool + " / " + profile + " (" + (completed+1) + "/" + total + ")");
-      var prompt = "Sen dünyaca tanınan AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci profili: " + profileCtx + "\n\nBu profile ÖZEL 10 ders kartı üret. Kartlar birbirinden farklı konular işlemeli:\n- 1-3: Temel kullanım, kurulum, kritik özellikler\n- 4-7: Prompt şablonları, sık hatalar, entegrasyonlar, otomasyon\n- 8-10: Rekabet avantajı, ROI senaryoları, 2025-2030 fırsatları\n\nHer kart:\n- 4-5 cümle detaylı açıklama\n- Gerçek isimli kişi senaryosu\n- Her adımda somut örnek\n- Rakam içeren pro ipucu\n\nSADECE JSON döndür:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [somut örnek]\\n2️⃣ [adım]: [somut örnek]\\n3️⃣ [adım]: [somut örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]";
-      fetch(PROXY_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-haiku-4-5-20251001",
-          max_tokens: 3000,
-          messages: [{ role: "user", content: prompt }]
-        })
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        var text = "";
-        if (d && d.content) { for (var i = 0; i < d.content.length; i++) text += d.content[i].text || ""; }
-        var clean = text.replace(/```json|```/g, "").trim();
-        var start = clean.indexOf("[");
-        var end = clean.lastIndexOf("]");
-        var cards = [];
-        if (start !== -1 && end !== -1) {
-          try { cards = JSON.parse(clean.slice(start, end + 1)); } catch(e) {}
-        }
-        if (cards.length > 0) {
-          fetch("https://ai-proxy-two-pi.vercel.app/api/generate-lessons?key=aicert-cron-2024", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ tool: tool, profileKey: profile, cards: cards, triggeredBy: "manual" })
-          }).then(function() {
-            success++;
+      var prompts = [
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Temel: bu araç nedir, neden önemli, kurulum, ilk adımlar, arayüz turu):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Özellikler: en kritik 5 özellik, her biri için ayrı kart):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Prompt şablonları: 5 farklı hazır komut şablonu, her biri için kullanım senaryosu):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Hatalar: sık yapılan 5 hata, her biri için önce-sonra karşılaştırması):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Entegrasyonlar: Zapier, Make, API, Chrome eklentisi, diğer araçlarla bağlantı):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Otomasyon: iş akışı otomasyonu, zaman tasarrufu, tekrar eden görevler):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Kariyer: bu araçla kariyer avantajı, sektörel kullanım, rekabet üstünlüğü):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (ROI ve verimlilik: somut rakamlar, zaman/para tasarrufu, iş hayatına katkı):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Gelecek: 2025-2030 fırsatları, AGI yolculuğu, dönüşen meslekler):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Öğrenme planı: 30 günlük kişiselleştirilmiş plan, haftalık hedefler, milestones):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Pratik egzersizler: hemen yapılabilecek 5 görev, her biri 10-15 dakika):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Sık sorular: bu seviyedeki kullanıcıların en çok kafasını karıştıran 5 soru ve detaylı cevapları):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Gelişmiş teknikler: çoğu kullanıcının bilmediği 5 ileri seviye ipucu):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Başarı hikayeleri: bu araçla gerçek başarı elde etmiş 5 farklı profil hikayesi):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]",
+        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Sonraki adımlar: bu araçtan sonra hangi araçları öğrenmeli, nasıl bir öğrenme yolu izlemeli):\nSADECE JSON:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [örnek]\\n2️⃣ [adım]: [örnek]\\n3️⃣ [adım]: [örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]"
+      ];
+      var allCards = [];
+      var promptIdx = 0;
+      function fetchPrompt() {
+        if (promptIdx >= prompts.length) {
+          if (allCards.length > 0) {
+            fetch("https://ai-proxy-two-pi.vercel.app/api/generate-lessons?key=aicert-cron-2024", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ tool: tool, profileKey: profile, cards: allCards, triggeredBy: "manual" })
+            }).then(function() {
+              success++;
+              completed++;
+              processNext(toolIdx, profileIdx + 1);
+            }).catch(function() { failed++; completed++; processNext(toolIdx, profileIdx + 1); });
+          } else {
+            failed++;
             completed++;
             processNext(toolIdx, profileIdx + 1);
-          }).catch(function() { failed++; completed++; processNext(toolIdx, profileIdx + 1); });
-        } else {
-          failed++;
-          completed++;
-          processNext(toolIdx, profileIdx + 1);
+          }
+          return;
         }
-      })
-      .catch(function() {
-        failed++;
-        completed++;
-        processNext(toolIdx, profileIdx + 1);
-      });
+        fetch(PROXY_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "claude-haiku-4-5-20251001",
+            max_tokens: 3000,
+            messages: [{ role: "user", content: prompts[promptIdx] }]
+          })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          var text = "";
+          if (d && d.content) { for (var i = 0; i < d.content.length; i++) text += d.content[i].text || ""; }
+          var clean = text.replace(/```json|```/g, "").trim();
+          var start = clean.indexOf("[");
+          var end = clean.lastIndexOf("]");
+          if (start !== -1 && end !== -1) {
+            try { allCards = allCards.concat(JSON.parse(clean.slice(start, end + 1))); } catch(e) {}
+          }
+          promptIdx++;
+          setTimeout(function() { fetchPrompt(); }, 800);
+        })
+        .catch(function() { promptIdx++; setTimeout(function() { fetchPrompt(); }, 800); });
+      }
+      fetchPrompt();
     }
     processNext(0, 0);
   }
