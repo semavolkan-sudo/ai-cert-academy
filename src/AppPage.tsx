@@ -1595,6 +1595,44 @@ function AdminPanel(props) {
 
                 <CouponPanel />
 
+                <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:16, padding:24, gridColumn:"1 / -1" }}>
+
+                  <div style={{ fontSize:15, fontWeight:700, color:"#fff", marginBottom:6 }}>🤖 Toplu Ders Üretimi</div>
+
+                  <div style={{ fontSize:12, color:"#666677", marginBottom:16 }}>Seçili araç ve profil için AI ile ders kartları üret, Vercel'e kaydet</div>
+
+                  <div style={{ display:"flex", gap:10, marginBottom:12, flexWrap:"wrap" }}>
+
+                    <select value={selectedTool} onChange={function(e) { setSelectedTool(e.target.value); }} disabled={batchRunning} style={{ flex:1, minWidth:160, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:10, padding:"10px 12px", color:"#fff", fontSize:13, outline:"none" }}>
+                      <option value="Tümü">Tüm Araçlar</option>
+                      {TOOLS_LIST.map(function(t) { return <option key={t} value={t}>{t}</option>; })}
+                    </select>
+
+                    <select value={selectedProfile} onChange={function(e) { setSelectedProfile(e.target.value); }} disabled={batchRunning} style={{ flex:1, minWidth:160, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:10, padding:"10px 12px", color:"#fff", fontSize:13, outline:"none" }}>
+                      <option value="Tümü">Tüm Profiller</option>
+                      {Object.keys(PROFILES_MAP).map(function(p) { return <option key={p} value={p}>{p}</option>; })}
+                    </select>
+
+                    <button onClick={runBatch} disabled={batchRunning} style={{ background: batchRunning ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg,#d4a853,#f0c060)", color: batchRunning ? "#888899" : "#08080f", border:"none", borderRadius:10, padding:"11px 24px", fontSize:13, fontWeight:700, cursor: batchRunning ? "not-allowed" : "pointer" }}>
+                      {batchRunning ? "Çalışıyor..." : "Başlat"}
+                    </button>
+
+                  </div>
+
+                  {batchProgress && (
+                    <div style={{ fontSize:12, color:"#ccccdd", padding:"10px 14px", background:"rgba(255,255,255,0.04)", borderRadius:8, marginBottom:12 }}>{batchProgress}</div>
+                  )}
+
+                  {batchLogs.length > 0 && (
+                    <div style={{ maxHeight:200, overflowY:"auto", fontSize:11, color:"#888899", fontFamily:"monospace", background:"rgba(0,0,0,0.3)", borderRadius:8, padding:12 }}>
+                      {batchLogs.slice(0, 30).map(function(log, i) {
+                        return <div key={i} style={{ marginBottom:4 }}>{JSON.stringify(log)}</div>;
+                      })}
+                    </div>
+                  )}
+
+                </div>
+
               </div>
 
             )}
