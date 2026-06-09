@@ -871,7 +871,7 @@ function AdminPanel(props) {
       var profile = profilesToRun[profileIdx];
       var profileCtx = PROFILES_MAP[profile] || "Genel kullanıcı";
       setBatchProgress("⚙️ " + tool + " / " + profile + " (" + (completed+1) + "/" + total + ")");
-      var prompt = "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci: " + profileCtx + "\n\n5 ders kartı üret. Her kart somut, uygulanabilir, profile özel olmalı.\n\nSADECE JSON döndür:\n[{\"title\":\"başlık\",\"content\":\"açıklama\\n\\n💡 Örnek: somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ adım\\n2️⃣ adım\\n3️⃣ adım\\n\\n⚡ İpucu: somut ipucu\",\"icon\":\"emoji\"}]";
+      var prompt = "Sen dünyaca tanınan AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nÖğrenci profili: " + profileCtx + "\n\nBu profile ÖZEL 15 ders kartı üret. Kartlar birbirinden farklı konular işlemeli:\n- 1-5: Temel kullanım, kurulum, kritik özellikler, prompt şablonları, sık hatalar\n- 6-10: Entegrasyonlar, otomasyon, rekabet avantajı, ROI senaryoları, 2025-2030 fırsatları\n- 11-15: 30 günlük plan, pratik egzersizler, sık sorular, sonraki seviye, başarı hikayeleri\n\nHer kart:\n- 4-5 cümle detaylı açıklama\n- Gerçek isimli kişi senaryosu\n- Her adımda somut örnek\n- Rakam içeren pro ipucu\n\nSADECE JSON döndür:\n[{\"title\":\"başlık\",\"content\":\"detaylı açıklama\\n\\n💡 Gerçek Örnek: [isim/meslek] somut senaryo\\n\\n📊 Adımlar:\\n1️⃣ [adım]: [somut örnek]\\n2️⃣ [adım]: [somut örnek]\\n3️⃣ [adım]: [somut örnek]\\n\\n⚡ Pro İpucu: [rakam içeren ipucu]\",\"icon\":\"emoji\"}]";
       fetch(PROXY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
