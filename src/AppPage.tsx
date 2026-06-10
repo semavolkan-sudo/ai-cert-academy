@@ -1,6 +1,12 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
 import logoAsset from "@/assets/ai-cert-academy-logo.png.asset.json";
+import { useServerFn } from "@tanstack/react-start";
+import {
+  verifyAdminLogin,
+  requestAdminPasswordReset,
+  changeAdminPassword,
+} from "@/lib/admin-auth.functions";
 
 
 // ─── SSR-SAFE STORAGE ────────────────────────────────────────────────────────
@@ -27,7 +33,6 @@ var PROXY_URL = "https://ai-proxy-two-pi.vercel.app/api/proxy";
 // Lovable'a yükledikten sonra yukarıdaki URL'yi Supabase'den aldiginla degistir
 var USERS_API = "https://ai-proxy-two-pi.vercel.app/api/users";
 var ADMIN_EMAIL = "admin@aicert.com";
-var ADMIN_PASS = "aicert-admin-2024";
 var ADMIN_KEY = "aicert-admin-2024";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
@@ -1766,12 +1771,25 @@ function Login(props) {
   var [err, setErr] = useState("");
   var [loading, setLoading] = useState(false);
   var [showAdmin, setShowAdmin] = useState(false);
+  var [forgotMsg, setForgotMsg] = useState("");
+  var [forgotLoading, setForgotLoading] = useState(false);
+  var verifyAdmin = useServerFn(verifyAdminLogin);
+  var requestReset = useServerFn(requestAdminPasswordReset);
 
-  function submit() {
+  async function submit() {
     if (!email || !pass) { setErr("Tüm alanlari doldurun"); return; }
-    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+    if (email.toLowerCase().trim() === ADMIN_EMAIL) {
       setErr("");
-      setShowAdmin(true);
+      setLoading(true);
+      try {
+        var r = await verifyAdmin({ data: { email: email, password: pass } });
+        setLoading(false);
+        if (r && r.ok) { setShowAdmin(true); return; }
+        setErr("Hatalı yönetici şifresi");
+      } catch (e) {
+        setLoading(false);
+        setErr("Sunucuya ulaşılamadı");
+      }
       return;
     }
     if (pass.length < 6) { setErr("Şifre en az 6 karakter"); return; }
@@ -1831,6 +1849,21 @@ function Login(props) {
       });
   }
 
+  async function onForgot() {
+    setForgotMsg("");
+    var target = (email || "").trim() || ADMIN_EMAIL;
+    if (target.indexOf("@") < 0) { setErr("Önce e-posta adresinizi yazın"); return; }
+    setForgotLoading(true);
+    try {
+      await requestReset({ data: { email: target, origin: window.location.origin } });
+      setForgotMsg("E-posta adresinizi kontrol edin. Hesap varsa sıfırlama linki gönderildi (15 dk geçerli).");
+    } catch {
+      setForgotMsg("İşlem başarısız, tekrar deneyin.");
+    } finally {
+      setForgotLoading(false);
+    }
+  }
+
   if (showAdmin) {
     return <AdminPanel onLogout={function() { setShowAdmin(false); setEmail(""); setPass(""); }} />;
   }
@@ -1859,6 +1892,17 @@ function Login(props) {
             style={{ width:"100%", background: loading ? "#444" : "linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"13px 0", fontSize:15, fontWeight:700, cursor: loading ? "not-allowed" : "pointer" }}>
             {loading ? "Kontrol ediliyor..." : "Giriş Yap"}
           </button>
+          <div style={{ textAlign:"right", marginTop:8 }}>
+            <button onClick={onForgot} disabled={forgotLoading}
+              style={{ background:"transparent", border:"none", color:"#9999b8", cursor: forgotLoading ? "wait" : "pointer", fontSize:12, padding:0, textDecoration:"underline" }}>
+              {forgotLoading ? "Gönderiliyor..." : "Şifremi unuttum (yönetici)"}
+            </button>
+          </div>
+          {forgotMsg && (
+            <div style={{ marginTop:10, padding:"8px 12px", background:"rgba(0,201,167,0.08)", border:"1px solid rgba(0,201,167,0.25)", borderRadius:8, color:"#6ee7b7", fontSize:12 }}>
+              {forgotMsg}
+            </div>
+          )}
           <p style={{ textAlign:"center", marginTop:16, fontSize:12, color:"#555577" }}>
             Hesabın yok mu?
             <button onClick={props.onRegister} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:12, marginLeft:4 }}>Kayıt Ol</button>
@@ -2934,7 +2978,15 @@ function Auth(props) {
     setErr("");
     setInfo("");
     if (!email || !pass) { setErr("Tüm alanlari doldurun"); return; }
-    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) { setShowAdmin(true); return; }
+    if (email.toLowerCase().trim() === ADMIN_EMAIL) {
+      verifyAdminLogin({ data: { email: email, password: pass } })
+        .then(function(r) {
+          if (r && r.ok) { setShowAdmin(true); }
+          else { setErr("Hatalı yönetici şifresi"); }
+        })
+        .catch(function() { setErr("Sunucuya ulaşılamadı"); });
+      return;
+    }
     // Test kullanıcıları: ödeme atlanır, doğru planla giriş yapılır
     var emailKey = (email || "").toLowerCase();
     var testUser = TEST_USERS[emailKey];
