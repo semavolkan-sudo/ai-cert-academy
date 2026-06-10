@@ -1640,8 +1640,8 @@ function AdminPanel(props) {
                     </select>
 
                     <select value={selectedProfile} onChange={function(e) { setSelectedProfile(e.target.value); }} disabled={batchRunning} style={{ flex:1, minWidth:160, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:10, padding:"10px 12px", color:"#fff", fontSize:13, outline:"none" }}>
-                      <option value="Tümü">Tüm Profiller</option>
-                      {Object.keys(PROFILES_MAP).map(function(p) { return <option key={p} value={p}>{p}</option>; })}
+                      <option value="Tümü" style={{ color:"#070711", backgroundColor:"#f0f0f5" }}>Tüm Profiller</option>
+                      {Object.keys(PROFILES_MAP).map(function(p) { return <option key={p} value={p} style={{ color:"#070711", backgroundColor:"#f0f0f5" }}>{p}</option>; })}
                     </select>
 
                     <button onClick={runBatch} disabled={batchRunning} style={{ background: batchRunning ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg,#d4a853,#f0c060)", color: batchRunning ? "#888899" : "#08080f", border:"none", borderRadius:10, padding:"11px 24px", fontSize:13, fontWeight:700, cursor: batchRunning ? "not-allowed" : "pointer" }}>
