@@ -38,33 +38,6 @@ export type Database = {
         }
         Relationships: []
       }
-      admin_password_resets: {
-        Row: {
-          created_at: string
-          email: string
-          expires_at: string
-          id: string
-          token_hash: string
-          used_at: string | null
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          expires_at: string
-          id?: string
-          token_hash: string
-          used_at?: string | null
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          expires_at?: string
-          id?: string
-          token_hash?: string
-          used_at?: string | null
-        }
-        Relationships: []
-      }
     }
     Views: {
       [_ in never]: never
