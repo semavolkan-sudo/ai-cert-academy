@@ -1660,14 +1660,16 @@ function AdminPanel(props) {
 
                   {batchRunning && (
                     <div style={{ marginTop:16 }}>
-                      <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
+                      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
                         <span style={{ fontSize:13, color:"#ccccdd" }}>{batchProgress}</span>
-                        <span style={{ fontSize:13, color:"#d4a853", fontFamily:"monospace", fontWeight:700 }}>{batchProgressPct}%</span>
+                        <span style={{ fontSize:13, color:"#d4a853", fontWeight:700, fontFamily:"monospace" }}>{batchProgressPct}%</span>
                       </div>
                       <div style={{ height:8, background:"rgba(255,255,255,0.07)", borderRadius:100, overflow:"hidden" }}>
-                        <div style={{ width:batchProgressPct+"%", height:"100%", background:"linear-gradient(90deg,#d4a853,#f0c060)", borderRadius:100, transition:"width 0.4s ease" }} />
+                        <div style={{ width:batchProgressPct+"%", height:"100%", background:"linear-gradient(90deg,#d4a853,#f0c060)", borderRadius:100, transition:"width 0.3s ease" }} />
                       </div>
-                      <div style={{ fontSize:11, color:"#555577", marginTop:6 }}>Her araç/profil için 15 API çağrısı yapılıyor — lütfen bekleyin</div>
+                      <div style={{ fontSize:11, color:"#555577", marginTop:6 }}>
+                        {batchCompleted} / {batchTotal} tamamlandı
+                      </div>
                     </div>
                   )}
 
@@ -1678,10 +1680,58 @@ function AdminPanel(props) {
                   )}
 
                   {batchLogs.length > 0 && (
-                    <div style={{ maxHeight:200, overflowY:"auto", fontSize:11, color:"#888899", fontFamily:"monospace", background:"rgba(0,0,0,0.3)", borderRadius:8, padding:12 }}>
-                      {batchLogs.slice(0, 30).map(function(log, i) {
-                        return <div key={i} style={{ marginBottom:4 }}>{JSON.stringify(log)}</div>;
-                      })}
+                    <div style={{ marginTop:16, maxHeight:400, overflowY:"auto", background:"rgba(0,0,0,0.3)", borderRadius:8 }}>
+                      <table style={{ width:"100%", borderCollapse:"collapse", fontSize:12, color:"#ccccdd" }}>
+                        <thead style={{ position:"sticky", top:0, background:"#0d0d1f", zIndex:1 }}>
+                          <tr>
+                            {["Tarih","Başlangıç","Süre","Tetikleyen","Durum","Başarı/Hata","Detay"].map(function(h) {
+                              return <th key={h} style={{ padding:"10px 14px", textAlign:"left", fontSize:11, fontWeight:700, color:"#888899", textTransform:"uppercase", letterSpacing:0.5, borderBottom:"1px solid rgba(255,255,255,0.1)" }}>{h}</th>;
+                            })}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {batchLogs.map(function(log, i) {
+                            var results = log.results || [];
+                            var duration = log.finished_at && log.started_at
+                              ? Math.round((new Date(log.finished_at).getTime() - new Date(log.started_at).getTime()) / 1000) + "s"
+                              : "⏳";
+                            var statusColor = log.status === "success" ? "#10a37f" : log.status === "partial" ? "#f59e0b" : log.status === "running" ? "#6366f1" : "#ef4444";
+                            return (
+                              <React.Fragment key={i}>
+                                <tr style={{ borderTop:"2px solid rgba(255,255,255,0.1)", background:"rgba(255,255,255,0.02)" }}>
+                                  <td style={{ padding:"10px 14px", color:"#fff", fontWeight:700 }}>{log.batch_date}</td>
+                                  <td style={{ padding:"10px 14px", color:"#888899" }}>{log.started_at ? new Date(log.started_at).toLocaleTimeString("tr-TR") : "-"}</td>
+                                  <td style={{ padding:"10px 14px", color:"#888899", fontFamily:"monospace" }}>{duration}</td>
+                                  <td style={{ padding:"10px 14px", color:"#888899" }}>{log.triggered_by || "cron"}</td>
+                                  <td style={{ padding:"10px 14px" }}>
+                                    <span style={{ background:statusColor+"22", color:statusColor, border:"1px solid "+statusColor+"44", borderRadius:20, padding:"3px 10px", fontSize:11, fontWeight:700 }}>
+                                      {log.status === "success" ? "✅ Başarılı" : log.status === "partial" ? "⚠️ Kısmi" : log.status === "running" ? "⏳ Çalışıyor" : "❌ Başarısız"}
+                                    </span>
+                                  </td>
+                                  <td style={{ padding:"10px 14px", color:"#d4a853", fontWeight:700 }}>{log.success_count || 0} ✅ / {log.fail_count || 0} ❌</td>
+                                  <td style={{ padding:"10px 14px", color:"#555577", fontSize:11 }}>{results.length} kayıt</td>
+                                </tr>
+                                {results.map(function(r, j) {
+                                  return (
+                                    <tr key={i+"-"+j} style={{ borderTop:"1px solid rgba(255,255,255,0.04)", background:"rgba(255,255,255,0.01)" }}>
+                                      <td style={{ padding:"6px 14px 6px 28px", color:"#555577", fontSize:11 }} colSpan={2}>└ {r.tool}</td>
+                                      <td style={{ padding:"6px 14px", color:"#555577", fontSize:11 }}></td>
+                                      <td style={{ padding:"6px 14px", color:"#555577", fontSize:11 }}></td>
+                                      <td style={{ padding:"6px 14px" }}>
+                                        <span style={{ background: r.status==="ok" ? "rgba(16,163,127,0.1)" : "rgba(239,68,68,0.1)", color: r.status==="ok" ? "#10a37f" : "#ef4444", borderRadius:20, padding:"2px 8px", fontSize:10 }}>
+                                          {r.status === "ok" ? "✅" : "❌"} {r.status}
+                                        </span>
+                                      </td>
+                                      <td style={{ padding:"6px 14px", color:"#888899", fontSize:11 }}>{r.profile}</td>
+                                      <td style={{ padding:"6px 14px", color:"#d4a853", fontSize:11, fontFamily:"monospace" }}>{r.count} kart</td>
+                                    </tr>
+                                  );
+                                })}
+                              </React.Fragment>
+                            );
+                          })}
+                        </tbody>
+                      </table>
                     </div>
                   )}
 
