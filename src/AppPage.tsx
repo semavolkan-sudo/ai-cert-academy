@@ -1770,15 +1770,7 @@ function Login(props) {
   var [err, setErr] = useState("");
   var [loading, setLoading] = useState(false);
   var [showAdmin, setShowAdmin] = useState(false);
-  var [forgotMsg, setForgotMsg] = useState("");
-  var [forgotLoading, setForgotLoading] = useState(false);
-  var [showReset, setShowReset] = useState(false);
-  var [resetEmail, setResetEmail] = useState("");
-  var [resetSent, setResetSent] = useState(false);
-  var [resetLoading, setResetLoading] = useState(false);
-  var [resetErr, setResetErr] = useState("");
   var verifyAdmin = useServerFn(verifyAdminLogin);
-  var requestReset = useServerFn(requestAdminPasswordReset);
 
   async function submit() {
     if (!email || !pass) { setErr("Tüm alanlari doldurun"); return; }
