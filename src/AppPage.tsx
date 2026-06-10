@@ -947,9 +947,16 @@ function AdminPanel(props) {
             try { allCards = allCards.concat(JSON.parse(clean.slice(start, end + 1))); } catch(e) {}
           }
           promptIdx++;
+          var promptProgress = Math.round(((completed + (promptIdx / prompts.length)) / total) * 100);
+          setBatchProgressPct(Math.min(99, promptProgress));
           setTimeout(function() { fetchPrompt(); }, 800);
         })
-        .catch(function() { promptIdx++; setTimeout(function() { fetchPrompt(); }, 800); });
+        .catch(function() {
+          promptIdx++;
+          var promptProgress = Math.round(((completed + (promptIdx / prompts.length)) / total) * 100);
+          setBatchProgressPct(Math.min(99, promptProgress));
+          setTimeout(function() { fetchPrompt(); }, 800);
+        });
       }
       fetchPrompt();
     }
