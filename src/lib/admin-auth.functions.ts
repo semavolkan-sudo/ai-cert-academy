@@ -3,6 +3,9 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 
 export const verifyAdminLogin = createServerFn({ method: "POST" })
+  .inputValidator((d) =>
+    z.object({ email: z.string().email().max(255), password: z.string().min(1).max(200) }).parse(d),
+  )
   .handler(async ({ data }) => {
     const email = data.email.toLowerCase().trim();
     const ADMIN_EMAIL = "admin@aicert.com";
