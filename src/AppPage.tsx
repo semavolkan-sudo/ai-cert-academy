@@ -1771,12 +1771,25 @@ function Login(props) {
   var [err, setErr] = useState("");
   var [loading, setLoading] = useState(false);
   var [showAdmin, setShowAdmin] = useState(false);
+  var [forgotMsg, setForgotMsg] = useState("");
+  var [forgotLoading, setForgotLoading] = useState(false);
+  var verifyAdmin = useServerFn(verifyAdminLogin);
+  var requestReset = useServerFn(requestAdminPasswordReset);
 
-  function submit() {
+  async function submit() {
     if (!email || !pass) { setErr("Tüm alanlari doldurun"); return; }
-    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+    if (email.toLowerCase().trim() === ADMIN_EMAIL) {
       setErr("");
-      setShowAdmin(true);
+      setLoading(true);
+      try {
+        var r = await verifyAdmin({ data: { email: email, password: pass } });
+        setLoading(false);
+        if (r && r.ok) { setShowAdmin(true); return; }
+        setErr("Hatalı yönetici şifresi");
+      } catch (e) {
+        setLoading(false);
+        setErr("Sunucuya ulaşılamadı");
+      }
       return;
     }
     if (pass.length < 6) { setErr("Şifre en az 6 karakter"); return; }
@@ -1834,6 +1847,21 @@ function Login(props) {
       .catch(function() {
         normalLogin();
       });
+  }
+
+  async function onForgot() {
+    setForgotMsg("");
+    var target = (email || "").trim() || ADMIN_EMAIL;
+    if (target.indexOf("@") < 0) { setErr("Önce e-posta adresinizi yazın"); return; }
+    setForgotLoading(true);
+    try {
+      await requestReset({ data: { email: target, origin: window.location.origin } });
+      setForgotMsg("E-posta adresinizi kontrol edin. Hesap varsa sıfırlama linki gönderildi (15 dk geçerli).");
+    } catch {
+      setForgotMsg("İşlem başarısız, tekrar deneyin.");
+    } finally {
+      setForgotLoading(false);
+    }
   }
 
   if (showAdmin) {
