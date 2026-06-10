@@ -3093,6 +3093,65 @@ function Auth(props) {
     );
   }
 
+  if (resetMode) {
+    return (
+      <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+        <div style={{ width:"100%", maxWidth:440, background:"rgba(13,13,31,0.95)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:24, padding:40, boxShadow:SHADOW }}>
+          {!resetSent2 ? (
+            <div>
+              <h2 style={{ color:"#fff", fontWeight:700, marginBottom:8, fontSize:19 }}>🔑 Şifre Sıfırlama</h2>
+              <p style={{ color:TEXT2, fontSize:13, marginBottom:20, lineHeight:1.5 }}>E-posta adresinize sıfırlama bağlantısı gönderilecek</p>
+              <input
+                value={resetEmail2}
+                onChange={function(e) { setResetEmail2(e.target.value); }}
+                placeholder="ornek@ornek.com"
+                type="email"
+                style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"14px 16px", color:"#fff", fontSize:15, outline:"none", marginBottom:12, boxSizing:"border-box", fontFamily:FONT }}
+              />
+              <button
+                disabled={resetLoading2}
+                onClick={function() {
+                  var em = (resetEmail2 || "").toLowerCase().trim();
+                  if (!em || em.indexOf("@") < 0) { if (typeof alert !== "undefined") alert("Geçerli e-posta girin"); return; }
+                  setResetLoading2(true);
+                  if (typeof fetch === "undefined") { setResetSent2(true); setResetLoading2(false); return; }
+                  fetch(USERS_API, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: "reset-password", email: em })
+                  })
+                    .then(function(r) { return r.json(); })
+                    .then(function(d) { console.log("reset resp", d); setResetSent2(true); setResetLoading2(false); })
+                    .catch(function(e) { console.error("reset err", e); setResetSent2(true); setResetLoading2(false); });
+                }}
+                style={{ width:"100%", background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:12, padding:"14px", fontSize:15, fontWeight:700, cursor: resetLoading2 ? "not-allowed" : "pointer", marginBottom:10, fontFamily:FONT }}>
+                {resetLoading2 ? "Gönderiliyor..." : "Sıfırlama Bağlantısı Gönder"}
+              </button>
+              <button
+                onClick={function() { setResetMode(false); setResetSent2(false); setResetEmail2(""); }}
+                style={{ width:"100%", background:"transparent", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"12px", color:TEXT2, fontSize:13, cursor:"pointer", fontFamily:FONT }}>
+                Geri Dön
+              </button>
+            </div>
+          ) : (
+            <div style={{ textAlign:"center" }}>
+              <div style={{ fontSize:48, marginBottom:12 }}>📧</div>
+              <h3 style={{ color:"#fff", fontSize:17, fontWeight:700, marginBottom:10 }}>E-posta Gönderildi!</h3>
+              <p style={{ color:"#bbbbcc", fontSize:13, marginBottom:18, lineHeight:1.5 }}>
+                <strong style={{ color:GOLD2 }}>{resetEmail2}</strong> adresine sıfırlama bağlantısı gönderildi.
+              </p>
+              <button
+                onClick={function() { setResetMode(false); setResetSent2(false); setResetEmail2(""); }}
+                style={{ width:"100%", background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:12, padding:"13px", fontSize:14, fontWeight:700, cursor:"pointer", fontFamily:FONT }}>
+                Giriş Ekranına Dön
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, display:"flex", alignItems:"center", justifyContent:"center", padding:20, backgroundImage:"radial-gradient(ellipse at 50% 0%,rgba(124,92,252,0.18) 0%,rgba(201,168,76,0.08) 35%,transparent 70%), radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize:"auto, 32px 32px" }}>
       <div style={{ width:"100%", maxWidth:440 }}>
