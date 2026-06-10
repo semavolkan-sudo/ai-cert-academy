@@ -1892,6 +1892,17 @@ function Login(props) {
             style={{ width:"100%", background: loading ? "#444" : "linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:10, padding:"13px 0", fontSize:15, fontWeight:700, cursor: loading ? "not-allowed" : "pointer" }}>
             {loading ? "Kontrol ediliyor..." : "Giriş Yap"}
           </button>
+          <div style={{ textAlign:"right", marginTop:8 }}>
+            <button onClick={onForgot} disabled={forgotLoading}
+              style={{ background:"transparent", border:"none", color:"#9999b8", cursor: forgotLoading ? "wait" : "pointer", fontSize:12, padding:0, textDecoration:"underline" }}>
+              {forgotLoading ? "Gönderiliyor..." : "Şifremi unuttum (yönetici)"}
+            </button>
+          </div>
+          {forgotMsg && (
+            <div style={{ marginTop:10, padding:"8px 12px", background:"rgba(0,201,167,0.08)", border:"1px solid rgba(0,201,167,0.25)", borderRadius:8, color:"#6ee7b7", fontSize:12 }}>
+              {forgotMsg}
+            </div>
+          )}
           <p style={{ textAlign:"center", marginTop:16, fontSize:12, color:"#555577" }}>
             Hesabın yok mu?
             <button onClick={props.onRegister} style={{ background:"transparent", border:"none", color:GOLD, cursor:"pointer", fontSize:12, marginLeft:4 }}>Kayıt Ol</button>
