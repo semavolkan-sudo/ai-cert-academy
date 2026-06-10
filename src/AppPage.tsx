@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import logoAsset from "@/assets/ai-cert-academy-logo.png.asset.json";
 import { useServerFn } from "@tanstack/react-start";
 import {
