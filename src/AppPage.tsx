@@ -3210,7 +3210,62 @@ function Auth(props) {
           <div style={{ fontSize:17, fontWeight:600, color:TEXT, marginTop:4 }}>Certification Academy</div>
         </div>
         <div style={{ background:"rgba(13,13,31,0.95)", backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:24, overflow:"hidden", boxShadow:SHADOW }}>
-          {verifyCode ? (
+          {showReset ? (
+            <div style={{ padding:40 }}>
+              {!resetSent ? (
+                <div>
+                  <h2 style={{ color:"#fff", fontWeight:700, marginBottom:8, fontSize:19 }}>🔑 Şifre Sıfırlama</h2>
+                  <p style={{ color:TEXT2, fontSize:13, marginBottom:20, lineHeight:1.5 }}>E-posta adresinize sıfırlama bağlantısı göndereceğiz.</p>
+                  <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>E-posta Adresi</label>
+                  <input
+                    value={resetEmail}
+                    onChange={function(e) { setResetEmail(e.target.value); setResetErr(""); }}
+                    placeholder="ornek@ornek.com"
+                    type="email"
+                    style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"14px 16px", color:"#fff", fontSize:15, outline:"none", marginBottom:8, boxSizing:"border-box", fontFamily:FONT }}
+                  />
+                  {resetErr && <div style={{ color:"#ef4444", fontSize:12, marginBottom:8 }}>{resetErr}</div>}
+                  <button
+                    onClick={function() {
+                      var em = (resetEmail || "").toLowerCase().trim();
+                      if (!em || em.indexOf("@") < 0) { setResetErr("Geçerli bir e-posta adresi girin"); return; }
+                      setResetLoading(true);
+                      fetch(USERS_API, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ action: "reset-password", email: em })
+                      })
+                      .then(function(r) { return r.json(); })
+                      .then(function() { setResetSent(true); setResetLoading(false); })
+                      .catch(function() { setResetSent(true); setResetLoading(false); });
+                    }}
+                    disabled={resetLoading}
+                    style={{ width:"100%", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"15px", fontSize:15, fontWeight:700, cursor: resetLoading ? "not-allowed" : "pointer", marginBottom:12, fontFamily:FONT }}>
+                    {resetLoading ? "Gönderiliyor..." : "Sıfırlama Bağlantısı Gönder"}
+                  </button>
+                  <button
+                    onClick={function() { setShowReset(false); setResetErr(""); setResetSent(false); }}
+                    style={{ width:"100%", background:"transparent", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"12px", color:TEXT2, fontSize:13, cursor:"pointer", fontFamily:FONT }}>
+                    Geri Dön
+                  </button>
+                </div>
+              ) : (
+                <div style={{ textAlign:"center" }}>
+                  <div style={{ fontSize:48, marginBottom:12 }}>📧</div>
+                  <h3 style={{ color:"#fff", fontSize:17, fontWeight:700, marginBottom:10 }}>E-posta Gönderildi!</h3>
+                  <p style={{ color:"#bbbbcc", fontSize:13, marginBottom:14, lineHeight:1.5 }}>
+                    <strong style={{ color:GOLD2 }}>{resetEmail}</strong> adresine sıfırlama bağlantısı gönderildi. Gelen kutunuzu kontrol edin.
+                  </p>
+                  <p style={{ color:"#777799", fontSize:12, marginBottom:18 }}>E-posta gelmedi mi? Spam klasörünü kontrol edin.</p>
+                  <button
+                    onClick={function() { setShowReset(false); setResetSent(false); setResetErr(""); }}
+                    style={{ width:"100%", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"13px", fontSize:14, fontWeight:700, cursor:"pointer", fontFamily:FONT }}>
+                    Giriş Ekranına Dön
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : verifyCode ? (
             <div style={{ padding:40 }}>
               <div style={{ textAlign:"center", marginBottom:24 }}>
                 <div style={{ fontSize:40, marginBottom:10 }}>✉️</div>
