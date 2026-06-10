@@ -2930,11 +2930,10 @@ function Auth(props) {
   var [couponCode, setCouponCode] = useState("");
   var [couponResult, setCouponResult] = useState(null);
   var [couponLoading, setCouponLoading] = useState(false);
-  var [showReset, setShowReset] = useState(false);
-  var [resetEmail, setResetEmail] = useState("");
-  var [resetSent, setResetSent] = useState(false);
-  var [resetLoading, setResetLoading] = useState(false);
-  var [resetErr, setResetErr] = useState("");
+  var [resetMode, setResetMode] = useState(false);
+  var [resetEmail2, setResetEmail2] = useState("");
+  var [resetSent2, setResetSent2] = useState(false);
+  var [resetLoading2, setResetLoading2] = useState(false);
 
   function applyCoupon(emailVal) {
     if (!couponCode.trim()) return;
