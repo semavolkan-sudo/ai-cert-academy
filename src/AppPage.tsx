@@ -3121,6 +3121,7 @@ function Auth(props) {
                     onClick={function() {
                       var em = (resetEmail || "").toLowerCase().trim();
                       if (!em || em.indexOf("@") < 0) { setResetErr("Geçerli bir e-posta adresi girin"); return; }
+                      if (em === ADMIN_EMAIL) { setResetErr("Yönetici şifresi e-posta ile sıfırlanamaz."); return; }
                       setResetLoading(true);
                       fetch(USERS_API, {
                         method: "POST",
