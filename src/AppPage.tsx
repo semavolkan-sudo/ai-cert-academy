@@ -2930,11 +2930,10 @@ function Auth(props) {
   var [couponCode, setCouponCode] = useState("");
   var [couponResult, setCouponResult] = useState(null);
   var [couponLoading, setCouponLoading] = useState(false);
-  var [showReset, setShowReset] = useState(false);
-  var [resetEmail, setResetEmail] = useState("");
-  var [resetSent, setResetSent] = useState(false);
-  var [resetLoading, setResetLoading] = useState(false);
-  var [resetErr, setResetErr] = useState("");
+  var [resetMode, setResetMode] = useState(false);
+  var [resetEmail2, setResetEmail2] = useState("");
+  var [resetSent2, setResetSent2] = useState(false);
+  var [resetLoading2, setResetLoading2] = useState(false);
 
   function applyCoupon(emailVal) {
     if (!couponCode.trim()) return;
@@ -3094,6 +3093,65 @@ function Auth(props) {
     );
   }
 
+  if (resetMode) {
+    return (
+      <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+        <div style={{ width:"100%", maxWidth:440, background:"rgba(13,13,31,0.95)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:24, padding:40, boxShadow:SHADOW }}>
+          {!resetSent2 ? (
+            <div>
+              <h2 style={{ color:"#fff", fontWeight:700, marginBottom:8, fontSize:19 }}>🔑 Şifre Sıfırlama</h2>
+              <p style={{ color:TEXT2, fontSize:13, marginBottom:20, lineHeight:1.5 }}>E-posta adresinize sıfırlama bağlantısı gönderilecek</p>
+              <input
+                value={resetEmail2}
+                onChange={function(e) { setResetEmail2(e.target.value); }}
+                placeholder="ornek@ornek.com"
+                type="email"
+                style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"14px 16px", color:"#fff", fontSize:15, outline:"none", marginBottom:12, boxSizing:"border-box", fontFamily:FONT }}
+              />
+              <button
+                disabled={resetLoading2}
+                onClick={function() {
+                  var em = (resetEmail2 || "").toLowerCase().trim();
+                  if (!em || em.indexOf("@") < 0) { if (typeof alert !== "undefined") alert("Geçerli e-posta girin"); return; }
+                  setResetLoading2(true);
+                  if (typeof fetch === "undefined") { setResetSent2(true); setResetLoading2(false); return; }
+                  fetch(USERS_API, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: "reset-password", email: em })
+                  })
+                    .then(function(r) { return r.json(); })
+                    .then(function(d) { console.log("reset resp", d); setResetSent2(true); setResetLoading2(false); })
+                    .catch(function(e) { console.error("reset err", e); setResetSent2(true); setResetLoading2(false); });
+                }}
+                style={{ width:"100%", background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:12, padding:"14px", fontSize:15, fontWeight:700, cursor: resetLoading2 ? "not-allowed" : "pointer", marginBottom:10, fontFamily:FONT }}>
+                {resetLoading2 ? "Gönderiliyor..." : "Sıfırlama Bağlantısı Gönder"}
+              </button>
+              <button
+                onClick={function() { setResetMode(false); setResetSent2(false); setResetEmail2(""); }}
+                style={{ width:"100%", background:"transparent", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"12px", color:TEXT2, fontSize:13, cursor:"pointer", fontFamily:FONT }}>
+                Geri Dön
+              </button>
+            </div>
+          ) : (
+            <div style={{ textAlign:"center" }}>
+              <div style={{ fontSize:48, marginBottom:12 }}>📧</div>
+              <h3 style={{ color:"#fff", fontSize:17, fontWeight:700, marginBottom:10 }}>E-posta Gönderildi!</h3>
+              <p style={{ color:"#bbbbcc", fontSize:13, marginBottom:18, lineHeight:1.5 }}>
+                <strong style={{ color:GOLD2 }}>{resetEmail2}</strong> adresine sıfırlama bağlantısı gönderildi.
+              </p>
+              <button
+                onClick={function() { setResetMode(false); setResetSent2(false); setResetEmail2(""); }}
+                style={{ width:"100%", background:"linear-gradient(135deg,#d4a853,#f0c060)", color:"#08080f", border:"none", borderRadius:12, padding:"13px", fontSize:14, fontWeight:700, cursor:"pointer", fontFamily:FONT }}>
+                Giriş Ekranına Dön
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ minHeight:"100vh", background:BG, color:TEXT, fontFamily:FONT, display:"flex", alignItems:"center", justifyContent:"center", padding:20, backgroundImage:"radial-gradient(ellipse at 50% 0%,rgba(124,92,252,0.18) 0%,rgba(201,168,76,0.08) 35%,transparent 70%), radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize:"auto, 32px 32px" }}>
       <div style={{ width:"100%", maxWidth:440 }}>
@@ -3102,63 +3160,7 @@ function Auth(props) {
           <div style={{ fontSize:17, fontWeight:600, color:TEXT, marginTop:4 }}>Certification Academy</div>
         </div>
         <div style={{ background:"rgba(13,13,31,0.95)", backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:24, overflow:"hidden", boxShadow:SHADOW }}>
-          {showReset ? (
-            <div style={{ padding:40 }}>
-              {!resetSent ? (
-                <div>
-                  <h2 style={{ color:"#fff", fontWeight:700, marginBottom:8, fontSize:19 }}>🔑 Şifre Sıfırlama</h2>
-                  <p style={{ color:TEXT2, fontSize:13, marginBottom:20, lineHeight:1.5 }}>E-posta adresinize sıfırlama bağlantısı göndereceğiz.</p>
-                  <label style={{ display:"block", color:TEXT2, fontSize:11, fontWeight:600, marginBottom:8, textTransform:"uppercase", letterSpacing:"1px" }}>E-posta Adresi</label>
-                  <input
-                    value={resetEmail}
-                    onChange={function(e) { setResetEmail(e.target.value); setResetErr(""); }}
-                    placeholder="ornek@ornek.com"
-                    type="email"
-                    style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"14px 16px", color:"#fff", fontSize:15, outline:"none", marginBottom:8, boxSizing:"border-box", fontFamily:FONT }}
-                  />
-                  {resetErr && <div style={{ color:"#ef4444", fontSize:12, marginBottom:8 }}>{resetErr}</div>}
-                  <button
-                    onClick={function() {
-                      var em = (resetEmail || "").toLowerCase().trim();
-                      if (!em || em.indexOf("@") < 0) { setResetErr("Geçerli bir e-posta adresi girin"); return; }
-                      if (em === ADMIN_EMAIL) { setResetErr("Yönetici şifresi e-posta ile sıfırlanamaz."); return; }
-                      setResetLoading(true);
-                      fetch(USERS_API, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ action: "reset-password", email: em })
-                      })
-                      .then(function(r) { return r.json(); })
-                      .then(function() { setResetSent(true); setResetLoading(false); })
-                      .catch(function() { setResetSent(true); setResetLoading(false); });
-                    }}
-                    disabled={resetLoading}
-                    style={{ width:"100%", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"15px", fontSize:15, fontWeight:700, cursor: resetLoading ? "not-allowed" : "pointer", marginBottom:12, fontFamily:FONT }}>
-                    {resetLoading ? "Gönderiliyor..." : "Sıfırlama Bağlantısı Gönder"}
-                  </button>
-                  <button
-                    onClick={function() { setShowReset(false); setResetErr(""); setResetSent(false); }}
-                    style={{ width:"100%", background:"transparent", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"12px", color:TEXT2, fontSize:13, cursor:"pointer", fontFamily:FONT }}>
-                    Geri Dön
-                  </button>
-                </div>
-              ) : (
-                <div style={{ textAlign:"center" }}>
-                  <div style={{ fontSize:48, marginBottom:12 }}>📧</div>
-                  <h3 style={{ color:"#fff", fontSize:17, fontWeight:700, marginBottom:10 }}>E-posta Gönderildi!</h3>
-                  <p style={{ color:"#bbbbcc", fontSize:13, marginBottom:14, lineHeight:1.5 }}>
-                    <strong style={{ color:GOLD2 }}>{resetEmail}</strong> adresine sıfırlama bağlantısı gönderildi. Gelen kutunuzu kontrol edin.
-                  </p>
-                  <p style={{ color:"#777799", fontSize:12, marginBottom:18 }}>E-posta gelmedi mi? Spam klasörünü kontrol edin.</p>
-                  <button
-                    onClick={function() { setShowReset(false); setResetSent(false); setResetErr(""); }}
-                    style={{ width:"100%", background:"linear-gradient(135deg,#c9a84c,#f5cc6a)", color:"#08080f", border:"none", borderRadius:14, padding:"13px", fontSize:14, fontWeight:700, cursor:"pointer", fontFamily:FONT }}>
-                    Giriş Ekranına Dön
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : verifyCode ? (
+          {verifyCode ? (
             <div style={{ padding:40 }}>
               <div style={{ textAlign:"center", marginBottom:24 }}>
                 <div style={{ fontSize:40, marginBottom:10 }}>✉️</div>
@@ -3218,7 +3220,7 @@ function Auth(props) {
                 style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"14px 16px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box", fontFamily:FONT, transition:"border-color 0.2s ease" }} />
               {tab === "login" && (
                 <div style={{ textAlign:"right", marginTop:8 }}>
-                  <button type="button" onClick={function() { setShowReset(true); setResetEmail(email); setResetErr(""); setResetSent(false); }}
+                  <button type="button" onClick={function() { setResetMode(true); setResetEmail2(email); setResetSent2(false); }}
                     style={{ background:"transparent", border:"none", color:GOLD2, cursor:"pointer", fontSize:12, padding:0, textDecoration:"underline", fontFamily:FONT }}>
                     Şifremi unuttum
                   </button>
