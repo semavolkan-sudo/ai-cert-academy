@@ -915,12 +915,14 @@ function AdminPanel(props) {
               success++;
               completed++;
               setBatchProgressPct(Math.round((completed / total) * 100));
+              setBatchCompleted(completed);
               processNext(toolIdx, profileIdx + 1);
-            }).catch(function() { failed++; completed++; setBatchProgressPct(Math.round((completed / total) * 100)); processNext(toolIdx, profileIdx + 1); });
+            }).catch(function() { failed++; completed++; setBatchProgressPct(Math.round((completed / total) * 100)); setBatchCompleted(completed); processNext(toolIdx, profileIdx + 1); });
           } else {
             failed++;
             completed++;
             setBatchProgressPct(Math.round((completed / total) * 100));
+            setBatchCompleted(completed);
             processNext(toolIdx, profileIdx + 1);
           }
           return;
