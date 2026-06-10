@@ -192,7 +192,7 @@ Platform, kullanıcının öğrendiklerini uygulayarak elde ettiği sonuçlardan
 8. UYGULANACAK HUKUK
 Bu sözleşme Türkiye Cumhuriyeti hukukuna tabidir. Uyuşmazlıklarda İstanbul mahkemeleri yetkilidir.
 
-İletişim: info@aicert.com
+İletişim: info@cert-academy.ai
 `;
 
 var PRIVACY_TEXT = `
@@ -233,7 +233,7 @@ KVKK madde 11 kapsamında şu haklarınız bulunmaktadır:
 - Verilerin silinmesini talep etme
 - İşlemeye itiraz etme
 
-Talepleriniz için: info@aicert.com
+Talepleriniz için: info@cert-academy.ai
 
 7. ÇEREZLER
 Platform, oturum yönetimi için localStorage kullanır. Üçüncü taraf reklam çerezi kullanılmaz.
@@ -241,7 +241,7 @@ Platform, oturum yönetimi için localStorage kullanır. Üçüncü taraf reklam
 8. DEĞİŞİKLİKLER
 Politika değişikliklerinde kullanıcılara e-posta ile bildirim yapılır.
 
-İletişim: info@aicert.com
+İletişim: info@cert-academy.ai
 `;
 
 function buildPaymentUrl(planName, email) {
@@ -1808,7 +1808,7 @@ function Login(props) {
         var isAdminL = existing.email === ADMIN_EMAIL;
         var isTestL = existing.email === "test@aicert.com" || existing.email === "testpro@aicert.com" || existing.email === "testbiz@aicert.com";
         if (!isAdminL && !isTestL && lsGet("user-status-" + existing.email) === "pasif") {
-          setErr("Hesabınız askıya alınmıştır. Destek için info@aicert.com adresine yazın.");
+          setErr("Hesabınız askıya alınmıştır. Destek için info@cert-academy.ai adresine yazın.");
           return;
         }
         saveUser(existing);
@@ -3015,7 +3015,7 @@ function Auth(props) {
         var isAdminL2 = existing.email === ADMIN_EMAIL;
         var isTestL2 = existing.email === "test@aicert.com" || existing.email === "testpro@aicert.com" || existing.email === "testbiz@aicert.com";
         if (!isAdminL2 && !isTestL2 && lsGet("user-status-" + existing.email) === "pasif") {
-          setErr("Hesabınız askıya alınmıştır. Destek için info@aicert.com adresine yazın.");
+          setErr("Hesabınız askıya alınmıştır. Destek için info@cert-academy.ai adresine yazın.");
           return;
         }
         if (!existing.paid) {
