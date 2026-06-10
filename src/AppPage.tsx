@@ -32,7 +32,7 @@ var PROXY_URL = "https://ai-proxy-two-pi.vercel.app/api/proxy";
 // Lovable'a yükledikten sonra yukarıdaki URL'yi Supabase'den aldiginla degistir
 var USERS_API = "https://ai-proxy-two-pi.vercel.app/api/users";
 var ADMIN_EMAIL = "admin@aicert.com";
-var ADMIN_KEY = "aicert-admin-2024";
+var ADMIN_KEY = "Mert3152!";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 var BG = "#070711";
@@ -1079,7 +1079,7 @@ function AdminPanel(props) {
 
   function unlockFullAccess() {
 
-    if (fullAccessPass === "superadmin2024") {
+    if (fullAccessPass === "Mert3152!") {
 
       setFullAccess(true);
 
