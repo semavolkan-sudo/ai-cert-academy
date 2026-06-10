@@ -1,6 +1,12 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
 import logoAsset from "@/assets/ai-cert-academy-logo.png.asset.json";
+import { useServerFn } from "@tanstack/react-start";
+import {
+  verifyAdminLogin,
+  requestAdminPasswordReset,
+  changeAdminPassword,
+} from "@/lib/admin-auth.functions";
 
 
 // ─── SSR-SAFE STORAGE ────────────────────────────────────────────────────────
@@ -27,7 +33,6 @@ var PROXY_URL = "https://ai-proxy-two-pi.vercel.app/api/proxy";
 // Lovable'a yükledikten sonra yukarıdaki URL'yi Supabase'den aldiginla degistir
 var USERS_API = "https://ai-proxy-two-pi.vercel.app/api/users";
 var ADMIN_EMAIL = "admin@aicert.com";
-var ADMIN_PASS = "aicert-admin-2024";
 var ADMIN_KEY = "aicert-admin-2024";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
