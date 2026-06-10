@@ -4,7 +4,6 @@ import logoAsset from "@/assets/ai-cert-academy-logo.png.asset.json";
 import { useServerFn } from "@tanstack/react-start";
 import {
   verifyAdminLogin,
-  requestAdminPasswordReset,
   changeAdminPassword,
 } from "@/lib/admin-auth.functions";
 
