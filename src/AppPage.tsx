@@ -3268,6 +3268,14 @@ function Auth(props) {
                 onFocus={function(e){ e.currentTarget.style.borderColor=GOLD; }}
                 onBlur={function(e){ e.currentTarget.style.borderColor="rgba(255,255,255,0.12)"; }}
                 style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, padding:"14px 16px", color:"#fff", fontSize:15, outline:"none", boxSizing:"border-box", fontFamily:FONT, transition:"border-color 0.2s ease" }} />
+              {tab === "login" && (
+                <div style={{ textAlign:"right", marginTop:8 }}>
+                  <button type="button" onClick={function() { setShowReset(true); setResetEmail(email); setResetErr(""); setResetSent(false); }}
+                    style={{ background:"transparent", border:"none", color:GOLD2, cursor:"pointer", fontSize:12, padding:0, textDecoration:"underline", fontFamily:FONT }}>
+                    Şifremi unuttum
+                  </button>
+                </div>
+              )}
             </div>
             {tab === "register" && (
               <div style={{ marginBottom:18 }}>
