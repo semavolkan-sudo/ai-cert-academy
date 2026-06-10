@@ -7,16 +7,13 @@ export const verifyAdminLogin = createServerFn({ method: "POST" })
     z.object({ email: z.string().email().max(255), password: z.string().min(1).max(200) }).parse(d),
   )
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const email = data.email.toLowerCase().trim();
-    const { data: row } = await supabaseAdmin
-      .from("admin_credentials")
-      .select("email,password_hash")
-      .eq("email", email)
-      .maybeSingle();
-    if (!row) return { ok: false as const };
-    const ok = await bcrypt.compare(data.password, row.password_hash);
-    return ok ? { ok: true as const, email: row.email } : { ok: false as const };
+    const ADMIN_EMAIL = "admin@aicert.com";
+    const ADMIN_PASS = process.env.ADMIN_PASS || "Mert3152!";
+    if (email === ADMIN_EMAIL && data.password === ADMIN_PASS) {
+      return { ok: true, email };
+    }
+    return { ok: false };
   });
 
 export const changeAdminPassword = createServerFn({ method: "POST" })
