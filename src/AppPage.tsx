@@ -1635,8 +1635,8 @@ function AdminPanel(props) {
                   <div style={{ display:"flex", gap:10, marginBottom:12, flexWrap:"wrap" }}>
 
                     <select value={selectedTool} onChange={function(e) { setSelectedTool(e.target.value); }} disabled={batchRunning} style={{ flex:1, minWidth:160, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:10, padding:"10px 12px", color:"#fff", fontSize:13, outline:"none" }}>
-                      <option value="Tümü">Tüm Araçlar</option>
-                      {TOOLS_LIST.map(function(t) { return <option key={t} value={t}>{t}</option>; })}
+                      <option value="Tümü" style={{ color:"#070711", backgroundColor:"#f0f0f5" }}>Tüm Araçlar</option>
+                      {TOOLS_LIST.map(function(t) { return <option key={t} value={t} style={{ color:"#070711", backgroundColor:"#f0f0f5" }}>{t}</option>; })}
                     </select>
 
                     <select value={selectedProfile} onChange={function(e) { setSelectedProfile(e.target.value); }} disabled={batchRunning} style={{ flex:1, minWidth:160, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:10, padding:"10px 12px", color:"#fff", fontSize:13, outline:"none" }}>
