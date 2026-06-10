@@ -838,6 +838,10 @@ function AdminPanel(props) {
 
   var [batchLogs, setBatchLogs] = useState([]);
 
+  var [batchCompleted, setBatchCompleted] = useState(0);
+
+  var [batchTotal, setBatchTotal] = useState(0);
+
   var [selectedTool, setSelectedTool] = useState("Tümü");
 
   var [selectedProfile, setSelectedProfile] = useState("Tümü");
