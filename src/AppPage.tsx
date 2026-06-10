@@ -869,6 +869,8 @@ function AdminPanel(props) {
     var completed = 0;
     var success = 0;
     var failed = 0;
+    setBatchCompleted(0);
+    setBatchTotal(total);
     function processNext(toolIdx, profileIdx) {
       if (toolIdx >= toolsToRun.length) {
         setBatchProgress("✅ Tamamlandı! " + success + " başarılı, " + failed + " başarısız. Toplam: " + total);
