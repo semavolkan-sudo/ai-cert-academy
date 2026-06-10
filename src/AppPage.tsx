@@ -2978,7 +2978,15 @@ function Auth(props) {
     setErr("");
     setInfo("");
     if (!email || !pass) { setErr("Tüm alanlari doldurun"); return; }
-    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) { setShowAdmin(true); return; }
+    if (email.toLowerCase().trim() === ADMIN_EMAIL) {
+      verifyAdminLogin({ data: { email: email, password: pass } })
+        .then(function(r) {
+          if (r && r.ok) { setShowAdmin(true); }
+          else { setErr("Hatalı yönetici şifresi"); }
+        })
+        .catch(function() { setErr("Sunucuya ulaşılamadı"); });
+      return;
+    }
     // Test kullanıcıları: ödeme atlanır, doğru planla giriş yapılır
     var emailKey = (email || "").toLowerCase();
     var testUser = TEST_USERS[emailKey];
