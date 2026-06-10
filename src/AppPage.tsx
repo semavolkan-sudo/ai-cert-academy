@@ -3038,6 +3038,11 @@ function Auth(props) {
   var [couponCode, setCouponCode] = useState("");
   var [couponResult, setCouponResult] = useState(null);
   var [couponLoading, setCouponLoading] = useState(false);
+  var [showReset, setShowReset] = useState(false);
+  var [resetEmail, setResetEmail] = useState("");
+  var [resetSent, setResetSent] = useState(false);
+  var [resetLoading, setResetLoading] = useState(false);
+  var [resetErr, setResetErr] = useState("");
 
   function applyCoupon(emailVal) {
     if (!couponCode.trim()) return;
