@@ -1135,6 +1135,52 @@ function AdminPanel(props) {
     setUsers(function(prev) { return prev.map(function(x) { return x.email === u.email ? Object.assign({}, x, { _status: current === "pasif" ? "aktif" : "pasif" }) : x; }); });
   }
 
+  function profileColor(key) {
+    if (!key || key === "default") return "#888899";
+    if (key.indexOf("baslangic") === 0) return "#6366f1";
+    if (key.indexOf("orta") === 0) return "#d4a853";
+    return "#10a37f";
+  }
+
+  function profileLabel(key) {
+    var labels = {
+      "default": "Genel",
+      "baslangic_kariyer": "Başlangıç·K",
+      "baslangic_is": "Başlangıç·İ",
+      "baslangic_freelance": "Başlangıç·F",
+      "orta_kariyer": "Orta·K",
+      "orta_is": "Orta·İ",
+      "ileri_kariyer": "İleri·K"
+    };
+    return labels[key] || key;
+  }
+
+  function userProfileKey(u) {
+    if (!u) return "default";
+    if (u.profile_key) return u.profile_key;
+    if (u.profileKey) return u.profileKey;
+    if (u.profile && u.profile.profileKey) return u.profile.profileKey;
+    return "default";
+  }
+
+  function updateUserProfile(email, profileKey) {
+    if (typeof fetch === "undefined") return;
+    fetch(USERS_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "update", user: { email: email, profileKey: profileKey }, adminKey: ADMIN_KEY })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function() {
+      setUsers(function(prev) {
+        return prev.map(function(u) {
+          return u.email === email ? Object.assign({}, u, { profile_key: profileKey }) : u;
+        });
+      });
+    })
+    .catch(function() {});
+  }
+
   return (
 
     <div style={{ minHeight:"100vh", background:"#070711", color:"#fff", fontFamily:"'Inter',sans-serif" }}>
