@@ -2816,7 +2816,7 @@ function Lesson(props) {
   return (
     <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:FONT }}>
       <div style={{ borderBottom:"1px solid rgba(255,255,255,0.06)", padding:"12px 24px", display:"flex", alignItems:"center", gap:12 }}>
-        <button onClick={props.onBack} style={{ background:"transparent", border:"none", color:"#888899", cursor:"pointer", fontSize:18 }}>{"<"}</button>
+        <button onClick={function() { setPhase(""); props.onBack(); }} style={{ background:"transparent", border:"none", color:"#888899", cursor:"pointer", fontSize:18 }}>{"<"}</button>
         <span style={{ fontSize:18 }}>{lesson.icon}</span>
         <span style={{ fontWeight:700, fontSize:14 }}>{"Gün " + lesson.day + ": " + lesson.tool}</span>
         <div style={{ marginLeft:"auto", display:"flex", gap:5 }}>
@@ -3625,7 +3625,8 @@ export default function App() {
       <img
         src={logoAsset.url}
         alt="AI Certification Academy"
-        style={{ position:"fixed", top:16, left:16, width:56, height:56, borderRadius:"50%", zIndex:9998, boxShadow:"0 4px 16px rgba(0,0,0,0.45)", pointerEvents:"none" }}
+        onClick={function() { setPage("dashboard"); setLesson(null); }}
+        style={{ position:"fixed", top:16, left:16, width:56, height:56, borderRadius:"50%", zIndex:9998, boxShadow:"0 4px 16px rgba(0,0,0,0.45)", pointerEvents:"auto", cursor:"pointer" }}
       />
       {xpToast && <XPToast xp={xpToast} onDone={function() { setXpToast(null); }} />}
       {mentor && user && <MentorChat user={user} onClose={function() { setMentor(false); }} />}
