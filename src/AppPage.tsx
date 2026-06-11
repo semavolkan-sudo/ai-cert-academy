@@ -3625,7 +3625,8 @@ export default function App() {
       <img
         src={logoAsset.url}
         alt="AI Certification Academy"
-        style={{ position:"fixed", top:16, left:16, width:56, height:56, borderRadius:"50%", zIndex:9998, boxShadow:"0 4px 16px rgba(0,0,0,0.45)", pointerEvents:"none" }}
+        onClick={function() { setPage("dashboard"); setLesson(null); }}
+        style={{ position:"fixed", top:16, left:16, width:56, height:56, borderRadius:"50%", zIndex:9998, boxShadow:"0 4px 16px rgba(0,0,0,0.45)", pointerEvents:"auto", cursor:"pointer" }}
       />
       {xpToast && <XPToast xp={xpToast} onDone={function() { setXpToast(null); }} />}
       {mentor && user && <MentorChat user={user} onClose={function() { setMentor(false); }} />}
