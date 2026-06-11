@@ -2816,7 +2816,7 @@ function Lesson(props) {
   return (
     <div style={{ minHeight:"100vh", background:BG, color:"#fff", fontFamily:FONT }}>
       <div style={{ borderBottom:"1px solid rgba(255,255,255,0.06)", padding:"12px 24px", display:"flex", alignItems:"center", gap:12 }}>
-        <button onClick={props.onBack} style={{ background:"transparent", border:"none", color:"#888899", cursor:"pointer", fontSize:18 }}>{"<"}</button>
+        <button onClick={function() { setPhase(""); props.onBack(); }} style={{ background:"transparent", border:"none", color:"#888899", cursor:"pointer", fontSize:18 }}>{"<"}</button>
         <span style={{ fontSize:18 }}>{lesson.icon}</span>
         <span style={{ fontWeight:700, fontSize:14 }}>{"Gün " + lesson.day + ": " + lesson.tool}</span>
         <div style={{ marginLeft:"auto", display:"flex", gap:5 }}>
