@@ -151,9 +151,9 @@ var PAYMENT_LINKS = {
 
 // ─── TEST USERS (geliştirme amaçlı ödeme atlama) ─────────────────────────────
 var TEST_USERS = {
-  "test@aicert.com":     { name:"Test",         plan:"Starter",  pass:"TestSema1605", paid:true  },
-  "testpro@aicert.com":  { name:"TestPro",      plan:"Pro",      pass:"TestSema1605", paid:true  },
-  "testbiz@aicert.com":  { name:"TestBusiness", plan:"Business", pass:"TestSema1605", paid:true  },
+  "test@aicert.com":     { name:"Test",         plan:"Starter",  pass:"TestSema1605", paid:true, profileKey:"baslangic_kariyer" },
+  "testpro@aicert.com":  { name:"TestPro",      plan:"Pro",      pass:"TestSema1605", paid:true, profileKey:"orta_kariyer"      },
+  "testbiz@aicert.com":  { name:"TestBusiness", plan:"Business", pass:"TestSema1605", paid:true, profileKey:"ileri_kariyer"     },
 };
 
 var TERMS_TEXT = `
@@ -1891,7 +1891,7 @@ function Login(props) {
       .then(function(data) {
         if (data.ok === true) {
           var PLAN_MAP = { "Starter": PLANS[0], "Pro": PLANS[1], "Business": PLANS[2] };
-          var testUser = { name: data.name, email: email.toLowerCase().trim(), plan: PLAN_MAP[data.plan] || PLANS[0], paid: true, xp: 0, streak: 0, progress: {}, scores: {} };
+          var testUser = { name: data.name, email: email.toLowerCase().trim(), plan: PLAN_MAP[data.plan] || PLANS[0], paid: true, profile: { profileKey: data.profileKey || "default" }, xp: 0, streak: 0, progress: {}, scores: {} };
           saveUser(testUser);
           setLoading(false);
           props.onLogin && props.onLogin(testUser);
