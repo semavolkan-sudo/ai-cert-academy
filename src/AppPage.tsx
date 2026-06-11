@@ -151,9 +151,9 @@ var PAYMENT_LINKS = {
 
 // ─── TEST USERS (geliştirme amaçlı ödeme atlama) ─────────────────────────────
 var TEST_USERS = {
-  "test@aicert.com":     { name:"Test",         plan:"Starter",  pass:"TestSema1605", paid:true  },
-  "testpro@aicert.com":  { name:"TestPro",      plan:"Pro",      pass:"TestSema1605", paid:true  },
-  "testbiz@aicert.com":  { name:"TestBusiness", plan:"Business", pass:"TestSema1605", paid:true  },
+  "test@aicert.com":     { name:"Test",         plan:"Starter",  pass:"TestSema1605", paid:true, profileKey:"baslangic_kariyer" },
+  "testpro@aicert.com":  { name:"TestPro",      plan:"Pro",      pass:"TestSema1605", paid:true, profileKey:"orta_kariyer"      },
+  "testbiz@aicert.com":  { name:"TestBusiness", plan:"Business", pass:"TestSema1605", paid:true, profileKey:"ileri_kariyer"     },
 };
 
 var TERMS_TEXT = `
@@ -1135,6 +1135,52 @@ function AdminPanel(props) {
     setUsers(function(prev) { return prev.map(function(x) { return x.email === u.email ? Object.assign({}, x, { _status: current === "pasif" ? "aktif" : "pasif" }) : x; }); });
   }
 
+  function profileColor(key) {
+    if (!key || key === "default") return "#888899";
+    if (key.indexOf("baslangic") === 0) return "#6366f1";
+    if (key.indexOf("orta") === 0) return "#d4a853";
+    return "#10a37f";
+  }
+
+  function profileLabel(key) {
+    var labels = {
+      "default": "Genel",
+      "baslangic_kariyer": "Başlangıç·K",
+      "baslangic_is": "Başlangıç·İ",
+      "baslangic_freelance": "Başlangıç·F",
+      "orta_kariyer": "Orta·K",
+      "orta_is": "Orta·İ",
+      "ileri_kariyer": "İleri·K"
+    };
+    return labels[key] || key;
+  }
+
+  function userProfileKey(u) {
+    if (!u) return "default";
+    if (u.profile_key) return u.profile_key;
+    if (u.profileKey) return u.profileKey;
+    if (u.profile && u.profile.profileKey) return u.profile.profileKey;
+    return "default";
+  }
+
+  function updateUserProfile(email, profileKey) {
+    if (typeof fetch === "undefined") return;
+    fetch(USERS_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "update", user: { email: email, profileKey: profileKey }, adminKey: ADMIN_KEY })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function() {
+      setUsers(function(prev) {
+        return prev.map(function(u) {
+          return u.email === email ? Object.assign({}, u, { profile_key: profileKey }) : u;
+        });
+      });
+    })
+    .catch(function() {});
+  }
+
   return (
 
     <div style={{ minHeight:"100vh", background:"#070711", color:"#fff", fontFamily:"'Inter',sans-serif" }}>
@@ -1339,8 +1385,8 @@ function AdminPanel(props) {
 
                     <tr style={{ background:"#0d0d1f" }}>
 
-                      {["#","Ad Soyad","Email","Durum","Plan","XP","İlerleme","Kayıt","Son Giriş","İşlem"].map(function(h) {
-                        var mw = h==="#"?32:h==="Ad Soyad"?140:h==="Email"?180:h==="Durum"?80:h==="Plan"?90:h==="XP"?50:h==="İlerleme"?120:h==="Kayıt"?130:h==="Son Giriş"?130:200;
+                      {["#","Ad Soyad","Email","Durum","Plan","Profil","XP","İlerleme","Kayıt","Son Giriş","İşlem"].map(function(h) {
+                        var mw = h==="#"?32:h==="Ad Soyad"?140:h==="Email"?180:h==="Durum"?80:h==="Plan"?90:h==="Profil"?160:h==="XP"?50:h==="İlerleme"?120:h==="Kayıt"?130:h==="Son Giriş"?130:200;
                         return <th key={h} style={{ padding:"13px 14px", color:"#555577", fontWeight:600, textAlign:"left", whiteSpace:"nowrap", fontSize:11, textTransform:"uppercase", letterSpacing:1, minWidth:mw }}>{h}</th>;
 
                       })}
@@ -1395,6 +1441,29 @@ function AdminPanel(props) {
 
                             <span style={{ background:pc+"22", color:pc, border:"1px solid "+pc+"44", borderRadius:20, padding:"4px 12px", fontSize:11, fontWeight:700 }}>{pn}</span>
 
+                          </td>
+
+                          <td style={{ padding:"12px 14px", minWidth:160 }}>
+                            {fullAccess ? (
+                              <select
+                                value={userProfileKey(u)}
+                                onChange={function(e) { updateUserProfile(u.email, e.target.value); }}
+                                style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:8, padding:"4px 8px", color:"#fff", fontSize:11, cursor:"pointer" }}>
+                                <option value="default">Genel</option>
+                                <option value="baslangic_kariyer">Başlangıç - Kariyer</option>
+                                <option value="baslangic_is">Başlangıç - İş</option>
+                                <option value="baslangic_freelance">Başlangıç - Freelance</option>
+                                <option value="orta_kariyer">Orta - Kariyer</option>
+                                <option value="orta_is">Orta - İş</option>
+                                <option value="ileri_kariyer">İleri - Kariyer</option>
+                              </select>
+                            ) : (
+                              (function() {
+                                var pk = userProfileKey(u);
+                                var col = profileColor(pk);
+                                return <span style={{ background:col+"22", color:col, border:"1px solid "+col+"44", borderRadius:20, padding:"4px 10px", fontSize:11, fontWeight:700 }}>{profileLabel(pk)}</span>;
+                              })()
+                            )}
                           </td>
 
                           <td style={{ padding:"12px 14px", color:"#d4a853", fontWeight:700, minWidth:50 }}>{u.xp||0}</td>
@@ -1891,7 +1960,7 @@ function Login(props) {
       .then(function(data) {
         if (data.ok === true) {
           var PLAN_MAP = { "Starter": PLANS[0], "Pro": PLANS[1], "Business": PLANS[2] };
-          var testUser = { name: data.name, email: email.toLowerCase().trim(), plan: PLAN_MAP[data.plan] || PLANS[0], paid: true, xp: 0, streak: 0, progress: {}, scores: {} };
+          var testUser = { name: data.name, email: email.toLowerCase().trim(), plan: PLAN_MAP[data.plan] || PLANS[0], paid: true, profile: { profileKey: data.profileKey || "default" }, xp: 0, streak: 0, progress: {}, scores: {} };
           saveUser(testUser);
           setLoading(false);
           props.onLogin && props.onLogin(testUser);
