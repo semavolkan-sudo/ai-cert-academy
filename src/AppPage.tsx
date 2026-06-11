@@ -1385,8 +1385,8 @@ function AdminPanel(props) {
 
                     <tr style={{ background:"#0d0d1f" }}>
 
-                      {["#","Ad Soyad","Email","Durum","Plan","XP","İlerleme","Kayıt","Son Giriş","İşlem"].map(function(h) {
-                        var mw = h==="#"?32:h==="Ad Soyad"?140:h==="Email"?180:h==="Durum"?80:h==="Plan"?90:h==="XP"?50:h==="İlerleme"?120:h==="Kayıt"?130:h==="Son Giriş"?130:200;
+                      {["#","Ad Soyad","Email","Durum","Plan","Profil","XP","İlerleme","Kayıt","Son Giriş","İşlem"].map(function(h) {
+                        var mw = h==="#"?32:h==="Ad Soyad"?140:h==="Email"?180:h==="Durum"?80:h==="Plan"?90:h==="Profil"?160:h==="XP"?50:h==="İlerleme"?120:h==="Kayıt"?130:h==="Son Giriş"?130:200;
                         return <th key={h} style={{ padding:"13px 14px", color:"#555577", fontWeight:600, textAlign:"left", whiteSpace:"nowrap", fontSize:11, textTransform:"uppercase", letterSpacing:1, minWidth:mw }}>{h}</th>;
 
                       })}
@@ -1441,6 +1441,29 @@ function AdminPanel(props) {
 
                             <span style={{ background:pc+"22", color:pc, border:"1px solid "+pc+"44", borderRadius:20, padding:"4px 12px", fontSize:11, fontWeight:700 }}>{pn}</span>
 
+                          </td>
+
+                          <td style={{ padding:"12px 14px", minWidth:160 }}>
+                            {fullAccess ? (
+                              <select
+                                value={userProfileKey(u)}
+                                onChange={function(e) { updateUserProfile(u.email, e.target.value); }}
+                                style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:8, padding:"4px 8px", color:"#fff", fontSize:11, cursor:"pointer" }}>
+                                <option value="default">Genel</option>
+                                <option value="baslangic_kariyer">Başlangıç - Kariyer</option>
+                                <option value="baslangic_is">Başlangıç - İş</option>
+                                <option value="baslangic_freelance">Başlangıç - Freelance</option>
+                                <option value="orta_kariyer">Orta - Kariyer</option>
+                                <option value="orta_is">Orta - İş</option>
+                                <option value="ileri_kariyer">İleri - Kariyer</option>
+                              </select>
+                            ) : (
+                              (function() {
+                                var pk = userProfileKey(u);
+                                var col = profileColor(pk);
+                                return <span style={{ background:col+"22", color:col, border:"1px solid "+col+"44", borderRadius:20, padding:"4px 10px", fontSize:11, fontWeight:700 }}>{profileLabel(pk)}</span>;
+                              })()
+                            )}
                           </td>
 
                           <td style={{ padding:"12px 14px", color:"#d4a853", fontWeight:700, minWidth:50 }}>{u.xp||0}</td>
