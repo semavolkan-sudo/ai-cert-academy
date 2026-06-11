@@ -2751,13 +2751,34 @@ function Lesson(props) {
 
     var today = new Date().toISOString().split("T")[0];
     var profileKey = "default";
+
     try {
+
       var su = lsGet("aica_user");
+
       if (su) {
+
         var pu = JSON.parse(su);
-        if (pu.profile && pu.profile.profileKey) profileKey = pu.profile.profileKey;
+
+        if (pu && pu.profile && pu.profile.profileKey) {
+
+          profileKey = pu.profile.profileKey;
+
+        } else if (pu && pu.profileKey) {
+
+          profileKey = pu.profileKey;
+
+        } else if (pu && pu.profile_key) {
+
+          profileKey = pu.profile_key;
+
+        }
+
       }
+
     } catch(e) {}
+
+    console.log("profileKey:", profileKey);
 
     var cacheKey2 = "lesson-db-" + lesson.tool + "-" + profileKey + "-" + today;
 
