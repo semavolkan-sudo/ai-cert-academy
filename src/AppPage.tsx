@@ -1976,39 +1976,48 @@ function Login(props) {
     }
 
     if (typeof fetch === "undefined") { normalLogin(); return; }
-    fetch("https://ai-proxy-two-pi.vercel.app/api/users", {
+    fetch("https://ai-proxy-two-pi.vercel.app/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "verify-test", user: { email: email.toLowerCase().trim(), pass: pass } })
+      body: JSON.stringify({ email: email.toLowerCase().trim(), pass: pass })
     })
-      .then(function(r) { return r.json(); })
+      .then(function(r) {
+        if (r.status === 401) {
+          setLoading(false);
+          setErr("Hatalı e-posta veya şifre");
+          return null;
+        }
+        return r.json();
+      })
       .then(function(data) {
-        if (data.ok === true) {
+        if (!data) return;
+        if (data.ok === true && data.token) {
+          setAuthToken(data.token);
           var PLAN_MAP = { "Starter": PLANS[0], "Pro": PLANS[1], "Business": PLANS[2] };
-          var testUser = {
-            name: data.name,
-            email: email.toLowerCase().trim(),
-            plan: PLAN_MAP[data.plan] || PLANS[0],
-            profileKey: data.profileKey || "default",
-            profile: { profileKey: data.profileKey || "default" },
-            profile_key: data.profileKey || "default",
-            xp: 0,
-            streak: 0,
-            progress: {},
-            scores: {}
+          var du = data.user || {};
+          var loggedUser = {
+            name: du.name || "",
+            email: (du.email || email).toLowerCase().trim(),
+            plan: PLAN_MAP[du.plan] || (du.plan && du.plan.name ? du.plan : PLANS[0]),
+            profileKey: du.profileKey || "default",
+            profile: { profileKey: du.profileKey || "default" },
+            profile_key: du.profileKey || "default",
+            xp: du.xp || 0,
+            streak: du.streak || 0,
+            progress: du.progress || {},
+            scores: du.scores || {}
           };
-          saveUser(testUser);
+          saveUser(loggedUser);
           setLoading(false);
-          props.onLogin && props.onLogin(testUser);
-          if (props.onDone) props.onDone(testUser);
+          props.onLogin && props.onLogin(loggedUser);
+          if (props.onDone) props.onDone(loggedUser);
           return;
         }
-        if (data.ok === false && data.reason === "wrong_pass") {
-          setErr("Hatalı şifre");
+        if (data.ok === false) {
+          setErr("Hatalı e-posta veya şifre");
           setLoading(false);
           return;
         }
-        // not_test_user → normal giriş akışına devam et
         normalLogin();
       })
       .catch(function() {
