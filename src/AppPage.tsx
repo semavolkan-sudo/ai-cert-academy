@@ -1174,7 +1174,7 @@ function AdminPanel(props) {
 
     fetch("https://ai-proxy-two-pi.vercel.app/api/login", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: ADMIN_EMAIL, pass: fullAccessPass })
+      body: JSON.stringify({ email: (function() { try { var t = getAuthToken(); var pl = JSON.parse(atob(t.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))); return pl.email || ADMIN_EMAIL; } catch (e) { return ADMIN_EMAIL; } })(), pass: fullAccessPass })
     })
       .then(function(r) { return r.json(); })
       .then(function(d) {
