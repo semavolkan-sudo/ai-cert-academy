@@ -949,7 +949,7 @@ function AdminPanel(props) {
     setBatchProgressPct(0);
     var LEVELS = ["baslangic_kariyer", "orta_kariyer", "ileri_kariyer"];
     var toolsToRun = selectedTool === "Tümü" ? TOOLS_LIST : [selectedTool];
-    var total = toolsToRun.length;
+    var total = toolsToRun.length * LEVELS.length;
     var completed = 0, success = 0, failed = 0;
     setBatchCompleted(0);
     setBatchTotal(total);
@@ -966,26 +966,26 @@ function AdminPanel(props) {
         return;
       }
       var tool = toolsToRun[idx];
-      setBatchProgress("⚙️ " + tool + " üretiliyor (" + (idx + 1) + "/" + total + ")");
-      // Sunucu tarafı: seçili aracın hedeflenmesi için önce eksik kontrolü değil,
-      // doğrudan bu aracın 3 seviyesini üret. Backend 'tool' parametresiyle hedefler.
-      fetch("https://ai-proxy-two-pi.vercel.app/api/generate-lessons?tool=" + encodeURIComponent(tool), {
-        method: "GET", headers: authJsonHeaders()
-      })
-        .then(function(r) { return r.json(); })
-        .then(function(d) {
-          if (d && d.ok) { success++; } else { failed++; }
+      // Her araç için 3 seviyeyi TEK TEK, sırayla üret (her istek ~20sn, timeout-safe)
+      var lvlIdx = 0;
+      function runLevel() {
+        if (lvlIdx >= LEVELS.length) {
           completed++;
           setBatchCompleted(completed);
           setBatchProgressPct(Math.round((completed / total) * 100));
           runTool(idx + 1);
+          return;
+        }
+        var lvl = LEVELS[lvlIdx];
+        setBatchProgress("⚙️ " + tool + " · " + lvl + " (" + (idx + 1) + "/" + total + ")");
+        fetch("https://ai-proxy-two-pi.vercel.app/api/generate-lessons?tool=" + encodeURIComponent(tool) + "&profile=" + encodeURIComponent(lvl), {
+          method: "GET", headers: authJsonHeaders()
         })
-        .catch(function() {
-          failed++; completed++;
-          setBatchCompleted(completed);
-          setBatchProgressPct(Math.round((completed / total) * 100));
-          runTool(idx + 1);
-        });
+          .then(function(r) { return r.json(); })
+          .then(function(d) { if (d && d.ok) { success++; } else { failed++; } lvlIdx++; runLevel(); })
+          .catch(function() { failed++; lvlIdx++; runLevel(); });
+      }
+      runLevel();
     }
     runTool(0);
   }
