@@ -51,8 +51,6 @@ var PROXY_URL = "https://ai-proxy-two-pi.vercel.app/api/proxy";
 // Lovable'a yükledikten sonra yukarıdaki URL'yi Supabase'den aldiginla degistir
 var USERS_API = "https://ai-proxy-two-pi.vercel.app/api/users";
 var ADMIN_EMAIL = "admin@aicert.com";
-var ADMIN_KEY = "aicert-admin-2024";
-var ADMIN_PASS = "Mert3152!";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 var BG = "#070711";
@@ -170,9 +168,9 @@ var PAYMENT_LINKS = {
 
 // ─── TEST USERS (geliştirme amaçlı ödeme atlama) ─────────────────────────────
 var TEST_USERS = {
-  "test@aicert.com":     { name:"Test",         plan:"Starter",  pass:"TestSema1605", paid:true, profileKey:"baslangic_kariyer" },
-  "testpro@aicert.com":  { name:"TestPro",      plan:"Pro",      pass:"TestSema1605", paid:true, profileKey:"orta_kariyer"      },
-  "testbiz@aicert.com":  { name:"TestBusiness", plan:"Business", pass:"TestSema1605", paid:true, profileKey:"ileri_kariyer"     },
+  "test@aicert.com":     { name:"Test",         plan:"Starter",  pass:"", paid:true, profileKey:"baslangic_kariyer" },
+  "testpro@aicert.com":  { name:"TestPro",      plan:"Pro",      pass:"", paid:true, profileKey:"orta_kariyer"      },
+  "testbiz@aicert.com":  { name:"TestBusiness", plan:"Business", pass:"", paid:true, profileKey:"ileri_kariyer"     },
 };
 
 var TERMS_TEXT = `
@@ -276,8 +274,8 @@ function saveUser(user) {
     try {
       fetch(USERS_API, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "register", user: user })
+        headers: authJsonHeaders(),
+        body: JSON.stringify({ action: getAuthToken() ? "update" : "register", user: user })
       }).catch(function() {});
     } catch(e) {}
   } catch(e) {}
@@ -516,7 +514,7 @@ function MentorChat(props) {
     history.push({ role:"user", content:msg });
     fetch(PROXY_URL, {
       method:"POST", headers: authJsonHeaders(),
-      body: JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:800,
+      body: JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:800,
         system:"Sen bir AI egitim mentorusun. Öğrenci: "+user.name+". Plan: "+(user.plan?user.plan.name:"")+". Seviye: "+lvl.name+" ("+( user.xp||0)+" XP). Türkçe, samimi, motive edici, kısa ve pratik yanitlar ver.",
         messages:history })
     }).then(function(r) {
@@ -762,7 +760,7 @@ function Register(props) {
       setTimeout(function() {
         setLoading(false);
         var userData = {
-          name: name, email: email,
+          name: name, email: email, pass: pass,
           plan: props.plan || PLANS[1],
           progress: {}, scores: {}, xp: 0, streak: 0,
           teamId: inviteData ? inviteData.teamId : null,
@@ -897,7 +895,7 @@ function AdminPanel(props) {
       if (toolIdx >= toolsToRun.length) {
         setBatchProgress("✅ Tamamlandı! " + success + " başarılı, " + failed + " başarısız. Toplam: " + total);
         setBatchRunning(false);
-        fetch("https://ai-proxy-two-pi.vercel.app/api/batch-logs?adminKey=" + ADMIN_KEY)
+        fetch("https://ai-proxy-two-pi.vercel.app/api/batch-logs", { headers: authJsonHeaders() })
           .then(function(r) { return r.json(); })
           .then(function(d) { setBatchLogs(d.logs || []); });
         return;
@@ -929,9 +927,9 @@ function AdminPanel(props) {
       function fetchPrompt() {
         if (promptIdx >= prompts.length) {
           if (allCards.length > 0) {
-            fetch("https://ai-proxy-two-pi.vercel.app/api/generate-lessons?key=aicert-cron-2024", {
+            fetch("https://ai-proxy-two-pi.vercel.app/api/generate-lessons", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: authJsonHeaders(),
               body: JSON.stringify({ tool: tool, profileKey: profile, cards: allCards, triggeredBy: "manual" })
             }).then(function() {
               success++;
@@ -994,9 +992,8 @@ function AdminPanel(props) {
 
       method: "POST",
 
-      headers: { "Content-Type": "application/json" },
-
-      body: JSON.stringify({ action: "list", adminKey: ADMIN_KEY })
+      headers: authJsonHeaders(),
+      body: JSON.stringify({ action: "list" })
 
     })
 
@@ -1120,17 +1117,21 @@ function AdminPanel(props) {
 
   function unlockFullAccess() {
 
-    if (fullAccessPass === ADMIN_PASS) {
-
-      setFullAccess(true);
-
-      setFullAccessErr("");
-
-    } else {
-
-      setFullAccessErr("Hatalı şifre");
-
-    }
+    fetch("https://ai-proxy-two-pi.vercel.app/api/login", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: ADMIN_EMAIL, pass: fullAccessPass })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d && d.ok && d.token && d.user && d.user.admin) {
+          setAuthToken(d.token);
+          setFullAccess(true);
+          setFullAccessErr("");
+        } else {
+          setFullAccessErr("Hatalı şifre");
+        }
+      })
+      .catch(function() { setFullAccessErr("Bağlantı hatası"); });
 
   }
 
@@ -1192,8 +1193,8 @@ function AdminPanel(props) {
     if (typeof fetch === "undefined") return;
     fetch(USERS_API, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "update", user: { email: email, profileKey: profileKey }, adminKey: ADMIN_KEY })
+      headers: authJsonHeaders(),
+      body: JSON.stringify({ action: "admin-update", user: { email: email, profileKey: profileKey } })
     })
     .then(function(r) { return r.json(); })
     .then(function() {
@@ -3192,7 +3193,7 @@ function Auth(props) {
       setTimeout(function() {
         setLoading(false);
         var userData = {
-          name: name, email: email,
+          name: name, email: email, pass: pass,
           plan: null, paid: false,
           progress: {}, scores: {}, xp: 0, streak: 0,
           createdAt: Date.now(),
@@ -3513,8 +3514,8 @@ function CouponPanel() {
   useEffect(function() {
     fetch(USERS_API, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "list-coupons", adminKey: ADMIN_KEY })
+      headers: authJsonHeaders(),
+      body: JSON.stringify({ action: "list-coupons" })
     })
       .then(function(r) { return r.json(); })
       .then(function(d) { setCoupons(d.coupons || []); setLoading(false); })
