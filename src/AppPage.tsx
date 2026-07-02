@@ -3736,7 +3736,7 @@ export default function App() {
 
   function handleRegDone(u) { setUser(u); saveUser(u); setPage("planselect"); }
   function handleOnbDone(prof) { updateUser(function(p) { return Object.assign({}, p, { profile:prof }); }); setPage("dashboard"); }
-  function handleLogout() { setUser(null); deleteUser(); setPage("landing"); }
+  function handleLogout() { setUser(null); deleteUser(); clearAuthToken(); setPage("landing"); }
   function handleLessonStart(l) { setLesson(l); setPage("lesson"); }
   function handleLessonDone(day, sc, xp) {
     updateUser(function(prev) {
