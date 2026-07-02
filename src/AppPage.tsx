@@ -26,6 +26,25 @@ function lsRemove(key) {
   try { localStorage.removeItem(key); } catch(e) {}
 }
 
+// ─── AUTH TOKEN HELPERS ──────────────────────────────────────────────────────
+function getAuthToken() { return lsGet("auth_token"); }
+function setAuthToken(t) { if (t) lsSet("auth_token", t); }
+function clearAuthToken() { lsRemove("auth_token"); }
+function authJsonHeaders() {
+  var h = { "Content-Type": "application/json" };
+  var t = getAuthToken();
+  if (t) h["Authorization"] = "Bearer " + t;
+  return h;
+}
+function handleUnauthorized() {
+  try {
+    clearAuthToken();
+    lsRemove("aica-user");
+    lsSet("auth_expired_msg", "1");
+    if (typeof window !== "undefined") window.location.reload();
+  } catch(e) {}
+}
+
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 var PROXY_URL = "https://ai-proxy-two-pi.vercel.app/api/proxy";
