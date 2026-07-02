@@ -947,150 +947,47 @@ function AdminPanel(props) {
     setBatchRunning(true);
     setBatchProgress("Başlatılıyor...");
     setBatchProgressPct(0);
+    var LEVELS = ["baslangic_kariyer", "orta_kariyer", "ileri_kariyer"];
     var toolsToRun = selectedTool === "Tümü" ? TOOLS_LIST : [selectedTool];
-    var profilesToRun = selectedProfile === "Tümü" ? Object.keys(PROFILES_MAP) : [selectedProfile];
-    var total = toolsToRun.length * profilesToRun.length;
-    var completed = 0;
-    var success = 0;
-    var failed = 0;
+    var total = toolsToRun.length;
+    var completed = 0, success = 0, failed = 0;
     setBatchCompleted(0);
     setBatchTotal(total);
-    function processNext(toolIdx, profileIdx) {
-      if (toolIdx >= toolsToRun.length) {
-        setBatchProgress("✅ Tamamlandı! " + success + " başarılı, " + failed + " başarısız. Toplam: " + total);
+
+    function runTool(idx) {
+      if (idx >= toolsToRun.length) {
         setBatchRunning(false);
+        setBatchProgress("✅ Tamamlandı: " + success + " başarılı, " + failed + " hata");
+        setBatchProgressPct(100);
+        loadCoverage();
         fetch("https://ai-proxy-two-pi.vercel.app/api/batch-logs", { headers: authJsonHeaders() })
           .then(function(r) { return r.json(); })
           .then(function(d) { setBatchLogs(d.logs || []); });
         return;
       }
-      if (profileIdx >= profilesToRun.length) { processNext(toolIdx + 1, 0); return; }
-      var tool = toolsToRun[toolIdx];
-      var profile = profilesToRun[profileIdx];
-      var profileCtx = PROFILES_MAP[profile] || "Genel kullanıcı";
-      setBatchProgress("⚙️ " + tool + " / " + profile + " (" + (completed+1) + "/" + total + ")");
-      var prompts = [
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Temel: bu araç nedir, neden önemli, kurulum, ilk adımlar, arayüz turu):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Özellikler: en kritik 5 özellik, her biri için ayrı kart):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Prompt şablonları: 5 farklı hazır komut şablonu, her biri için kullanım senaryosu):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Hatalar: sık yapılan 5 hata, her biri için önce-sonra karşılaştırması):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Entegrasyonlar: Zapier, Make, API, Chrome eklentisi, diğer araçlarla bağlantı):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Otomasyon: iş akışı otomasyonu, zaman tasarrufu, tekrar eden görevler):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Kariyer: bu araçla kariyer avantajı, sektörel kullanım, rekabet üstünlüğü):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (ROI ve verimlilik: somut rakamlar, zaman/para tasarrufu, iş hayatına katkı):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Gelecek: 2025-2030 fırsatları, AGI yolculuğu, dönüşen meslekler):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Öğrenme planı: 30 günlük kişiselleştirilmiş plan, haftalık hedefler, milestones):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Pratik egzersizler: hemen yapılabilecek 5 görev, her biri 10-15 dakika):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Sık sorular: bu seviyedeki kullanıcıların en çok kafasını karıştıran 5 soru ve detaylı cevapları):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Gelişmiş teknikler: çoğu kullanıcının bilmediği 5 ileri seviye ipucu):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Başarı hikayeleri: bu araçla gerçek başarı elde etmiş 5 farklı profil hikayesi):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]",
-        "Sen AI eğitim uzmanısın. " + tool + " aracını öğretiyorsun.\nKurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.\nÖğrenci: " + profileCtx + "\n\n5 kart üret (Sonraki adımlar: bu araçtan sonra hangi araçları öğrenmeli, nasıl bir öğrenme yolu izlemeli):\nSADECE JSON döndür, başka hiçbir şey yazma:\n[{\"title\":\"başlık\",\"content\":\"2-3 cümle açıklama. Konuyu sade Türkçe ile anlat.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım Nasıl Yapılır:\\n1️⃣ [Adım adı]: [Tam komut veya tıklanacak yer - kullanıcı kopyalayıp uygulayabilmeli]\\n2️⃣ [Adım adı]: [Tam olarak ne görüntülenir veya ne yapılır - ekran açıklaması ile]\\n3️⃣ [Adım adı]: [Beklenen çıktı - kullanıcı ne görüyor, ne elde ediyor]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir numara - hazır şablon, kısayol veya rakam içersin]\",\"icon\":\"emoji\"}]"
-      ];
-      var allCards = [];
-      var promptIdx = 0;
-      function fetchPrompt() {
-        if (promptIdx >= prompts.length) {
-          if (allCards.length > 0) {
-            fetch("https://ai-proxy-two-pi.vercel.app/api/generate-lessons", {
-              method: "POST",
-              headers: authJsonHeaders(),
-              body: JSON.stringify({ tool: tool, profileKey: profile, cards: allCards, triggeredBy: "manual" })
-            }).then(function() {
-              success++;
-              completed++;
-              setBatchProgressPct(Math.round((completed / total) * 100));
-              setBatchCompleted(completed);
-              processNext(toolIdx, profileIdx + 1);
-            }).catch(function() { failed++; completed++; setBatchProgressPct(Math.round((completed / total) * 100)); setBatchCompleted(completed); processNext(toolIdx, profileIdx + 1); });
-          } else {
-            failed++;
-            completed++;
-            setBatchProgressPct(Math.round((completed / total) * 100));
-            setBatchCompleted(completed);
-            processNext(toolIdx, profileIdx + 1);
-          }
-          return;
-        }
-        fetch(PROXY_URL, {
-          method: "POST",
-          headers: authJsonHeaders(),
-          body: JSON.stringify({
-            model: "claude-haiku-4-5-20251001",
-            max_tokens: 3000,
-            messages: [{ role: "user", content: prompts[promptIdx] }]
-          })
-        })
-        .then(function(r) {
-          if (r.status === 401) { handleUnauthorized(); throw new Error("unauthorized"); }
-          return r.json();
-        })
+      var tool = toolsToRun[idx];
+      setBatchProgress("⚙️ " + tool + " üretiliyor (" + (idx + 1) + "/" + total + ")");
+      // Sunucu tarafı: seçili aracın hedeflenmesi için önce eksik kontrolü değil,
+      // doğrudan bu aracın 3 seviyesini üret. Backend 'tool' parametresiyle hedefler.
+      fetch("https://ai-proxy-two-pi.vercel.app/api/generate-lessons?tool=" + encodeURIComponent(tool), {
+        method: "GET", headers: authJsonHeaders()
+      })
+        .then(function(r) { return r.json(); })
         .then(function(d) {
-          var text = "";
-          if (d && d.content) { for (var i = 0; i < d.content.length; i++) text += d.content[i].text || ""; }
-          var clean = text.replace(/```json|```/g, "").trim();
-          var start = clean.indexOf("[");
-          var end = clean.lastIndexOf("]");
-          if (start !== -1 && end !== -1) {
-            try { allCards = allCards.concat(JSON.parse(clean.slice(start, end + 1))); } catch(e) {}
-          }
-          promptIdx++;
-          var promptProgress = Math.round(((completed + (promptIdx / prompts.length)) / total) * 100);
-          setBatchProgressPct(Math.min(99, promptProgress));
-          setTimeout(function() { fetchPrompt(); }, 800);
+          if (d && d.ok) { success++; } else { failed++; }
+          completed++;
+          setBatchCompleted(completed);
+          setBatchProgressPct(Math.round((completed / total) * 100));
+          runTool(idx + 1);
         })
         .catch(function() {
-          promptIdx++;
-          var promptProgress = Math.round(((completed + (promptIdx / prompts.length)) / total) * 100);
-          setBatchProgressPct(Math.min(99, promptProgress));
-          setTimeout(function() { fetchPrompt(); }, 800);
+          failed++; completed++;
+          setBatchCompleted(completed);
+          setBatchProgressPct(Math.round((completed / total) * 100));
+          runTool(idx + 1);
         });
-      }
-      fetchPrompt();
     }
-    processNext(0, 0);
-  }
-
-  useEffect(function() {
-
-    fetch(USERS_API, {
-
-      method: "POST",
-
-      headers: authJsonHeaders(),
-      body: JSON.stringify({ action: "list" })
-
-    })
-
-    .then(function(r) { return r.json(); })
-
-    .then(function(data) {
-
-      var list = Array.isArray(data) ? data : (data && data.users ? data.users : []);
-
-      setUsers(list || []);
-
-      setLoading(false);
-
-    })
-
-    .catch(function() { setLoading(false); });
-
-  }, []);
-
-  function fmt(ts) {
-
-    if (!ts) return "-";
-
-    try {
-
-      var d = new Date(ts);
-
-      if (isNaN(d.getTime())) return "-";
-
-      return d.toLocaleDateString("tr-TR") + " " + d.toLocaleTimeString("tr-TR", { hour:"2-digit", minute:"2-digit" });
-
-    } catch(e) { return "-"; }
-
+    runTool(0);
   }
 
   function planName(u) {
