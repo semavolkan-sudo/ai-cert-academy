@@ -1550,7 +1550,7 @@ function renderList(){ routeView=false; exitRoutePick(); exitComparePick(); setC
   list.forEach(s=>{
     const c=CATS[s.cat];
     html += `<div class="card" onclick="openDetail(${s.id})">
-      <div class="thumb" style="background-image:url('${s.heroPhoto||phImg(s.cat)}'),url('${phImg(s.cat)}')">
+      <div class="thumb" style="background-image:url('${heroSrc(s)}'),url('${phImg(s.cat)}')">
         <div class="cat-tag" style="background:${spotColor(s)}">${catIcon(s)}</div>
       </div>
       <div class="card-main">
@@ -1892,7 +1892,7 @@ async function enrichPlace(s){
 const isMobileView=()=>window.matchMedia('(max-width:819px)').matches;
 let previewOpen=false, _pvScrollT=null;
 function pvCardHtml(s){
-  const c=CATS[s.cat]; const hero=s.heroPhoto||phImg(s.cat); const fav=isFav(s);
+  const c=CATS[s.cat]; const hero=heroSrc(s); const fav=isFav(s);
   let dist=''; if(userLoc){ const km=haversine(userLoc,s); dist=`<span>📍 ${km<10?km.toFixed(1):km.toFixed(0)} km</span>`; }
   const d=esc((s.desc||'').replace(/\s+/g,' ').trim());
   return `<div class="pv-card" data-id="${s.id}" onclick="openDetail(${s.id})">
@@ -2229,6 +2229,9 @@ function detailImages(s){
   const si=(s.cat==='camp'||s.cat==='park')?satImg(s):null;
   return si?[si]:[phImg(s.cat)];
 }
+// single display image under the SAME rule as detailImages: visitor photo, else satellite (camp/park), else placeholder.
+// s.heroPhoto (OSM/web/wiki) is deliberately NOT shown anywhere (third-party copyright + irrelevant town shots).
+function heroSrc(s){ const own=[...(s.userPhotos||[]),...(s.pendingPhotos||[])].filter(Boolean); if(own.length) return own[0]; const si=(s.cat==='camp'||s.cat==='park')?satImg(s):null; return si||phImg(s.cat); }
 /* ---- community photo report (🚩) ---- */
 const PHOTO_REPORT_REASONS=[
   ['irrelevant','Alakasız (mekânla ilgisi yok)'],
@@ -3020,7 +3023,7 @@ function openAddModal(){
     const s={id:nextId++,sk:'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),user:true,
       name,cat:pickedCat,lat:newLatLng.lat,lng:newLatLng.lng,price,
       rating:0,ratingCount:0,gid:null,photo:Math.floor(Math.random()*PHOTOS.length),svc:[...pickedSvc],desc,reviews:[]};
-    if(pickedFile){ try{ s.heroPhoto=URL.createObjectURL(pickedFile); }catch(e){} }   // session preview (private, not persisted)
+    if(pickedFile){ try{ s.userPhotos=[URL.createObjectURL(pickedFile)]; }catch(e){} }   // session preview (own photo -> shown by heroSrc/detailImages; private, not persisted)
     spots.push(s);
     activeCats.add(pickedCat);
     modalBg.classList.remove('show');
@@ -4442,7 +4445,7 @@ function renderComparePanel(){
   const sel=compareList.map(byId).filter(Boolean);
   let slots='';
   sel.forEach(s=>{
-    const thumb=s.heroPhoto||phImg(s.cat);
+    const thumb=heroSrc(s);
     const meta=(CATS[s.cat]?CATS[s.cat].label:'') + (s.priceWeb?(' · '+s.priceWeb):(typeof s.price==='number'&&s.price>=0?(' · €'+s.price):''));
     slots+=`<div class="cmp-slot">
       <img src="${thumb}" alt="" onerror="this.onerror=null;this.src='${phImg(s.cat)}'">
@@ -4491,7 +4494,7 @@ function renderCompareTable(d){
   let cards='';
   places.forEach(p=>{
     const s=cmpSpotByKey(p.key);
-    const thumb=s?(s.heroPhoto||phImg(s.cat)):phImg('park');
+    const thumb=s?heroSrc(s):phImg('park');
     const fallback=s?phImg(s.cat):phImg('park');
     const ov=p.scores.overall|0;
     const isWin=(p.key===win);

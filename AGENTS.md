@@ -35,7 +35,7 @@ Marka: "Sema Volkan" (Einzelunternehmen / şahıs şirketi). Sahibi/geliştirici
       alanı döner; `POST {debug:true}` ile canlı sürüm + env booleanları doğrulanır.
       enrich.js değişiklikleri **sw bump gerektirmez** (serverless, cache'lenmez).
 - **SW cache sürümü:** `index.html` her değiştiğinde `sw.js` içindeki
-  `const CACHE='alproute-shell-vN'` numarasını **+1 yap** (şu an **v113**). Yoksa
+  `const CACHE='alproute-shell-vN'` numarasını **+1 yap** (şu an **v114**). Yoksa
   kullanıcılar eski sürümü cache'ten görür.
   - `admin.html` değişiklikleri sw bump GEREKTİRMEZ (admin navigasyonu network-first,
     cache'lenmez). Sadece sert yenileme (Ctrl+Shift+R) yeterli.
