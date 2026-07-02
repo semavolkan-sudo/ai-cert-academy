@@ -2775,7 +2775,7 @@ function Lesson(props) {
 
     try {
 
-      var su = lsGet("aica_user");
+      var su = lsGet("aica-user");
 
       if (su) {
 
@@ -3541,7 +3541,7 @@ function PlanSelectInner(props) {
     if (!couponCode.trim()) return;
     setCouponLoading(true);
     var userEmail = "";
-    try { var su = lsGet("aica_user"); if (su) { var u = JSON.parse(su); userEmail = u.email || ""; } } catch(e) {}
+    try { var su = lsGet("aica-user"); if (su) { var u = JSON.parse(su); userEmail = u.email || ""; } } catch(e) {}
     fetch(USERS_API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -3614,7 +3614,7 @@ function PlanSelectInner(props) {
                   <div style={{ color:"#6ee7b7", fontSize:13, marginBottom:12 }}>Bu kupon ile Pro plana ücretsiz erişebilirsin.</div>
                   <button onClick={function() {
                     var freeUser = null;
-                    try { var su = lsGet("aica_user"); if (su) freeUser = JSON.parse(su); } catch(e) {}
+                    try { var su = lsGet("aica-user"); if (su) freeUser = JSON.parse(su); } catch(e) {}
                     if (freeUser) {
                       freeUser.plan = PLANS[1];
                       freeUser.couponUsed = couponResult.code;
