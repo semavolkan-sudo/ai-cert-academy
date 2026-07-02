@@ -5,7 +5,7 @@
 // API) always go to the network and are never intercepted — auth, payments and
 // live data keep working normally.
 
-const CACHE = 'alproute-shell-v112';
+const CACHE = 'alproute-shell-v113';
 const TILES = 'alproute-tiles-v2';   // bumped: purges old 1024px @2x satellite tiles on activate
 const TILE_MAX = 1500;            // cap cached tiles (~a few large regions)
 const SHELL = [

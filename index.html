@@ -2221,10 +2221,7 @@ function satImg(s){
 // merged carousel images — real photos win; MapTiler satellite is shown ONLY as a fallback
 // when the place has no real image at all (saves MapTiler quota; served from MapTiler per TOS).
 function detailImages(s){
-  const own=[...(s.userPhotos||[]),...(s.pendingPhotos||[])];
-  const osm=s.osmPhoto?[s.osmPhoto]:[];
-  const web=(s.webImages&&s.webImages.length)?s.webImages.slice(0):[];
-  const real=[...own,...osm,...web].filter(Boolean);   // genuine on-site photos ONLY: visitor / OSM image= / the camp's OWN website
+  const real=[...(s.userPhotos||[]),...(s.pendingPhotos||[])].filter(Boolean);   // VISITOR photos only (clean licence); OSM image=/website images dropped — third-party copyright + often irrelevant town shots
   const dedup=arr=>{ const seen=new Set(), out=[]; for(const u of arr){ if(u&&!seen.has(u)){ seen.add(u); out.push(u);} if(out.length>=8) break; } return out; };
   if(real.length) return dedup(real);         // have real photo(s) -> show ONLY these (no street/town/aerial mixed in)
   if((s._enriching && !s._enriched) || (s._extrasPending && !s._extras)) return [phImg(s.cat)];   // still fetching -> placeholder; don't lock in a fallback prematurely
