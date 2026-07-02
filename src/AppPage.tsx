@@ -515,11 +515,14 @@ function MentorChat(props) {
     var history = msgs.map(function(m) { return { role: m.role === "ai" ? "assistant" : "user", content: m.text }; });
     history.push({ role:"user", content:msg });
     fetch(PROXY_URL, {
-      method:"POST", headers:{"Content-Type":"application/json"},
+      method:"POST", headers: authJsonHeaders(),
       body: JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:800,
         system:"Sen bir AI egitim mentorusun. Öğrenci: "+user.name+". Plan: "+(user.plan?user.plan.name:"")+". Seviye: "+lvl.name+" ("+( user.xp||0)+" XP). Türkçe, samimi, motive edici, kısa ve pratik yanitlar ver.",
         messages:history })
-    }).then(function(r) { return r.json(); }).then(function(d) {
+    }).then(function(r) {
+      if (r.status === 401) { handleUnauthorized(); throw new Error("unauthorized"); }
+      return r.json();
+    }).then(function(d) {
       var text = ""; if (d.content) for (var i = 0; i < d.content.length; i++) text += d.content[i].text || "";
       setMsgs(newMsgs.concat([{ role:"ai", text: text || "Hata olustu, tekrar dene." }]));
       setLoading(false);
