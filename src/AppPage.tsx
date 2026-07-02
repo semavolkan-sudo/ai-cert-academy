@@ -3687,6 +3687,15 @@ export default function App() {
 
   useEffect(function() {
     if (typeof window === "undefined") { setBooting(false); return; }
+    // Auth token süresi dolmuş mesajı
+    try {
+      if (lsGet("auth_expired_msg")) {
+        lsRemove("auth_expired_msg");
+        setTimeout(function() {
+          try { window.alert("Oturumunuz sona erdi, lütfen tekrar giriş yapın"); } catch(e) {}
+        }, 0);
+      }
+    } catch(e) {}
     // Davet linki kontrolü
     try {
       var params = new URLSearchParams(window.location.search);
