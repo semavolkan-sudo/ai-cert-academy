@@ -26,6 +26,25 @@ function lsRemove(key) {
   try { localStorage.removeItem(key); } catch(e) {}
 }
 
+// ─── AUTH TOKEN HELPERS ──────────────────────────────────────────────────────
+function getAuthToken() { return lsGet("auth_token"); }
+function setAuthToken(t) { if (t) lsSet("auth_token", t); }
+function clearAuthToken() { lsRemove("auth_token"); }
+function authJsonHeaders() {
+  var h = { "Content-Type": "application/json" };
+  var t = getAuthToken();
+  if (t) h["Authorization"] = "Bearer " + t;
+  return h;
+}
+function handleUnauthorized() {
+  try {
+    clearAuthToken();
+    lsRemove("aica-user");
+    lsSet("auth_expired_msg", "1");
+    if (typeof window !== "undefined") window.location.reload();
+  } catch(e) {}
+}
+
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 var PROXY_URL = "https://ai-proxy-two-pi.vercel.app/api/proxy";
@@ -496,11 +515,14 @@ function MentorChat(props) {
     var history = msgs.map(function(m) { return { role: m.role === "ai" ? "assistant" : "user", content: m.text }; });
     history.push({ role:"user", content:msg });
     fetch(PROXY_URL, {
-      method:"POST", headers:{"Content-Type":"application/json"},
+      method:"POST", headers: authJsonHeaders(),
       body: JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:800,
         system:"Sen bir AI egitim mentorusun. Öğrenci: "+user.name+". Plan: "+(user.plan?user.plan.name:"")+". Seviye: "+lvl.name+" ("+( user.xp||0)+" XP). Türkçe, samimi, motive edici, kısa ve pratik yanitlar ver.",
         messages:history })
-    }).then(function(r) { return r.json(); }).then(function(d) {
+    }).then(function(r) {
+      if (r.status === 401) { handleUnauthorized(); throw new Error("unauthorized"); }
+      return r.json();
+    }).then(function(d) {
       var text = ""; if (d.content) for (var i = 0; i < d.content.length; i++) text += d.content[i].text || "";
       setMsgs(newMsgs.concat([{ role:"ai", text: text || "Hata olustu, tekrar dene." }]));
       setLoading(false);
@@ -929,14 +951,17 @@ function AdminPanel(props) {
         }
         fetch(PROXY_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: authJsonHeaders(),
           body: JSON.stringify({
             model: "claude-haiku-4-5-20251001",
             max_tokens: 3000,
             messages: [{ role: "user", content: prompts[promptIdx] }]
           })
         })
-        .then(function(r) { return r.json(); })
+        .then(function(r) {
+          if (r.status === 401) { handleUnauthorized(); throw new Error("unauthorized"); }
+          return r.json();
+        })
         .then(function(d) {
           var text = "";
           if (d && d.content) { for (var i = 0; i < d.content.length; i++) text += d.content[i].text || ""; }
@@ -1951,39 +1976,48 @@ function Login(props) {
     }
 
     if (typeof fetch === "undefined") { normalLogin(); return; }
-    fetch("https://ai-proxy-two-pi.vercel.app/api/users", {
+    fetch("https://ai-proxy-two-pi.vercel.app/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "verify-test", user: { email: email.toLowerCase().trim(), pass: pass } })
+      body: JSON.stringify({ email: email.toLowerCase().trim(), pass: pass })
     })
-      .then(function(r) { return r.json(); })
+      .then(function(r) {
+        if (r.status === 401) {
+          setLoading(false);
+          setErr("Hatalı e-posta veya şifre");
+          return null;
+        }
+        return r.json();
+      })
       .then(function(data) {
-        if (data.ok === true) {
+        if (!data) return;
+        if (data.ok === true && data.token) {
+          setAuthToken(data.token);
           var PLAN_MAP = { "Starter": PLANS[0], "Pro": PLANS[1], "Business": PLANS[2] };
-          var testUser = {
-            name: data.name,
-            email: email.toLowerCase().trim(),
-            plan: PLAN_MAP[data.plan] || PLANS[0],
-            profileKey: data.profileKey || "default",
-            profile: { profileKey: data.profileKey || "default" },
-            profile_key: data.profileKey || "default",
-            xp: 0,
-            streak: 0,
-            progress: {},
-            scores: {}
+          var du = data.user || {};
+          var loggedUser = {
+            name: du.name || "",
+            email: (du.email || email).toLowerCase().trim(),
+            plan: PLAN_MAP[du.plan] || (du.plan && du.plan.name ? du.plan : PLANS[0]),
+            profileKey: du.profileKey || "default",
+            profile: { profileKey: du.profileKey || "default" },
+            profile_key: du.profileKey || "default",
+            xp: du.xp || 0,
+            streak: du.streak || 0,
+            progress: du.progress || {},
+            scores: du.scores || {}
           };
-          saveUser(testUser);
+          saveUser(loggedUser);
           setLoading(false);
-          props.onLogin && props.onLogin(testUser);
-          if (props.onDone) props.onDone(testUser);
+          props.onLogin && props.onLogin(loggedUser);
+          if (props.onDone) props.onDone(loggedUser);
           return;
         }
-        if (data.ok === false && data.reason === "wrong_pass") {
-          setErr("Hatalı şifre");
+        if (data.ok === false) {
+          setErr("Hatalı e-posta veya şifre");
           setLoading(false);
           return;
         }
-        // not_test_user → normal giriş akışına devam et
         normalLogin();
       })
       .catch(function() {
@@ -2850,14 +2884,17 @@ function Lesson(props) {
     function fetchBatch(batchIndex, onDone) {
       fetch(PROXY_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authJsonHeaders(),
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001",
           max_tokens: 4000,
           messages: [{ role: "user", content: batchPrompts[batchIndex] }]
         })
       })
-      .then(function(r) { return r.json(); })
+      .then(function(r) {
+        if (r.status === 401) { handleUnauthorized(); throw new Error("unauthorized"); }
+        return r.json();
+      })
       .then(function(d) {
         var text = "";
         if (d && d.content) { for (var j = 0; j < d.content.length; j++) text += d.content[j].text || ""; }
@@ -3650,6 +3687,15 @@ export default function App() {
 
   useEffect(function() {
     if (typeof window === "undefined") { setBooting(false); return; }
+    // Auth token süresi dolmuş mesajı
+    try {
+      if (lsGet("auth_expired_msg")) {
+        lsRemove("auth_expired_msg");
+        setTimeout(function() {
+          try { window.alert("Oturumunuz sona erdi, lütfen tekrar giriş yapın"); } catch(e) {}
+        }, 0);
+      }
+    } catch(e) {}
     // Davet linki kontrolü
     try {
       var params = new URLSearchParams(window.location.search);
@@ -3699,7 +3745,7 @@ export default function App() {
 
   function handleRegDone(u) { setUser(u); saveUser(u); setPage("planselect"); }
   function handleOnbDone(prof) { updateUser(function(p) { return Object.assign({}, p, { profile:prof }); }); setPage("dashboard"); }
-  function handleLogout() { setUser(null); deleteUser(); setPage("landing"); }
+  function handleLogout() { setUser(null); deleteUser(); clearAuthToken(); setPage("landing"); }
   function handleLessonStart(l) { setLesson(l); setPage("lesson"); }
   function handleLessonDone(day, sc, xp) {
     updateUser(function(prev) {
