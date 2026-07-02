@@ -41,17 +41,24 @@ const PROFILES = {
   ileri_kariyer: 'Yönetici / ileri düzey kullanıcı. Strateji, ekip verimliliği ve ileri kullanım senaryolarına odaklan.',
 };
 
-function buildPrompt(tool, profileCtx) {
+function buildPrompt(tool, profileCtx, part) {
+  const SPECS = {
+    temel: '4 kart üret, konu TEMEL: araç nedir, neden önemli, nasıl başlanır, temel kavramlar.',
+    ozellik: '4 kart üret, konu ÖZELLİKLER: bu aracın en kritik 4 özelliği, her biri ayrı kart.',
+    sablon: '4 kart üret, konu PROMPT ŞABLONLARI: kopyala-kullan hazır 4 komut şablonu ve kullanım senaryosu.',
+    ileri: '3 kart üret, konu İLERİ İPUÇLARI: çoğu kullanıcının bilmediği 3 pratik ileri teknik.',
+  };
+  const spec = SPECS[part] || SPECS.temel;
   return `Sen AI eğitim uzmanısın. ${tool} aracını öğretiyorsun.
 Kurallar: Emin olmadığın arayüz detayını (buton adı, menü yeri) yazma; işlevi tarif et. Arayüzler değişebildiği için gerektiğinde resmî dokümana yönlendir. Uydurma isim, istatistik veya vaka verme. Kazanç garantisi verme.
 Öğrenci: ${profileCtx}
 
-15 kart üret: ilk 5 kart TEMEL (araç nedir, neden önemli, başlangıç, temel kavramlar, ekosistem), sonraki 5 kart ÖZELLİKLER (en kritik 5 özellik), son 5 kart PROMPT ŞABLONLARI (kopyala-kullan hazır komutlar ve kullanım senaryoları).
+${spec} (her kartın content alanı 600 karakteri geçmesin.)
 SADECE geçerli bir JSON dizisi döndür, başka hiçbir şey yazma:
 [{"title":"başlık","content":"2-3 cümle sade Türkçe açıklama.\\n\\n💡 Örnek Senaryo (temsili):\\nDurum: [Bir meslek grubundan temsili kullanıcı - gerçek kişi ismi UYDURMA]\\nYaklaşım: [Araçla izlediği adımlar ve kullandığı örnek komut]\\nKazanım: [Beklenen somut fayda - uydurma istatistik ve garanti dili YOK]\\n\\n📊 Adım Adım:\\n1️⃣ [Adım]: [Uygulanabilir talimat veya örnek komut]\\n2️⃣ [Adım]: [Ne yapılır, ne beklenir]\\n3️⃣ [Adım]: [Beklenen çıktı]\\n\\n⚡ Pro İpucu: [Hemen uygulanabilir pratik öneri]","icon":"emoji"}]`;
 }
 
-async function generateCards(tool, profileKey) {
+async function callHaiku(prompt) {
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -61,18 +68,32 @@ async function generateCards(tool, profileKey) {
     },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 4096,
-      messages: [{ role: 'user', content: buildPrompt(tool, PROFILES[profileKey]) }],
+      max_tokens: 5000,
+      messages: [{ role: 'user', content: prompt }],
     }),
   });
   const data = await resp.json();
+  if (data && data.error) throw new Error('API: ' + (data.error.message || data.error.type || 'bilinmeyen'));
   let text = '';
   if (Array.isArray(data.content)) for (const b of data.content) text += b.text || '';
   text = text.replace(/```json|```/g, '').trim();
   const start = text.indexOf('['); const end = text.lastIndexOf(']');
   if (start === -1 || end === -1) throw new Error('JSON bulunamadı');
   const cards = JSON.parse(text.slice(start, end + 1));
-  if (!Array.isArray(cards) || cards.length < 5) throw new Error('kart sayısı yetersiz');
+  if (!Array.isArray(cards)) throw new Error('JSON dizi değil');
+  return cards;
+}
+
+// 15 kartı DÖRT paralel parçada üret (4+4+4+3) → her çağrı çok kısa, timeout-safe
+async function generateCards(tool, profileKey) {
+  const ctx = PROFILES[profileKey];
+  const parts = ['temel', 'ozellik', 'sablon', 'ileri'];
+  const settled = await Promise.allSettled(parts.map((pt) => callHaiku(buildPrompt(tool, ctx, pt))));
+  let cards = [];
+  for (const r of settled) {
+    if (r.status === 'fulfilled' && Array.isArray(r.value)) cards = cards.concat(r.value);
+  }
+  if (cards.length < 5) throw new Error('kart sayısı yetersiz: ' + cards.length);
   return cards;
 }
 
@@ -136,9 +157,13 @@ export default async function handler(req, res) {
     return res.status(200).json({ tools: TOOLS.length, covered: rows.length, missing, oldest: rows[0] || null });
   }
 
-  // ── CRON: hedef aracı seç → eksik olan öncelikli, yoksa en eski güncellenen ──
+  // ── Hedef araç: ?tool= verilmişse onu üret (panel), yoksa otomatik seç (cron) ──
   let target = null;
-  for (const t of TOOLS) {
+  const requestedTool = req.query.tool;
+  if (requestedTool && TOOLS.includes(requestedTool)) {
+    target = requestedTool;
+  }
+  for (const t of (target ? [] : TOOLS)) {
     if (profileKeys.some(pk => !have.has(t + '::' + pk))) { target = t; break; }
   }
   if (!target) {
@@ -152,9 +177,37 @@ export default async function handler(req, res) {
     target = (sorted.length > 0 ? sorted[0][0] : TOOLS[0]);
   }
 
+  // ── Tek seviye modu: ?tool= & ?profile= verilirse yalnız o seviyeyi üret (panel, timeout-safe) ──
+  const singleProfile = req.query.profile;
+  if (target && singleProfile && profileKeys.includes(singleProfile)) {
+    const startedOne = new Date().toISOString();
+    let one;
+    try {
+      const cards = await generateCards(target, singleProfile);
+      const save = await sbFetch('lesson_cards', {
+        method: 'POST', prefer: 'resolution=merge-duplicates,return=minimal',
+        body: JSON.stringify({ tool_name: target, profile_key: singleProfile, batch_date: today, cards, updated_at: new Date().toISOString() })
+      });
+      one = save.ok ? { tool: target, profile: singleProfile, count: cards.length } : { tool: target, profile: singleProfile, error: 'db' };
+    } catch (e) {
+      console.log('GEN_FAIL', target, singleProfile, String(e.message).slice(0, 200));
+      one = { tool: target, profile: singleProfile, error: String(e.message).slice(0, 80) };
+    }
+    await sbFetch('batch_logs', {
+      method: 'POST', prefer: 'return=minimal',
+      body: JSON.stringify({
+        batch_date: today, started_at: startedOne, finished_at: new Date().toISOString(),
+        status: one.error ? 'failed' : 'success', triggered_by: isAdmin ? 'admin' : 'cron-key',
+        total_tools: 1, total_profiles: 1,
+        success_count: one.error ? 0 : 1, fail_count: one.error ? 1 : 0, results: [one]
+      })
+    });
+    return res.status(200).json({ ok: !one.error, tool: target, profile: singleProfile, result: one });
+  }
+
   const started = new Date().toISOString();
-  const results = []; let ok = 0, fail = 0;
-  for (const pk of profileKeys) {
+  // 3 seviye PARALEL üretilir: toplam süre "en uzun tek üretim" olur, 60 sn sınırına sığar
+  const settled = await Promise.all(profileKeys.map(async (pk) => {
     try {
       const cards = await generateCards(target, pk);
       const save = await sbFetch('lesson_cards', {
@@ -164,12 +217,16 @@ export default async function handler(req, res) {
           cards, updated_at: new Date().toISOString()
         })
       });
-      if (save.ok) { ok++; results.push({ tool: target, profile: pk, count: cards.length }); }
-      else { fail++; results.push({ tool: target, profile: pk, error: 'db' }); }
+      if (save.ok) return { tool: target, profile: pk, count: cards.length };
+      return { tool: target, profile: pk, error: 'db' };
     } catch (e) {
-      fail++; results.push({ tool: target, profile: pk, error: String(e.message).slice(0, 80) });
+      console.log('GEN_FAIL', target, pk, String(e.message).slice(0, 200));
+      return { tool: target, profile: pk, error: String(e.message).slice(0, 80) };
     }
-  }
+  }));
+  const results = settled;
+  const ok = settled.filter(r => !r.error).length;
+  const fail = settled.length - ok;
 
   await sbFetch('batch_logs', {
     method: 'POST', prefer: 'return=minimal',
