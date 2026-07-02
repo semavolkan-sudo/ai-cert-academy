@@ -912,6 +912,15 @@ function AdminPanel(props) {
   var [batchProgressPct, setBatchProgressPct] = useState(0);
 
   var [batchLogs, setBatchLogs] = useState([]);
+  var [coverage, setCoverage] = useState(null);
+  var [coverageLoading, setCoverageLoading] = useState(false);
+  function loadCoverage() {
+    setCoverageLoading(true);
+    fetch("https://ai-proxy-two-pi.vercel.app/api/generate-lessons?mode=status", { headers: authJsonHeaders() })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { setCoverage(d); setCoverageLoading(false); })
+      .catch(function() { setCoverageLoading(false); });
+  }
 
   var [batchCompleted, setBatchCompleted] = useState(0);
 
@@ -921,7 +930,7 @@ function AdminPanel(props) {
 
   var [selectedProfile, setSelectedProfile] = useState("Tümü");
 
-  var TOOLS_LIST = ["ChatGPT","Claude","Gemini","Perplexity","Deepseek","Copilot","Grok","Midjourney","Leonardo AI","Stable Diffusion","Canva AI","ElevenLabs","Runway ML","Make.com","Zapier AI","Notion AI","Lovable","Manus","Meta AI","Assembly AI","Prompt Engineering","AI İş Stratejisi"];
+  var TOOLS_LIST = ["ChatGPT","Claude","Gemini","Perplexity","Deepseek","Copilot","Grok","Lovable","Manus","NanoBanana","Leonardo AI","Meta AI","Assembly AI","Canva AI","Veo 3","Sora 2","NotebookLM","Microsoft 365 Copilot","Midjourney","Runway ML","ElevenLabs","Pika Labs","Stable Diffusion","Make.com","Zapier AI","Notion AI","Prompt Engineering","AI İş Stratejisi"];
 
   var PROFILES_MAP = {
     "default": "Genel kullanıcı, AI araçlarını öğrenmek isteyen kişi",
@@ -1797,6 +1806,27 @@ function AdminPanel(props) {
 
                   <div style={{ fontSize:12, color:"#666677", marginBottom:16 }}>Seçili araç ve profil için AI ile ders kartları üret, Vercel'e kaydet</div>
 
+                  <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.10)", borderRadius:12, padding:"14px 16px", marginBottom:14 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:8 }}>
+                      <div style={{ fontSize:13, color:"#ccccdd" }}>
+                        {coverage ? ("📚 " + coverage.covered + " ders kaydı · " + (coverage.missing ? coverage.missing.length : 0) + " eksik kombinasyon") : "Ders kapsamını görmek için yenile"}
+                      </div>
+                      <button onClick={loadCoverage} disabled={coverageLoading} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.15)", borderRadius:8, padding:"7px 14px", color:"#d4a853", fontSize:12, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>
+                        {coverageLoading ? "Yükleniyor..." : "🔄 Kapsamı Yenile"}
+                      </button>
+                    </div>
+                    {coverage && coverage.missing && coverage.missing.length > 0 && (
+                      <div style={{ marginTop:10, display:"flex", flexWrap:"wrap", gap:6 }}>
+                        {coverage.missing.slice(0, 30).map(function(m, i) {
+                          return <span key={i} style={{ fontSize:11, background:"rgba(239,68,68,0.10)", border:"1px solid rgba(239,68,68,0.3)", color:"#fca5a5", borderRadius:6, padding:"3px 8px", fontFamily:FONT_MONO }}>{m}</span>;
+                        })}
+                        {coverage.missing.length > 30 && <span style={{ fontSize:11, color:"#888899" }}>+{coverage.missing.length - 30} daha</span>}
+                      </div>
+                    )}
+                    {coverage && coverage.missing && coverage.missing.length === 0 && (
+                      <div style={{ marginTop:8, fontSize:12, color:"#4ade80" }}>✅ Tüm araçların tüm seviyeleri hazır.</div>
+                    )}
+                  </div>
                   <div style={{ display:"flex", gap:10, marginBottom:12, flexWrap:"wrap" }}>
 
                     <select value={selectedTool} onChange={function(e) { setSelectedTool(e.target.value); }} disabled={batchRunning} style={{ flex:1, minWidth:160, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:10, padding:"10px 12px", color:"#fff", fontSize:13, outline:"none" }}>
