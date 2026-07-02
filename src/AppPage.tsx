@@ -954,11 +954,13 @@ function AdminPanel(props) {
     setBatchCompleted(0);
     setBatchTotal(total);
 
+    var LEVEL_ADI = { baslangic_kariyer: "Başlangıç", orta_kariyer: "Orta", ileri_kariyer: "İleri" };
     function runTool(idx) {
       if (idx >= toolsToRun.length) {
         setBatchRunning(false);
-        setBatchProgress("✅ Tamamlandı: " + success + " başarılı, " + failed + " hata");
+        setBatchProgress("✅ Tamamlandı: " + success + " başarılı, " + failed + " hata (" + completed + "/" + total + ")");
         setBatchProgressPct(100);
+        setBatchCompleted(total);
         loadCoverage();
         fetch("https://ai-proxy-two-pi.vercel.app/api/batch-logs", { headers: authJsonHeaders() })
           .then(function(r) { return r.json(); })
@@ -970,20 +972,25 @@ function AdminPanel(props) {
       var lvlIdx = 0;
       function runLevel() {
         if (lvlIdx >= LEVELS.length) {
-          completed++;
-          setBatchCompleted(completed);
-          setBatchProgressPct(Math.round((completed / total) * 100));
           runTool(idx + 1);
           return;
         }
         var lvl = LEVELS[lvlIdx];
-        setBatchProgress("⚙️ " + tool + " · " + lvl + " (" + (idx + 1) + "/" + total + ")");
+        // İlerleme SEVİYE bazında sayılır: bar her ~20sn'de bir gerçek adım atar
+        setBatchProgress("⚙️ " + tool + " · " + (LEVEL_ADI[lvl] || lvl) + " üretiliyor... (" + (completed + 1) + "/" + total + ")");
         fetch("https://ai-proxy-two-pi.vercel.app/api/generate-lessons?tool=" + encodeURIComponent(tool) + "&profile=" + encodeURIComponent(lvl), {
           method: "GET", headers: authJsonHeaders()
         })
           .then(function(r) { return r.json(); })
-          .then(function(d) { if (d && d.ok) { success++; } else { failed++; } lvlIdx++; runLevel(); })
-          .catch(function() { failed++; lvlIdx++; runLevel(); });
+          .then(function(d) { if (d && d.ok) { success++; } else { failed++; } })
+          .catch(function() { failed++; })
+          .then(function() {
+            completed++;
+            setBatchCompleted(completed);
+            setBatchProgressPct(Math.min(99, Math.round((completed / total) * 100)));
+            lvlIdx++;
+            runLevel();
+          });
       }
       runLevel();
     }
