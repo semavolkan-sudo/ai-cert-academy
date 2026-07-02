@@ -951,14 +951,17 @@ function AdminPanel(props) {
         }
         fetch(PROXY_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: authJsonHeaders(),
           body: JSON.stringify({
             model: "claude-haiku-4-5-20251001",
             max_tokens: 3000,
             messages: [{ role: "user", content: prompts[promptIdx] }]
           })
         })
-        .then(function(r) { return r.json(); })
+        .then(function(r) {
+          if (r.status === 401) { handleUnauthorized(); throw new Error("unauthorized"); }
+          return r.json();
+        })
         .then(function(d) {
           var text = "";
           if (d && d.content) { for (var i = 0; i < d.content.length; i++) text += d.content[i].text || ""; }
