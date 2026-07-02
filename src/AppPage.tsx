@@ -2803,16 +2803,10 @@ function Lesson(props) {
 
     var cacheKey2 = "lesson-db-" + lesson.tool + "-" + profileKey + "-" + today;
 
+    // Ders içeriği güncel kalsın diye localStorage cache KULLANILMIYOR; her açılışta DB'den taze çekilir.
+    // Eski sürümlerden kalan ders cache'lerini bir defa temizle.
     try {
-      var lv = lsGet(cacheKey2);
-      if (lv) {
-        var ld = JSON.parse(lv);
-        if (ld.cards && ld.cards.length > 0) {
-          setCards(normalizeCards(ld.cards));
-          setLoading(false);
-          return;
-        }
-      }
+      Object.keys(localStorage).filter(function(k){ return k.indexOf("lesson-db-") === 0; }).forEach(function(k){ localStorage.removeItem(k); });
     } catch(e) {}
 
     setLoadProgress(30);
@@ -2822,7 +2816,6 @@ function Lesson(props) {
     .then(function(data) {
       setLoadProgress(100);
       if (data && data.cards && data.cards.length > 0) {
-        try { lsSet(cacheKey2, JSON.stringify({ cards: data.cards })); } catch(e) {}
         setCards(normalizeCards(data.cards));
         setLoading(false);
       } else {
@@ -2896,7 +2889,6 @@ function Lesson(props) {
             setLoadProgress(Math.round((completed / totalBatches) * 100));
             if (completed === totalBatches) {
               if (allCards.length > 0) {
-                try { lsSet(cacheKey2, JSON.stringify({ cards: allCards })); } catch(e) {}
                 setCards(normalizeCards(allCards));
               } else {
                 setCards(getFallbackCards());
