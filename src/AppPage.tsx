@@ -1,11 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect, useRef } from "react";
 import logoAsset from "@/assets/ai-cert-academy-logo.png.asset.json";
-import { useServerFn } from "@tanstack/react-start";
-import {
-  verifyAdminLogin,
-  changeAdminPassword,
-} from "@/lib/admin-auth.functions";
 
 
 // ─── SSR-SAFE STORAGE ────────────────────────────────────────────────────────
@@ -1931,24 +1926,9 @@ function Login(props) {
   var [err, setErr] = useState("");
   var [loading, setLoading] = useState(false);
   var [showAdmin, setShowAdmin] = useState(false);
-  var verifyAdmin = useServerFn(verifyAdminLogin);
 
   async function submit() {
     if (!email || !pass) { setErr("Tüm alanlari doldurun"); return; }
-    if (email.toLowerCase().trim() === ADMIN_EMAIL) {
-      setErr("");
-      setLoading(true);
-      try {
-        var r = await verifyAdmin({ data: { email: email, password: pass } });
-        setLoading(false);
-        if (r && r.ok) { setShowAdmin(true); return; }
-        setErr("Hatalı yönetici şifresi");
-      } catch (e) {
-        setLoading(false);
-        setErr("Sunucuya ulaşılamadı");
-      }
-      return;
-    }
     if (pass.length < 6) { setErr("Şifre en az 6 karakter"); return; }
     setLoading(true);
 
@@ -1994,6 +1974,7 @@ function Login(props) {
         if (!data) return;
         if (data.ok === true && data.token) {
           setAuthToken(data.token);
+          if (data.user && data.user.admin) { setLoading(false); setShowAdmin(true); return; }
           var PLAN_MAP = { "Starter": PLANS[0], "Pro": PLANS[1], "Business": PLANS[2] };
           var du = data.user || {};
           var loggedUser = {
@@ -3157,10 +3138,14 @@ function Auth(props) {
     setErr("");
     setInfo("");
     if (!email || !pass) { setErr("Tüm alanlari doldurun"); return; }
-    if (email.toLowerCase().trim() === ADMIN_EMAIL) {
-      verifyAdminLogin({ data: { email: email, password: pass } })
-        .then(function(r) {
-          if (r && r.ok) { setShowAdmin(true); }
+    if (tab !== "register" && email.toLowerCase().trim() === ADMIN_EMAIL) {
+      fetch("https://ai-proxy-two-pi.vercel.app/api/login", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.toLowerCase().trim(), pass: pass })
+      })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          if (d && d.ok && d.token && d.user && d.user.admin) { setAuthToken(d.token); setShowAdmin(true); }
           else { setErr("Hatalı yönetici şifresi"); }
         })
         .catch(function() { setErr("Sunucuya ulaşılamadı"); });
@@ -3206,27 +3191,34 @@ function Auth(props) {
         // Generate 6-digit verification code (simulated email send)
         var code = String(Math.floor(100000 + Math.random() * 900000));
         setVerifyCode(code);
+        try { fetch(USERS_API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "send-verify-code", email: email.toLowerCase().trim(), code: code }) }).catch(function() {}); } catch(e) {}
         setPendingUser(userData);
         setCodeInput("");
         setInfo("Doğrulama kodu " + email + " adresine gönderildi.");
       }, 800);
     } else {
       setLoading(true);
-      setTimeout(function() {
-        setLoading(false);
-        var existing = getUserByEmail(email);
-        if (!existing) { setErr("Bu email ile kayıtlı hesap yok. Kayıt Ol sekmesini kullan."); return; }
-        var isAdminL2 = existing.email === ADMIN_EMAIL;
-        var isTestL2 = existing.email === "test@aicert.com" || existing.email === "testpro@aicert.com" || existing.email === "testbiz@aicert.com";
-        if (!isAdminL2 && !isTestL2 && lsGet("user-status-" + existing.email) === "pasif") {
-          setErr("Hesabınız askıya alınmıştır. Destek için info@cert-academy.ai adresine yazın.");
-          return;
-        }
-        if (!existing.paid) {
-          setErr("Ödeme yapılmadan sisteme giriş yapılamaz. Lütfen bir plan seçin.");
-        }
-        props.onLogin(existing);
-      }, 600);
+      fetch("https://ai-proxy-two-pi.vercel.app/api/login", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.toLowerCase().trim(), pass: pass })
+      })
+        .then(function(r) { if (r.status === 401) { setLoading(false); setErr("Hatalı e-posta veya şifre"); return null; } return r.json(); })
+        .then(function(data) {
+          if (!data) return;
+          setLoading(false);
+          if (data.ok === true && data.token) {
+            setAuthToken(data.token);
+            var du = data.user || {};
+            if (du.admin) { setShowAdmin(true); return; }
+            var PLAN_MAP = { "Starter": PLANS[0], "Pro": PLANS[1], "Business": PLANS[2] };
+            var loggedUser = { name: du.name || "", email: (du.email || email).toLowerCase().trim(), plan: PLAN_MAP[du.plan] || PLANS[0], paid: true, profileKey: du.profileKey || "default", profile: { profileKey: du.profileKey || "default" }, profile_key: du.profileKey || "default", xp: du.xp || 0, streak: du.streak || 0, progress: du.progress || {}, scores: du.scores || {} };
+            addToRegistry(loggedUser.email, loggedUser);
+            props.onLogin(loggedUser);
+            return;
+          }
+          setErr("Hatalı e-posta veya şifre");
+        })
+        .catch(function() { setLoading(false); setErr("Sunucu hatası. Tekrar deneyin."); });
     }
   }
 
@@ -3238,6 +3230,9 @@ function Auth(props) {
     setTimeout(function() {
       setLoading(false);
       if (pendingUser) addToRegistry(pendingUser.email, pendingUser);
+      if (pendingUser && pendingUser.email) {
+        try { fetch(USERS_API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "register", user: pendingUser }) }).catch(function() {}); } catch(e) {}
+      }
       // Bedava erişim kuponu varsa kayıt akışını onRegister'a yönlendir
       if (pendingUser && pendingUser.coupon && pendingUser.coupon.isFree && props.onRegister) {
         var freeRegUser = Object.assign({}, pendingUser);
@@ -3270,6 +3265,7 @@ function Auth(props) {
 
   function resendCode() {
     var code = String(Math.floor(100000 + Math.random() * 900000));
+    try { fetch(USERS_API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "send-verify-code", email: email.toLowerCase().trim(), code: code }) }).catch(function() {}); } catch(e) {}
     setVerifyCode(code);
     setCodeInput("");
     setInfo("Yeni kod gönderildi.");
