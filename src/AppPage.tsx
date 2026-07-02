@@ -3145,22 +3145,7 @@ function Auth(props) {
         .catch(function() { setErr("Sunucuya ulaşılamadı"); });
       return;
     }
-    // Test kullanıcıları: ödeme atlanır, doğru planla giriş yapılır
-    var emailKey = (email || "").toLowerCase();
-    var testUser = TEST_USERS[emailKey];
-    if (testUser && tab === "login") {
-      if (pass !== testUser.pass) { setErr("Hatalı şifre"); return; }
-      var planObj = PLANS.find(function(p) { return p.name === testUser.plan; }) || PLANS[0];
-      var tu = {
-        name: testUser.name, email: emailKey,
-        plan: planObj, paid: true,
-        progress: {}, scores: {}, xp: 0, streak: 0,
-        createdAt: Date.now(),
-      };
-      addToRegistry(emailKey, tu);
-      props.onLogin(tu);
-      return;
-    }
+    // Test kullanıcıları da normal /api/login yolundan geçer (backend tanır, token üretir).
     if (pass.length < 6) { setErr("Şifre en az 6 karakter"); return; }
     if (tab === "register") {
       if (!name) { setErr("Ad Soyad gerekli"); return; }
